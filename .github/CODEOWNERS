@@ -1,0 +1,10 @@
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# @strakhovdenya will be requested for review when someone 
+# opens a pull request.
+*       @strakhovdenya
+
+# Specific ownership for critical parts
+/src/app/       @strakhovdenya
+/src/components/ @strakhovdenya
+/src/lib/       @strakhovdenya 
