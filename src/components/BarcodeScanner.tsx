@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 
+// Component for scanning barcodes and QR codes
 interface BarcodeScannerProps {
   onScan: (decodedText: string) => void;
   onError?: (error: string) => void;
