@@ -9,6 +9,7 @@ type RoomResponse = PostgrestSingleResponse<Pick<Room, 'id'>>;
 type LetterResponse = PostgrestSingleResponse<LetterWithRoom>;
 type NewLetter = Omit<Database['public']['Tables']['letters']['Insert'], 'room_id'> & {
   room_number: string;
+  barcode_id?: string;
 };
 
 interface OfflineLetter {
