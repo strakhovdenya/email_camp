@@ -38,7 +38,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         },
         (errorMessage) => {
           onError?.(errorMessage);
-        },
+        }
       )
       .catch((err: Error) => {
         onError?.(err.message || 'Failed to start scanner');

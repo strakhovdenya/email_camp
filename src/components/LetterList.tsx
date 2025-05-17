@@ -36,10 +36,7 @@ export const LetterList: React.FC<LetterListProps> = ({ roomNumber }): React.Rea
 
       <div className="divide-y divide-gray-200">
         {letters.map((letter) => (
-          <div
-            key={letter.id}
-            className="py-4 flex justify-between items-center"
-          >
+          <div key={letter.id} className="py-4 flex justify-between items-center">
             <div>
               <p className="text-sm font-medium text-gray-900">
                 Получено: {new Date(letter.created_at).toLocaleString()}

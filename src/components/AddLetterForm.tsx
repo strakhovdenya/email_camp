@@ -35,15 +35,9 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label
-          htmlFor="roomNumber"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="roomNumber" className="block text-sm font-medium text-gray-700">
           Номер комнаты
         </label>
         <input

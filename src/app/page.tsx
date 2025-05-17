@@ -46,10 +46,7 @@ export default function Home(): React.ReactElement {
                 </button>
               ) : (
                 <div>
-                  <BarcodeScanner
-                    onScan={handleScan}
-                    onError={handleError}
-                  />
+                  <BarcodeScanner onScan={handleScan} onError={handleError} />
                   <button
                     onClick={() => setIsScanning(false)}
                     className="w-full mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"

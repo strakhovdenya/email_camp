@@ -123,7 +123,7 @@ export function useLetters(roomNumber?: string): UseLettersResult {
       // В офлайн-режиме сохраняем в локальное хранилище
       if (!navigator.onLine) {
         const offlineData = JSON.parse(
-          localStorage.getItem('offlineLetters') || '[]',
+          localStorage.getItem('offlineLetters') || '[]'
         ) as OfflineLetter[];
 
         const newOfflineLetter: OfflineLetter = {

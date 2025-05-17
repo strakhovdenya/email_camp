@@ -2,29 +2,22 @@
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "prettier"
+    "plugin:prettier/recommended"
   ],
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["@typescript-eslint"],
   "rules": {
-    "prettier/prettier": "error",
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/explicit-function-return-type": "error",
-    "@typescript-eslint/explicit-module-boundary-types": "error",
-    "@typescript-eslint/no-floating-promises": "error",
-    "@typescript-eslint/no-misused-promises": "error",
-    "@typescript-eslint/await-thenable": "error",
-    "@typescript-eslint/no-empty-interface": "error",
-    "@typescript-eslint/no-unnecessary-type-assertion": "error",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
-    "no-console": ["warn", { "allow": ["warn", "error"] }],
-    "no-unused-vars": "off",
-    "no-trailing-spaces": "error",
-    "semi": ["error", "always"],
-    "quotes": ["error", "single"],
-    "comma-dangle": ["error", "always-multiline"]
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {

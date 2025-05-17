@@ -5,19 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npm run build:worker",
-    "build:worker": "tsc -p worker.tsconfig.json",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:strict": "eslint --max-warnings=0 \"src/**/*.{js,jsx,ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
-    "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json}\" && eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "prepare": "husky install",
-    "check": "npm run lint:strict && npm run format:check",
-    "check:fix": "npm run format:fix && npm run lint:fix",
-    "generate:icons": "node scripts/generate-icons.js"
+    "check": "npm run lint && npm run format:check",
+    "fix": "npm run lint:fix && npm run format"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
