@@ -19,7 +19,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan, onError 
     scannerRef.current = new Html5Qrcode(containerId);
 
     const constraints = {
-      facingMode: { ideal: 'environment' }
+      facingMode: { ideal: 'environment' },
     };
 
     scannerRef.current
@@ -42,19 +42,17 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan, onError 
 
     return () => {
       if (scannerRef.current) {
-        scannerRef.current
-          .stop()
-          .catch((err) => console.error('Failed to stop scanner:', err));
+        scannerRef.current.stop().catch((err) => console.error('Failed to stop scanner:', err));
       }
     };
   }, [onScan, onError]);
 
   return (
     <div className="w-full max-w-sm mx-auto">
-      <div 
+      <div
         ref={containerRef}
         className="aspect-square w-full bg-gray-100 rounded-lg overflow-hidden"
       />
     </div>
   );
-}; 
+};
