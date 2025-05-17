@@ -7,12 +7,15 @@ interface BarcodeScannerProps {
   onError?: (error: string) => void;
 }
 
-export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan, onError }) => {
+export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
+  onScan,
+  onError,
+}): React.ReactElement => {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
+  useEffect((): (() => void) => {
+    if (!containerRef.current) return () => {};
 
     const containerId = 'barcode-scanner';
     containerRef.current.id = containerId;
@@ -23,7 +26,7 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan, onError 
       facingMode: { ideal: 'environment' },
     };
 
-    scannerRef.current
+    void scannerRef.current
       .start(
         { facingMode: constraints.facingMode },
         {
@@ -35,15 +38,17 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScan, onError 
         },
         (errorMessage) => {
           onError?.(errorMessage);
-        }
+        },
       )
-      .catch((err) => {
-        onError?.(err?.message || 'Failed to start scanner');
+      .catch((err: Error) => {
+        onError?.(err.message || 'Failed to start scanner');
       });
 
-    return () => {
+    return (): void => {
       if (scannerRef.current) {
-        scannerRef.current.stop().catch((err) => console.error('Failed to stop scanner:', err));
+        void scannerRef.current.stop().catch((err: Error) => {
+          console.error('Failed to stop scanner:', err);
+        });
       }
     };
   }, [onScan, onError]);

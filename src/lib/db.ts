@@ -15,18 +15,18 @@ export class MailDatabase extends Dexie {
   constructor() {
     super('MailDatabase');
     this.version(1).stores({
-      letters: '++id, roomNumber, status, syncStatus'
+      letters: '++id, roomNumber, status, syncStatus',
     });
   }
 
   async addLetter(roomNumber: string): Promise<number> {
-    const id = await this.letters.add({
+    const id = (await this.letters.add({
       roomNumber,
       status: 'pending',
       registeredAt: new Date(),
-      syncStatus: 'pending'
-    });
-    this.syncWithServer();
+      syncStatus: 'pending',
+    })) as number;
+    void this.syncWithServer();
     return id;
   }
 
@@ -34,17 +34,14 @@ export class MailDatabase extends Dexie {
     await this.letters.update(id, {
       status: 'delivered',
       deliveredAt: new Date(),
-      syncStatus: 'pending'
+      syncStatus: 'pending',
     });
-    this.syncWithServer();
+    void this.syncWithServer();
   }
 
   private async syncWithServer(): Promise<void> {
     // TODO: Implement server synchronization
-    const pendingSync = await this.letters
-      .where('syncStatus')
-      .equals('pending')
-      .toArray();
+    await this.letters.where('syncStatus').equals('pending').toArray();
 
     // Здесь будет логика синхронизации с сервером
     // При успешной синхронизации обновляем статус на 'synced'
@@ -52,4 +49,4 @@ export class MailDatabase extends Dexie {
   }
 }
 
-export const db = new MailDatabase(); 
+export const db = new MailDatabase();
