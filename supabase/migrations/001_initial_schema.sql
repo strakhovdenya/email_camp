@@ -13,9 +13,7 @@ CREATE TABLE letters (
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'delivered')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     delivered_at TIMESTAMPTZ,
-    sync_status TEXT NOT NULL DEFAULT 'pending' CHECK (sync_status IN ('pending', 'synced', 'failed')),
-    barcode_id TEXT NOT NULL UNIQUE,
-    recipient_notified BOOLEAN NOT NULL DEFAULT false
+    sync_status TEXT NOT NULL DEFAULT 'pending' CHECK (sync_status IN ('pending', 'synced', 'failed'))
 );
 
 -- Create indexes for faster lookups
@@ -30,17 +28,22 @@ ALTER TABLE rooms ENABLE ROW LEVEL SECURITY;
 
 -- Create policies
 CREATE POLICY "Enable read access for all users" ON letters FOR SELECT USING (true);
-CREATE POLICY "Enable insert for authenticated users only" ON letters FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-CREATE POLICY "Enable update for authenticated users only" ON letters FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Enable insert for all users" ON letters FOR INSERT WITH CHECK (true);
+CREATE POLICY "Enable update for all users" ON letters FOR UPDATE USING (true);
 
 CREATE POLICY "Enable read access for all users" ON rooms FOR SELECT USING (true);
-CREATE POLICY "Enable insert for authenticated users only" ON rooms FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-CREATE POLICY "Enable update for authenticated users only" ON rooms FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Enable insert for all users" ON rooms FOR INSERT WITH CHECK (true);
+CREATE POLICY "Enable update for all users" ON rooms FOR UPDATE USING (true);
 
 -- Create view for letters with room information
 CREATE VIEW letters_with_rooms AS
 SELECT 
-    l.*,
+    l.id,
+    l.room_id,
+    l.status,
+    l.created_at,
+    l.delivered_at,
+    l.sync_status,
     r.room_number,
     r.telegram_chat_id
 FROM letters l

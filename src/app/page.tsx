@@ -1,70 +1,56 @@
 'use client';
 
-import React, { useState } from 'react';
-import { BarcodeScanner } from '@/components/BarcodeScanner';
-import { LetterList } from '@/components/LetterList';
-import { AddLetterForm } from '@/components/AddLetterForm';
+import React from 'react';
+import { useRoomsWithLetters } from '@/hooks/useRoomsWithLetters';
 
 export default function Home(): React.ReactElement {
-  const [isScanning, setIsScanning] = useState(false);
-  const [roomNumber, setRoomNumber] = useState<string>('');
-
-  const handleScan = (decodedText: string): void => {
-    setRoomNumber(decodedText);
-    setIsScanning(false);
-  };
-
-  const handleError = (error: string): void => {
-    console.error('Ошибка сканирования:', error);
-  };
+  const { rooms, isLoading } = useRoomsWithLetters();
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Управление письмами</h1>
-          <p className="mt-2 text-gray-600">Система учета писем для лагеря</p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {/* Форма добавления письма */}
-          <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Добавить письмо</h2>
-            <AddLetterForm onRoomNumberChange={setRoomNumber} />
-          </div>
-
-          {/* Сканер штрих-кодов */}
-          <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Сканировать код комнаты</h2>
-            <div className="space-y-4">
-              {!isScanning ? (
-                <button
-                  onClick={() => setIsScanning(true)}
-                  className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Начать сканирование
-                </button>
-              ) : (
-                <div>
-                  <BarcodeScanner onScan={handleScan} onError={handleError} />
-                  <button
-                    onClick={() => setIsScanning(false)}
-                    className="w-full mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                  >
-                    Отменить
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Список писем */}
-        <div className="mt-8 bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Письма</h2>
-          <LetterList roomNumber={roomNumber} />
-        </div>
-      </div>
+    <main className="max-w-xl mx-auto px-2 py-6 sm:px-4">
+      <h1 className="text-3xl sm:text-4xl font-extrabold mb-6 text-center text-blue-700">
+        Email Camp
+      </h1>
+      <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-700 text-center">
+        Список комнат и писем
+      </h2>
+      {isLoading ? (
+        <div className="text-gray-500 text-center py-8">Загрузка...</div>
+      ) : rooms.length === 0 ? (
+        <div className="text-gray-500 text-center py-8">Нет комнат и писем.</div>
+      ) : (
+        <ul className="flex flex-col gap-4">
+          {rooms.map((room) => (
+            <li
+              key={room.room_number}
+              className="bg-white rounded-xl shadow-md px-4 py-3 flex items-center justify-between hover:shadow-lg transition-shadow"
+            >
+              <div className="flex flex-col">
+                <span className="font-semibold text-base sm:text-lg text-gray-800">
+                  Комната {room.room_number}
+                </span>
+              </div>
+              <div>
+                {room.letters_count > 0 ? (
+                  <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                    Писем: {room.letters_count}
+                  </span>
+                ) : (
+                  <span className="inline-block bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">
+                    Писем нет
+                  </span>
+                )}
+              </div>
+              <a
+                href={`/room/${room.room_number}`}
+                className="ml-4 px-4 py-2 rounded-lg bg-blue-500 text-white font-semibold text-sm shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
+              >
+                Открыть
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </main>
   );
 }

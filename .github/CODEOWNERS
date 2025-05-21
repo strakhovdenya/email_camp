@@ -3,7 +3,7 @@
 # @strakhovdenya will be requested for review when someone 
 # opens a pull request.
 *       @strakhovdenya
-
+ 
 # Specific ownership for critical parts
 /src/app/       @strakhovdenya
 /src/components/ @strakhovdenya

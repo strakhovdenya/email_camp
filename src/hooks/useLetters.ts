@@ -1,148 +1,78 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import { Database } from '@/lib/database.types';
-import { PostgrestSingleResponse } from '@supabase/supabase-js';
 
-type LetterWithRoom = Database['public']['Views']['letters_with_rooms']['Row'];
-type Room = Database['public']['Tables']['rooms']['Row'];
-type RoomResponse = PostgrestSingleResponse<Pick<Room, 'id'>>;
-type LetterResponse = PostgrestSingleResponse<LetterWithRoom>;
-type NewLetter = Omit<Database['public']['Tables']['letters']['Insert'], 'room_id'> & {
-  room_number: string;
-  barcode_id?: string;
-};
-
-interface OfflineLetter {
+interface Letter {
   id: number;
-  room_number: string;
+  room_id: number;
+  // room_number не хранится в таблице, но может быть в view или для фильтрации
+  created_at: string;
+  delivered_at: string | null;
   status: 'pending' | 'delivered';
   sync_status: 'pending' | 'synced' | 'failed';
-  created_at: string;
 }
 
-interface UseLettersResult {
-  letters: LetterWithRoom[] | undefined;
-  isLoading: boolean;
-  addLetter: ReturnType<typeof useMutation<LetterWithRoom, Error, NewLetter>>;
-  markAsDelivered: ReturnType<typeof useMutation<LetterWithRoom, Error, number>>;
+interface AddLetterInput {
+  room_number: string;
 }
 
-export function useLetters(roomNumber?: string): UseLettersResult {
+export const useLetters = (roomNumber?: string) => {
   const queryClient = useQueryClient();
 
-  const { data: letters, isLoading } = useQuery({
+  const { data: letters = [], isLoading } = useQuery<Letter[]>({
     queryKey: ['letters', roomNumber],
-    queryFn: async (): Promise<LetterWithRoom[]> => {
-      try {
-        const roomResponse: RoomResponse = await supabase
+    queryFn: async () => {
+      let query = supabase.from('letters').select('*').order('created_at', { ascending: false });
+      if (roomNumber) {
+        // Получаем room_id по room_number
+        const { data: room, error: roomError } = await supabase
           .from('rooms')
           .select('id')
           .eq('room_number', roomNumber)
           .single();
-
-        if (roomResponse.error) throw roomResponse.error;
-        if (!roomResponse.data) throw new Error('Room not found');
-
-        const lettersResponse = await supabase
-          .from('letters_with_rooms')
-          .select('*')
-          .eq('room_id', roomResponse.data.id)
-          .order('created_at', { ascending: false });
-
-        if (lettersResponse.error) throw lettersResponse.error;
-        return lettersResponse.data as LetterWithRoom[];
-      } catch (error) {
-        // В офлайн-режиме возвращаем кэшированные данные
-        const cachedData = queryClient.getQueryData(['letters', roomNumber]);
-        if (cachedData) return cachedData as LetterWithRoom[];
-        return [];
+        if (roomError) throw roomError;
+        if (!room) return [];
+        query = query.eq('room_id', room.id);
       }
+      const { data, error } = await query;
+      if (error) throw error;
+      return data;
     },
-    enabled: !!roomNumber,
   });
 
   const addLetter = useMutation({
-    mutationFn: async (newLetter: NewLetter): Promise<LetterWithRoom> => {
-      // Сначала получаем или создаем комнату
-      const roomResponse: RoomResponse = await supabase
+    mutationFn: async (input: AddLetterInput) => {
+      const { data: room, error: roomError } = await supabase
         .from('rooms')
         .select('id')
-        .eq('room_number', newLetter.room_number)
+        .eq('room_number', input.room_number)
         .single();
 
-      if (roomResponse.error && roomResponse.error.code === 'PGRST116') {
-        // Комната не найдена, создаем новую
-        const newRoomResponse: RoomResponse = await supabase
-          .from('rooms')
-          .insert({ room_number: newLetter.room_number })
-          .select()
-          .single();
+      if (roomError) throw roomError;
 
-        if (newRoomResponse.error) throw newRoomResponse.error;
-        if (!newRoomResponse.data) throw new Error('Failed to create room');
-
-        // Создаем письмо с новой комнатой
-        const letterResponse: LetterResponse = await supabase
-          .from('letters')
-          .insert({
-            ...newLetter,
-            room_id: newRoomResponse.data.id,
-          })
-          .select()
-          .single();
-
-        if (letterResponse.error) throw letterResponse.error;
-        if (!letterResponse.data) throw new Error('Failed to create letter');
-
-        return letterResponse.data;
-      } else if (roomResponse.error) {
-        throw roomResponse.error;
-      }
-
-      if (!roomResponse.data) throw new Error('Room not found');
-
-      // Создаем письмо с существующей комнатой
-      const letterResponse: LetterResponse = await supabase
+      const { data, error } = await supabase
         .from('letters')
-        .insert({
-          ...newLetter,
-          room_id: roomResponse.data.id,
-        })
+        .insert([
+          {
+            room_id: room.id,
+            status: 'pending',
+            sync_status: 'pending',
+          },
+        ])
         .select()
         .single();
 
-      if (letterResponse.error) throw letterResponse.error;
-      if (!letterResponse.data) throw new Error('Failed to create letter');
-
-      return letterResponse.data;
+      if (error) throw error;
+      return data;
     },
-    onSuccess: (): void => {
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['letters'] });
       void queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
-    },
-    onError: (error: Error, variables: NewLetter): void => {
-      // В офлайн-режиме сохраняем в локальное хранилище
-      if (!navigator.onLine) {
-        const offlineData = JSON.parse(
-          localStorage.getItem('offlineLetters') || '[]'
-        ) as OfflineLetter[];
-
-        const newOfflineLetter: OfflineLetter = {
-          id: Date.now(),
-          room_number: variables.room_number,
-          status: 'pending',
-          sync_status: 'pending',
-          created_at: new Date().toISOString(),
-        };
-
-        offlineData.push(newOfflineLetter);
-        localStorage.setItem('offlineLetters', JSON.stringify(offlineData));
-      }
     },
   });
 
   const markAsDelivered = useMutation({
-    mutationFn: async (letterId: number): Promise<LetterWithRoom> => {
-      const response: LetterResponse = await supabase
+    mutationFn: async (letterId: number) => {
+      const { data, error } = await supabase
         .from('letters')
         .update({
           status: 'delivered',
@@ -152,12 +82,11 @@ export function useLetters(roomNumber?: string): UseLettersResult {
         .select()
         .single();
 
-      if (response.error) throw response.error;
-      if (!response.data) throw new Error('Failed to update letter');
-
-      return response.data;
+      if (error) throw error;
+      return data;
     },
-    onSuccess: (): void => {
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['letters'] });
       void queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
     },
   });
@@ -168,4 +97,4 @@ export function useLetters(roomNumber?: string): UseLettersResult {
     addLetter,
     markAsDelivered,
   };
-}
+};

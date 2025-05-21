@@ -1,68 +1,79 @@
 import React from 'react';
-import { useLetters } from '@/hooks/useLetters';
 
-interface LetterListProps {
-  roomNumber: string;
+interface Letter {
+  id: number;
+  room_id: number;
+  created_at: string;
+  delivered_at: string | null;
+  status: 'pending' | 'delivered';
+  sync_status: 'pending' | 'synced' | 'failed';
 }
 
-export const LetterList: React.FC<LetterListProps> = ({ roomNumber }): React.ReactElement => {
-  const { letters, isLoading, markAsDelivered } = useLetters(roomNumber);
+interface LetterListProps {
+  letters: Letter[];
+}
 
-  if (!roomNumber) {
-    return <div className="text-center text-gray-500">Введите или отсканируйте номер комнаты</div>;
-  }
-
-  if (isLoading) {
-    return (
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-        <p className="mt-2 text-gray-600">Загрузка писем...</p>
-      </div>
-    );
-  }
-
-  if (!letters?.length) {
-    return (
-      <div className="text-center text-gray-500">Писем для комнаты {roomNumber} не найдено</div>
-    );
+export const LetterList: React.FC<LetterListProps> = ({ letters }): React.ReactElement => {
+  if (letters.length === 0) {
+    return <div className="text-gray-400 text-center py-6">Нет писем для этой комнаты</div>;
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">Комната {roomNumber}</h3>
-        <span className="text-sm text-gray-500">Всего писем: {letters.length}</span>
-      </div>
-
-      <div className="divide-y divide-gray-200">
-        {letters.map((letter) => (
-          <div key={letter.id} className="py-4 flex justify-between items-center">
-            <div>
-              <p className="text-sm font-medium text-gray-900">
-                Получено: {new Date(letter.created_at).toLocaleString()}
-              </p>
-              <p className="text-sm text-gray-500">
-                Статус: {letter.status === 'delivered' ? 'Доставлено' : 'Ожидает'}
-              </p>
-              {letter.delivered_at && (
-                <p className="text-sm text-gray-500">
-                  Доставлено: {new Date(letter.delivered_at).toLocaleString()}
-                </p>
-              )}
-            </div>
-
-            {letter.status !== 'delivered' && (
-              <button
-                onClick={() => void markAsDelivered.mutate(letter.id)}
-                disabled={markAsDelivered.isPending}
-                className="ml-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50"
-              >
-                {markAsDelivered.isPending ? 'Обновление...' : 'Отметить доставленным'}
-              </button>
+    <div className="flex flex-col gap-4">
+      {letters.map((letter) => (
+        <div
+          key={letter.id}
+          className="bg-white rounded-2xl shadow-lg px-5 py-4 flex items-center gap-4 border border-gray-100 hover:shadow-xl transition-shadow"
+        >
+          <div className="flex-shrink-0 flex flex-col items-center justify-center">
+            {letter.status === 'delivered' ? (
+              <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+            ) : (
+              <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100 text-yellow-600">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01" />
+                </svg>
+              </span>
             )}
           </div>
-        ))}
-      </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+              <span className="font-semibold text-gray-900 text-base">Письмо #{letter.id}</span>
+              <span className="text-xs text-gray-400">
+                {new Date(letter.created_at).toLocaleString()}
+              </span>
+            </div>
+            <div className="mt-1">
+              <span
+                className={`text-xs font-medium rounded px-2 py-1 inline-block ${
+                  letter.status === 'delivered'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}
+              >
+                {letter.status === 'delivered' ? 'Доставлено' : 'Ожидает доставки'}
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
