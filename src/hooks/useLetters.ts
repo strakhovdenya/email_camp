@@ -14,6 +14,7 @@ interface Letter {
 interface AddLetterInput {
   room_number: string;
   note?: string;
+  photo_url?: string;
 }
 
 export const useLetters = (roomNumber?: string) => {
@@ -58,6 +59,7 @@ export const useLetters = (roomNumber?: string) => {
             status: 'pending',
             sync_status: 'pending',
             note: input.note ?? null,
+            photo_url: input.photo_url ?? null,
           },
         ])
         .select()

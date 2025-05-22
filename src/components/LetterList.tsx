@@ -8,6 +8,7 @@ interface Letter {
   status: 'pending' | 'delivered';
   sync_status: 'pending' | 'synced' | 'failed';
   note?: string;
+  photo_url?: string;
 }
 
 interface LetterListProps {
@@ -61,7 +62,7 @@ export const LetterList: React.FC<LetterListProps> = ({ letters }): React.ReactE
                 {new Date(letter.created_at).toLocaleString()}
               </span>
             </div>
-            <div className="mt-1">
+            <div className="mt-1 flex items-center gap-2">
               <span
                 className={`text-xs font-medium rounded px-2 py-1 inline-block ${
                   letter.status === 'delivered'
@@ -75,6 +76,39 @@ export const LetterList: React.FC<LetterListProps> = ({ letters }): React.ReactE
                 <span className="ml-2 text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">
                   {letter.note}
                 </span>
+              )}
+              {letter.photo_url && (
+                <button
+                  type="button"
+                  className="ml-2 text-blue-500 hover:text-blue-700"
+                  title="Посмотреть фото"
+                  onClick={() => window.open(letter.photo_url, '_blank')}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 inline"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5V7.5A2.25 2.25 0 015.25 5.25h13.5A2.25 2.25 0 0121 7.5v9a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 16.5z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5l5.25-5.25a2.25 2.25 0 013.18 0l5.25 5.25"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M14.25 9.75a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+                    />
+                  </svg>
+                </button>
               )}
             </div>
           </div>
