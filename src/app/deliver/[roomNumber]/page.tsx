@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { LetterCard } from '@/components/LetterCard';
 
 interface DeliverPageProps {
   params: { roomNumber: string };
@@ -11,10 +12,10 @@ interface DeliverPageProps {
 
 interface Letter {
   id: number;
-  status: string;
-  delivered_at?: string;
+  created_at: string;
+  status: 'pending' | 'delivered';
   note?: string;
-  // add other fields as needed
+  photo_url?: string;
 }
 
 export default function DeliverPage({ params }: DeliverPageProps): React.ReactElement {
@@ -77,31 +78,16 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
         {pending.length === 0 ? (
           <div className="text-center text-gray-400">Нет неполученных писем</div>
         ) : (
-          <ul>
+          <div className="flex flex-col gap-4">
             {pending.map((letter) => (
-              <li
+              <LetterCard
                 key={letter.id}
-                className="mb-2 p-2 border rounded bg-white flex justify-between items-center"
-              >
-                <span>Письмо #{letter.id}</span>
-                {letter.note && (
-                  <span className="ml-2 text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">
-                    {letter.note}
-                  </span>
-                )}
-                <button
-                  className="btn"
-                  onClick={() => {
-                    console.log('Выдача письма', letter.id);
-                    mutation.mutate(letter.id);
-                  }}
-                  disabled={mutation.isPending}
-                >
-                  {mutation.isPending ? 'Выдача...' : 'Выдать'}
-                </button>
-              </li>
+                letter={letter}
+                onDeliver={() => mutation.mutate(letter.id)}
+                deliverLoading={mutation.isPending}
+              />
             ))}
-          </ul>
+          </div>
         )}
       </section>
       <section className="bg-white rounded-xl shadow-md px-4 py-5">
@@ -109,18 +95,11 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
         {delivered.length === 0 ? (
           <div className="text-center text-gray-300">Нет полученных писем</div>
         ) : (
-          <ul>
+          <div className="flex flex-col gap-4">
             {delivered.map((letter) => (
-              <li key={letter.id} className="mb-2 p-2 border rounded bg-gray-100 text-gray-400">
-                <span>Письмо #{letter.id}</span>
-                {letter.note && (
-                  <span className="ml-2 text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">
-                    {letter.note}
-                  </span>
-                )}
-              </li>
+              <LetterCard key={letter.id} letter={letter} />
             ))}
-          </ul>
+          </div>
         )}
       </section>
     </main>

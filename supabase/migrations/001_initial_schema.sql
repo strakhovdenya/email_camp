@@ -14,7 +14,8 @@ CREATE TABLE letters (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     delivered_at TIMESTAMPTZ,
     sync_status TEXT NOT NULL DEFAULT 'pending' CHECK (sync_status IN ('pending', 'synced', 'failed')),
-    note TEXT
+    note TEXT,
+    photo_url TEXT
 );
 
 -- Create indexes for faster lookups
@@ -46,6 +47,7 @@ SELECT
     l.delivered_at,
     l.sync_status,
     l.note,
+    l.photo_url,
     r.room_number,
     r.telegram_chat_id
 FROM letters l
