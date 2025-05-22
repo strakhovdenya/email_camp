@@ -7,6 +7,7 @@ interface Letter {
   delivered_at: string | null;
   status: 'pending' | 'delivered';
   sync_status: 'pending' | 'synced' | 'failed';
+  note?: string;
 }
 
 interface LetterListProps {
@@ -70,6 +71,11 @@ export const LetterList: React.FC<LetterListProps> = ({ letters }): React.ReactE
               >
                 {letter.status === 'delivered' ? 'Доставлено' : 'Ожидает доставки'}
               </span>
+              {letter.note && (
+                <span className="ml-2 text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">
+                  {letter.note}
+                </span>
+              )}
             </div>
           </div>
         </div>

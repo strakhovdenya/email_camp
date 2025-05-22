@@ -14,6 +14,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
 }): React.ReactElement => {
   const [roomNumber, setRoomNumber] = useState(initialRoomNumber);
   const { addLetter } = useLetters();
+  const [note, setNote] = useState('');
 
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
@@ -23,8 +24,10 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
       try {
         await addLetter.mutateAsync({
           room_number: roomNumber,
+          note: note.trim() || undefined,
         });
         onRoomNumberChange(roomNumber);
+        setNote('');
       } catch (error) {
         console.error('Ошибка при добавлении письма:', error);
       }
@@ -45,6 +48,20 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           className="rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition w-full shadow-sm"
           placeholder="Введите номер комнаты"
           required
+        />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="note" className="text-sm font-medium text-gray-700">
+          Краткое описание письма
+        </label>
+        <input
+          type="text"
+          id="note"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          className="rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition w-full shadow-sm"
+          placeholder="Например: для мамы, от бабушки, важное..."
+          maxLength={100}
         />
       </div>
       <button

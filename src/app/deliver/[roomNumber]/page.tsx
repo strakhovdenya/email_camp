@@ -13,6 +13,7 @@ interface Letter {
   id: number;
   status: string;
   delivered_at?: string;
+  note?: string;
   // add other fields as needed
 }
 
@@ -83,6 +84,11 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
                 className="mb-2 p-2 border rounded bg-white flex justify-between items-center"
               >
                 <span>Письмо #{letter.id}</span>
+                {letter.note && (
+                  <span className="ml-2 text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">
+                    {letter.note}
+                  </span>
+                )}
                 <button
                   className="btn"
                   onClick={() => {
@@ -107,6 +113,11 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
             {delivered.map((letter) => (
               <li key={letter.id} className="mb-2 p-2 border rounded bg-gray-100 text-gray-400">
                 <span>Письмо #{letter.id}</span>
+                {letter.note && (
+                  <span className="ml-2 text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">
+                    {letter.note}
+                  </span>
+                )}
               </li>
             ))}
           </ul>
