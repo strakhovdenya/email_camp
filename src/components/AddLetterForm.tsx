@@ -43,6 +43,16 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           note: note.trim() || undefined,
           photo_url: photoUrl,
         });
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            roomNumber,
+            note,
+            photoUrl,
+            createdAt: new Date().toLocaleString(),
+          }),
+        });
         onRoomNumberChange(roomNumber);
         setNote('');
         setPhoto(null);
