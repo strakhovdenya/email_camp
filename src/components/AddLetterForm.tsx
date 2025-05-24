@@ -45,6 +45,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           photo_url: photoUrl,
         });
         toast.success('Письмо успешно добавлено!');
+        const errorBase = 'Ошибка при отправке уведомления';
         try {
           const res = await fetch('/api/send-email', {
             method: 'POST',
@@ -60,14 +61,11 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           if (res.ok && !result?.error && !result?.data?.error) {
             toast.success('Уведомление отправлено!');
           } else {
-            const errorMsg =
-              result?.error?.message ||
-              result?.data?.error?.message ||
-              'Ошибка при отправке уведомления';
-            toast.error(errorMsg);
+            const errorMsg = result?.error?.message || result?.data?.error?.message || errorBase;
+            toast.error(`${errorBase}: ${errorMsg}`);
           }
         } catch (e) {
-          toast.error('Ошибка при отправке уведомления');
+          toast.error(errorBase);
         }
         onRoomNumberChange(roomNumber);
         setNote('');
