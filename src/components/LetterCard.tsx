@@ -3,7 +3,7 @@ import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 interface Letter {
   id: number;
-  created_at: string;
+  created_at: string; //test
 
   status: 'pending' | 'delivered';
   note?: string;
