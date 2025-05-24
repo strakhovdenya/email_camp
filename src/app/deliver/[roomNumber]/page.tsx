@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { LetterCard } from '@/components/LetterCard';
+import { LetterList } from '@/components/LetterList';
 
 interface DeliverPageProps {
   params: { roomNumber: string };
@@ -12,8 +12,11 @@ interface DeliverPageProps {
 
 interface Letter {
   id: number;
+  room_id: number;
   created_at: string;
+  delivered_at: string | null;
   status: 'pending' | 'delivered';
+  sync_status: 'pending' | 'synced' | 'failed';
   note?: string;
   photo_url?: string;
 }
@@ -48,8 +51,6 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
     },
   });
 
-  const pending = letters.filter((l) => l.status === 'pending');
-  const delivered = letters.filter((l) => l.status === 'delivered');
   const count = letters.length;
 
   return (
@@ -71,37 +72,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
           Ошибка при выдаче письма. Попробуйте еще раз.
         </div>
       )}
-      <section className="mb-8 bg-white rounded-xl shadow-md px-4 py-5">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">
-          Неполученные письма
-        </h2>
-        {pending.length === 0 ? (
-          <div className="text-center text-gray-400">Нет неполученных писем</div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {pending.map((letter) => (
-              <LetterCard
-                key={letter.id}
-                letter={letter}
-                onDeliver={() => mutation.mutate(letter.id)}
-                deliverLoading={mutation.isPending}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-      <section className="bg-white rounded-xl shadow-md px-4 py-5">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">Полученные письма</h2>
-        {delivered.length === 0 ? (
-          <div className="text-center text-gray-300">Нет полученных писем</div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {delivered.map((letter) => (
-              <LetterCard key={letter.id} letter={letter} />
-            ))}
-          </div>
-        )}
-      </section>
+      <LetterList letters={letters} />
     </main>
   );
 }

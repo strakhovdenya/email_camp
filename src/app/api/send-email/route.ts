@@ -9,10 +9,14 @@ export async function POST(req: NextRequest) {
   const html = letterHtmlTemplate({ roomNumber, note, photoUrl, createdAt });
 
   try {
+    const subject =
+      note && note.trim()
+        ? `Новое письмо для комнаты ${roomNumber} (${note.trim()})`
+        : `Новое письмо для комнаты ${roomNumber}`;
     const data = await resend.emails.send({
       from: 'noreply@resend.dev', // для тестов
       to: 'delivered@resend.dev',
-      subject: `Новое письмо для комнаты ${roomNumber}`,
+      subject,
       html,
     });
     return NextResponse.json({ success: true, data });

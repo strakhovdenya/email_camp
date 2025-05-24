@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LetterCard } from './LetterCard';
 
 interface Letter {
@@ -17,25 +17,62 @@ interface LetterListProps {
 }
 
 export const LetterList: React.FC<LetterListProps> = ({ letters }): React.ReactElement => {
+  const [showPending, setShowPending] = useState(true);
+  const [showDelivered, setShowDelivered] = useState(false);
+
   if (letters.length === 0) {
     return <div className="text-gray-400 text-center py-6">Нет писем для этой комнаты</div>;
   }
 
-  // Сортировка: сначала невыданные, потом выданные, внутри группы — новые сверху
-  const sortedLetters = [...letters].sort((a, b) => {
-    if (a.status === b.status) {
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    }
-    if (a.status === 'pending') return -1;
-    if (b.status === 'pending') return 1;
-    return 0;
-  });
+  const pending = letters
+    .filter((l) => l.status === 'pending')
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  const delivered = letters
+    .filter((l) => l.status === 'delivered')
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   return (
-    <div className="flex flex-col gap-4">
-      {sortedLetters.map((letter) => (
-        <LetterCard key={letter.id} letter={letter} />
-      ))}
+    <div className="flex flex-col gap-8">
+      <div>
+        <button
+          type="button"
+          className="w-full flex items-center justify-between text-lg font-semibold mb-3 text-gray-800 focus:outline-none"
+          onClick={() => setShowPending((v) => !v)}
+        >
+          Ожидают доставки
+          <span className={`transition-transform ${showPending ? 'rotate-90' : ''}`}>▶</span>
+        </button>
+        {showPending &&
+          (pending.length === 0 ? (
+            <div className="text-center text-gray-400">Нет писем, ожидающих доставки</div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {pending.map((letter) => (
+                <LetterCard key={letter.id} letter={letter} />
+              ))}
+            </div>
+          ))}
+      </div>
+      <div>
+        <button
+          type="button"
+          className="w-full flex items-center justify-between text-lg font-semibold mb-3 text-gray-800 focus:outline-none"
+          onClick={() => setShowDelivered((v) => !v)}
+        >
+          Полученные письма
+          <span className={`transition-transform ${showDelivered ? 'rotate-90' : ''}`}>▶</span>
+        </button>
+        {showDelivered &&
+          (delivered.length === 0 ? (
+            <div className="text-center text-gray-300">Нет полученных писем</div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {delivered.map((letter) => (
+                <LetterCard key={letter.id} letter={letter} />
+              ))}
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
