@@ -72,7 +72,11 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
           Ошибка при выдаче письма. Попробуйте еще раз.
         </div>
       )}
-      <LetterList letters={letters} />
+      <LetterList
+        letters={letters}
+        onDeliver={(id) => mutation.mutate(id)}
+        deliverLoading={mutation.isPending}
+      />
     </main>
   );
 }

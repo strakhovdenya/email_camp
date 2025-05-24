@@ -14,9 +14,15 @@ interface Letter {
 
 interface LetterListProps {
   letters: Letter[];
+  onDeliver?: (id: number) => void;
+  deliverLoading?: boolean;
 }
 
-export const LetterList: React.FC<LetterListProps> = ({ letters }): React.ReactElement => {
+export const LetterList: React.FC<LetterListProps> = ({
+  letters,
+  onDeliver,
+  deliverLoading,
+}): React.ReactElement => {
   const [showPending, setShowPending] = useState(true);
   const [showDelivered, setShowDelivered] = useState(false);
 
@@ -48,7 +54,12 @@ export const LetterList: React.FC<LetterListProps> = ({ letters }): React.ReactE
           ) : (
             <div className="flex flex-col gap-4">
               {pending.map((letter) => (
-                <LetterCard key={letter.id} letter={letter} />
+                <LetterCard
+                  key={letter.id}
+                  letter={letter}
+                  onDeliver={onDeliver ? () => onDeliver(letter.id) : undefined}
+                  deliverLoading={deliverLoading}
+                />
               ))}
             </div>
           ))}
