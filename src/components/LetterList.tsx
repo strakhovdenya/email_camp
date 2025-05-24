@@ -45,7 +45,7 @@ export const LetterList: React.FC<LetterListProps> = ({
           className="w-full flex items-center justify-between text-lg font-semibold mb-3 text-gray-800 focus:outline-none"
           onClick={() => setShowPending((v) => !v)}
         >
-          Ожидают доставки
+          <span>Ожидают доставки: {pending.length}</span>
           <span className={`transition-transform ${showPending ? 'rotate-90' : ''}`}>▶</span>
         </button>
         {showPending &&
@@ -70,7 +70,7 @@ export const LetterList: React.FC<LetterListProps> = ({
           className="w-full flex items-center justify-between text-lg font-semibold mb-3 text-gray-800 focus:outline-none"
           onClick={() => setShowDelivered((v) => !v)}
         >
-          Полученные письма
+          <span>Полученные письма: {delivered.length}</span>
           <span className={`transition-transform ${showDelivered ? 'rotate-90' : ''}`}>▶</span>
         </button>
         {showDelivered &&

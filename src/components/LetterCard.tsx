@@ -1,4 +1,5 @@
 import React from 'react';
+import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 
 interface Letter {
   id: number;
@@ -24,37 +25,33 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
       <div className="flex-shrink-0 flex flex-col items-center justify-center">
         {letter.status === 'delivered' ? (
           <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
+            <CheckCircleIcon className="w-5 h-5" />
           </span>
         ) : (
           <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100 text-yellow-600">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01" />
-            </svg>
+            <ClockIcon className="w-5 h-5" />
           </span>
         )}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
           <span className="font-semibold text-gray-900 text-base">Письмо #{letter.id}</span>
-          <span className="text-xs text-gray-400">
-            {new Date(letter.created_at).toLocaleString()}
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
+          <span className="flex items-center gap-1 text-xs text-gray-500">
+            <ClockIcon className="w-4 h-4 text-gray-400" />
+            <span>Создано:</span>
+            <span className="font-medium text-gray-700">
+              {new Date(letter.created_at).toLocaleString()}
+            </span>
           </span>
+          {letter.status === 'delivered' && letter.delivered_at && (
+            <span className="flex items-center gap-1 text-xs text-green-600">
+              <CheckCircleIcon className="w-4 h-4 text-green-400" />
+              <span>Доставлено:</span>
+              <span className="font-medium">{new Date(letter.delivered_at).toLocaleString()}</span>
+            </span>
+          )}
         </div>
         <div className="mt-1 flex items-center gap-2">
           <span
