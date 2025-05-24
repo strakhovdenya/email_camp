@@ -4,7 +4,7 @@ import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 interface Letter {
   id: number;
   created_at: string;
-  delivered_at?: string | null;
+
   status: 'pending' | 'delivered';
   note?: string;
   photo_url?: string;
