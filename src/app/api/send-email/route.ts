@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { letterHtmlTemplate } from '@/lib/emailTemplates';
 
-const resend = new Resend('re_DsbyqpLV_ModnXYRf3527oVihYUDozwhe');
+const resend = new Resend('re_DsbyqpLV_ModnXYRf3527oVihYUDozwhe1');
 
 export async function POST(req: NextRequest) {
   const { roomNumber, note, photoUrl, createdAt } = await req.json();

@@ -5,6 +5,7 @@ import { useLetters } from '@/hooks/useLetters';
 import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 interface AddLetterFormProps {
   onRoomNumberChange: (roomNumber: string) => void;
@@ -43,16 +44,31 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           note: note.trim() || undefined,
           photo_url: photoUrl,
         });
-        await fetch('/api/send-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            roomNumber,
-            note,
-            photoUrl,
-            createdAt: new Date().toLocaleString(),
-          }),
-        });
+        toast.success('Письмо успешно добавлено!');
+        try {
+          const res = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              roomNumber,
+              note,
+              photoUrl,
+              createdAt: new Date().toLocaleString(),
+            }),
+          });
+          const result = await res.json();
+          if (res.ok && !result?.error && !result?.data?.error) {
+            toast.success('Уведомление отправлено!');
+          } else {
+            const errorMsg =
+              result?.error?.message ||
+              result?.data?.error?.message ||
+              'Ошибка при отправке уведомления';
+            toast.error(errorMsg);
+          }
+        } catch (e) {
+          toast.error('Ошибка при отправке уведомления');
+        }
         onRoomNumberChange(roomNumber);
         setNote('');
         setPhoto(null);

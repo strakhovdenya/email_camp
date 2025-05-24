@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { LetterList } from '@/components/LetterList';
+import toast from 'react-hot-toast';
 
 interface DeliverPageProps {
   params: { roomNumber: string };
@@ -48,6 +49,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
+      toast.success('Письмо выдано!');
     },
   });
 
