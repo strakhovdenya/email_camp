@@ -38,7 +38,8 @@ CREATE POLICY "Enable insert for all users" ON rooms FOR INSERT WITH CHECK (true
 CREATE POLICY "Enable update for all users" ON rooms FOR UPDATE USING (true);
 
 -- Create view for letters with room information
-CREATE VIEW letters_with_rooms AS
+-- Обновляем view letters_with_rooms: добавляем first_name и last_name пользователя
+CREATE OR REPLACE VIEW letters_with_rooms AS
 SELECT 
     l.id,
     l.room_id,
@@ -48,7 +49,32 @@ SELECT
     l.sync_status,
     l.note,
     l.photo_url,
+    l.user_id,
+    u.first_name,
+    u.last_name,
     r.room_number,
     r.telegram_chat_id
 FROM letters l
-JOIN rooms r ON l.room_id = r.id; 
+JOIN rooms r ON l.room_id = r.id
+LEFT JOIN users u ON l.user_id = u.id;
+
+
+-- Включить Row Level Security (RLS) для таблицы users
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+
+-- Разрешить чтение всем пользователям
+CREATE POLICY "Enable read access for all users" ON users
+  FOR SELECT
+  USING (true);
+
+-- Разрешить добавление всем пользователям
+CREATE POLICY "Enable insert for all users" ON users
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Разрешить обновление всем пользователям
+CREATE POLICY "Enable update for all users" ON users
+  FOR UPDATE
+  USING (true);
+
+ALTER TABLE letters ADD COLUMN user_id BIGINT REFERENCES users(id);

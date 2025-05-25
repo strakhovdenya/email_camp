@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, ClockIcon, UserIcon } from '@heroicons/react/24/outline';
 
 interface Letter {
   id: number;
@@ -8,6 +8,8 @@ interface Letter {
   status: 'pending' | 'delivered';
   note?: string;
   photo_url?: string;
+  first_name?: string;
+  last_name?: string;
 }
 
 interface LetterCardProps {
@@ -37,6 +39,12 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
       <div className="flex-1 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
           <span className="font-semibold text-gray-900 text-base">Письмо #{letter.id}</span>
+          {(letter.last_name || letter.first_name) && (
+            <span className="text-xs text-gray-700 flex items-center gap-1">
+              <UserIcon className="w-4 h-4 text-blue-400" />
+              {letter.last_name} {letter.first_name}
+            </span>
+          )}
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
           <span className="flex items-center gap-1 text-xs text-gray-500">

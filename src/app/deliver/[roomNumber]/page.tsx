@@ -1,43 +1,23 @@
 'use client';
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { LetterList } from '@/components/LetterList';
 import toast from 'react-hot-toast';
+import { useRoomLetters } from '@/hooks/useRoomLetters';
 
 interface DeliverPageProps {
   params: { roomNumber: string };
-}
-
-interface Letter {
-  id: number;
-  room_id: number;
-  created_at: string;
-  delivered_at: string | null;
-  status: 'pending' | 'delivered';
-  sync_status: 'pending' | 'synced' | 'failed';
-  note?: string;
-  photo_url?: string;
 }
 
 export default function DeliverPage({ params }: DeliverPageProps): React.ReactElement {
   const roomNumber = params.roomNumber;
   const queryClient = useQueryClient();
   const router = useRouter();
-
-  // Получаем письма для комнаты
-  const { data: letters = [] } = useQuery<Letter[]>({
-    queryKey: ['letters', roomNumber],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('letters_with_rooms')
-        .select('*')
-        .eq('room_number', roomNumber);
-      return data || [];
-    },
-  });
+  const { data: letters = [] } = useRoomLetters(roomNumber);
+  const count = letters.length;
 
   // Мутация для выдачи письма
   const mutation = useMutation({
@@ -52,8 +32,6 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
       toast.success('Письмо выдано!');
     },
   });
-
-  const count = letters.length;
 
   return (
     <main className="max-w-xl mx-auto px-2 py-6 sm:px-4">

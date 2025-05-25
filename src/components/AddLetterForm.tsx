@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, FormEvent } from 'react';
-import { useLetters } from '@/hooks/useLetters';
+import { useAddLetter } from '@/hooks/useLetters';
 import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
 import Image from 'next/image';
@@ -17,7 +17,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   initialRoomNumber = '',
 }): React.ReactElement => {
   const [roomNumber, setRoomNumber] = useState(initialRoomNumber);
-  const { addLetter } = useLetters();
+  const addLetter = useAddLetter();
   const [note, setNote] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
