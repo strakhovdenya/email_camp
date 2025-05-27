@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Room not found' }, { status: 404 });
     }
 
-    // Получаем имя пользователя, если есть user_id
+    // Get recipient name if user_id exists
     let recipientName = '';
     if (letter.user_id) {
       const { data: user, error: userError } = await supabase
@@ -44,42 +44,42 @@ export async function POST(request: Request) {
         recipientName = `${user.first_name} ${user.last_name}`.trim();
       }
     }
-    // Формируем короткую тему письма
-    let subject = `Комната ${room.room_number}`;
+    // Short subject in English
+    let subject = `Room ${room.room_number}`;
     if (recipientName && letterNote) {
-      subject = `Комната ${room.room_number} для ${recipientName}: ${letterNote}`;
+      subject = `Room ${room.room_number} for ${recipientName}: ${letterNote}`;
     } else if (recipientName) {
-      subject = `Комната ${room.room_number} для ${recipientName}`;
+      subject = `Room ${room.room_number} for ${recipientName}`;
     } else if (letterNote) {
-      subject = `Комната ${room.room_number}: ${letterNote}`;
+      subject = `Room ${room.room_number}: ${letterNote}`;
     }
 
     const { data: emailData, error: emailError } = await resend.emails.send({
-      from: 'Почта <noreply@resend.dev>',
+      from: 'Mail <noreply@resend.dev>',
       to: recipientEmail,
       subject: subject,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-          <h1 style="color: #1e40af; margin-bottom: 20px;">У вас новое письмо!</h1>
-          <p style="color: #374151; margin-bottom: 16px;">В комнате ${room.room_number} вас ожидает письмо.</p>
-          ${letterNote ? `<p style="color: #374151; margin-bottom: 16px;"><strong>Описание:</strong> ${letterNote}</p>` : ''}
-          ${photoUrl ? `<p style="color: #374151; margin-bottom: 16px;"><strong>Фото:</strong> <a href="${photoUrl}" style="color: #2563eb;">Посмотреть фото</a></p>` : ''}
-          <p style="color: #374151; margin-bottom: 16px;"><strong>Дата получения:</strong> ${new Date(letter.created_at).toLocaleString()}</p>
+          <h1 style="color: #1e40af; margin-bottom: 20px;">You have a new letter!</h1>
+          <p style="color: #374151; margin-bottom: 16px;">A letter is waiting for you in room ${room.room_number}.</p>
+          ${letterNote ? `<p style=\"color: #374151; margin-bottom: 16px;\"><strong>Description:</strong> ${letterNote}</p>` : ''}
+          ${photoUrl ? `<p style=\"color: #374151; margin-bottom: 16px;\"><strong>Photo:</strong> <a href=\"${photoUrl}\" style=\"color: #2563eb;\">View photo</a></p>` : ''}
+          <p style="color: #374151; margin-bottom: 16px;"><strong>Received at:</strong> ${new Date(letter.created_at).toLocaleString()}</p>
           <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
-            <p style="color: #6b7280; font-size: 14px;">Это автоматическое уведомление. Пожалуйста, не отвечайте на это письмо.</p>
+            <p style="color: #6b7280; font-size: 14px;">This is an automated notification. Please do not reply to this email.</p>
           </div>
         </div>
       `,
     });
 
     if (emailError) {
-      // Обновляем статус уведомления на false в случае ошибки
+      // Update notification status to false on error
       await supabase.from('letters').update({ recipient_notified: false }).eq('id', letterId);
 
       return NextResponse.json({ error: emailError.message }, { status: 500 });
     }
 
-    // Обновляем статус уведомления на true при успешной отправке
+    // Update notification status to true on success
     await supabase.from('letters').update({ recipient_notified: true }).eq('id', letterId);
 
     return NextResponse.json({ success: true, data: emailData });

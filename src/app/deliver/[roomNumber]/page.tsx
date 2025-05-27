@@ -37,7 +37,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
-      toast.success('Письмо выдано!');
+      toast.success('Letter delivered!');
     },
   });
 
@@ -47,17 +47,17 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
         className="mb-4 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium shadow hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
         onClick={() => router.push('/')}
       >
-        ← Назад к выбору комнаты
+        ← Back to room selection
       </button>
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-2 text-blue-700 text-center">
-        Выдача писем — комната {roomNumber}
+        Deliver letters — room {roomNumber}
       </h1>
       <div className="mb-6 text-lg text-center text-gray-700">
-        Всего писем: <b>{count}</b>
+        Total letters: <b>{count}</b>
       </div>
       <div className="mb-4">
         <label htmlFor="userFilter" className="block text-sm font-medium text-gray-700 mb-1">
-          Фильтр по пользователю
+          Filter by user
         </label>
         <select
           id="userFilter"
@@ -65,7 +65,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
           onChange={(e) => setSelectedUserId(Number(e.target.value) || null)}
           className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition shadow-sm"
         >
-          <option value="">Все пользователи</option>
+          <option value="">All users</option>
           {users.map((user) => (
             <option key={user.id} value={user.id}>
               {user.last_name} {user.first_name}
@@ -75,7 +75,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
       </div>
       {mutation.isError && (
         <div className="mb-4 text-center text-red-500">
-          Ошибка при выдаче письма. Попробуйте еще раз.
+          Error delivering letter. Please try again.
         </div>
       )}
       <LetterList

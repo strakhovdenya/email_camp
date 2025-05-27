@@ -53,7 +53,7 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
 
       <div className="flex-grow">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-          <span className="font-semibold text-gray-900 text-base">Письмо #{letter.id}</span>
+          <span className="font-semibold text-gray-900 text-base">Letter #{letter.id}</span>
           {(letter.last_name || letter.first_name) && (
             <span className="text-xs text-gray-700 flex items-center gap-1">
               <UserIcon className="w-4 h-4 text-blue-400" />
@@ -64,7 +64,7 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
           <span className="flex items-center gap-1 text-xs text-gray-500">
             <ClockIcon className="w-4 h-4 text-gray-400" />
-            <span>Создано:</span>
+            <span>Created:</span>
             <span className="font-medium text-gray-700">
               {new Date(letter.created_at).toLocaleString()}
             </span>
@@ -72,7 +72,7 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
           {letter.status === 'delivered' && letter.delivered_at && (
             <span className="flex items-center gap-1 text-xs text-green-600">
               <CheckCircleIcon className="w-4 h-4 text-green-400" />
-              <span>Доставлено:</span>
+              <span>Delivered:</span>
               <span className="font-medium">{new Date(letter.delivered_at).toLocaleString()}</span>
             </span>
           )}
@@ -85,11 +85,11 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
                 : 'bg-yellow-100 text-yellow-800'
             }`}
           >
-            {letter.status === 'delivered' ? 'Доставлено' : 'Ожидает доставки'}
+            {letter.status === 'delivered' ? 'Delivered' : 'Awaiting delivery'}
           </span>
           {!letter.recipient_notified && (
             <span className="text-xs font-medium rounded px-2 py-1 inline-block bg-red-100 text-red-700">
-              Нет email-уведомления
+              No email notification
             </span>
           )}
           {letter.note && (
@@ -101,7 +101,7 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
             <button
               type="button"
               className="text-blue-500 hover:text-blue-700"
-              title="Посмотреть фото"
+              title="View photo"
               onClick={() => window.open(letter.photo_url, '_blank')}
             >
               <svg
@@ -132,7 +132,7 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
           )}
           {onDeliver && letter.status !== 'delivered' && (
             <button className="btn" onClick={onDeliver} disabled={deliverLoading}>
-              {deliverLoading ? 'Выдача...' : 'Выдать'}
+              {deliverLoading ? 'Delivering...' : 'Deliver'}
             </button>
           )}
         </div>

@@ -12,12 +12,12 @@ export default function Home(): React.ReactElement {
         Email Camp
       </h1>
       <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-700 text-center">
-        Список комнат и писем
+        List of rooms and letters
       </h2>
       {isLoading ? (
-        <div className="text-gray-500 text-center py-8">Загрузка...</div>
+        <div className="text-gray-500 text-center py-8">Loading...</div>
       ) : rooms.length === 0 ? (
-        <div className="text-gray-500 text-center py-8">Нет комнат и писем.</div>
+        <div className="text-gray-500 text-center py-8">No rooms or letters.</div>
       ) : (
         <ul className="flex flex-col gap-4">
           {rooms.map((room) => (
@@ -27,17 +27,17 @@ export default function Home(): React.ReactElement {
             >
               <div className="flex flex-col">
                 <span className="font-semibold text-base sm:text-lg text-gray-800">
-                  Комната {room.room_number}
+                  Room {room.room_number}
                 </span>
               </div>
               <div>
                 {room.letters_count > 0 ? (
                   <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                    Писем: {room.letters_count}
+                    Letters: {room.letters_count}
                   </span>
                 ) : (
                   <span className="inline-block bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm">
-                    Писем нет
+                    No letters
                   </span>
                 )}
               </div>
@@ -45,7 +45,7 @@ export default function Home(): React.ReactElement {
                 href={`/room/${room.room_number}`}
                 className="ml-4 px-4 py-2 rounded-lg bg-blue-500 text-white font-semibold text-sm shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
               >
-                Открыть
+                Open
               </a>
             </li>
           ))}

@@ -49,8 +49,8 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           photo_url: photoUrl,
           user_id: selectedUserId,
         });
-        toast.success('Письмо успешно добавлено!');
-        const errorBase = 'Ошибка при отправке уведомления';
+        toast.success('Letter added successfully!');
+        const errorBase = 'Notification sending error';
         if (letter && letter.id) {
           const res = await fetch('/api/send-email', {
             method: 'POST',
@@ -64,7 +64,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           });
           const result = await res.json();
           if (res.ok && !result?.error && !result?.data?.error) {
-            toast.success('Уведомление отправлено!');
+            toast.success('Notification sent!');
           } else {
             const errorMsg = result?.error?.message || result?.data?.error?.message || errorBase;
             toast.error(`${errorBase}: ${errorMsg}`);
@@ -76,7 +76,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
         setPhotoPreview(null);
         setSelectedUserId(null);
       } catch (error) {
-        console.error('Ошибка при добавлении письма:', error);
+        console.error('Error adding letter:', error);
       }
     })();
   };
@@ -99,7 +99,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-stretch">
       <div className="flex flex-col gap-1">
         <label htmlFor="roomNumber" className="text-sm font-medium text-gray-700">
-          Номер комнаты
+          Room number
         </label>
         <input
           type="text"
@@ -107,13 +107,13 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           value={roomNumber}
           onChange={(e) => setRoomNumber(e.target.value)}
           className="rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition w-full shadow-sm"
-          placeholder="Введите номер комнаты"
+          placeholder="Enter room number"
           required
         />
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="note" className="text-sm font-medium text-gray-700">
-          Краткое описание письма
+          Letter description
         </label>
         <input
           type="text"
@@ -121,13 +121,13 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           value={note}
           onChange={(e) => setNote(e.target.value)}
           className="rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition w-full shadow-sm"
-          placeholder="Например: для мамы, от бабушки, важное..."
+          placeholder="For example: for mom, from grandma, important..."
           maxLength={100}
         />
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="photo" className="text-sm font-medium text-gray-700">
-          Фото письма (сделайте снимок)
+          Letter photo (take a picture)
         </label>
         <input
           type="file"
@@ -140,7 +140,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
         {photoPreview && (
           <Image
             src={photoPreview}
-            alt="Фото письма"
+            alt="Letter photo"
             className="mt-2 max-h-40 rounded"
             width={200}
             height={200}
@@ -150,7 +150,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="user" className="text-sm font-medium text-gray-700">
-          Получатель письма
+          Letter recipient
         </label>
         <select
           id="user"
@@ -161,7 +161,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           disabled={usersLoading || users.length === 0}
         >
           <option value="" disabled>
-            {usersLoading ? 'Загрузка...' : 'Выберите пользователя'}
+            {usersLoading ? 'Loading...' : 'Select recipient'}
           </option>
           {users.map((user) => (
             <option key={user.id} value={user.id}>
@@ -175,11 +175,11 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
         disabled={addLetter.isPending || !roomNumber.trim()}
         className="w-full bg-blue-600 text-white text-base font-semibold px-4 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition disabled:opacity-50"
       >
-        {addLetter.isPending ? 'Добавление...' : 'Добавить письмо'}
+        {addLetter.isPending ? 'Adding...' : 'Add letter'}
       </button>
       {addLetter.isError && (
         <p className="text-red-500 text-sm mt-2 text-center">
-          Ошибка при добавлении письма. Попробуйте еще раз.
+          Error adding letter. Please try again.
         </p>
       )}
     </form>
