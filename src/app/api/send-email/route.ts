@@ -5,8 +5,8 @@ import { letterHtmlTemplate } from '@/lib/emailTemplates';
 const resend = new Resend('re_DsbyqpLV_ModnXYRf3527oVihYUDozwhe');
 
 export async function POST(req: NextRequest) {
-  const { roomNumber, note, photoUrl, createdAt } = await req.json();
-  const html = letterHtmlTemplate({ roomNumber, note, photoUrl, createdAt });
+  const { roomNumber, note, photoUrl, createdAt, userEmail, userName } = await req.json();
+  const html = letterHtmlTemplate({ roomNumber, note, photoUrl, createdAt, userName });
 
   try {
     const subject =
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
         : `Новое письмо для комнаты ${roomNumber}`;
     const data = await resend.emails.send({
       from: 'noreply@resend.dev', // для тестов
-      to: 'delivered@resend.dev',
+      to: userEmail || 'delivered@resend.dev',
       subject,
       html,
     });

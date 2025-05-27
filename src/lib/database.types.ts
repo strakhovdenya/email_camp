@@ -55,6 +55,38 @@ export interface Database {
           created_at?: string;
         };
       };
+      users: {
+        Row: {
+          id: number;
+          first_name: string;
+          last_name: string;
+          phone: string | null;
+          email: string;
+          room_id: number;
+          role: 'admin' | 'staff' | 'camper';
+          created_at: string;
+        };
+        Insert: {
+          id?: number;
+          first_name: string;
+          last_name: string;
+          phone?: string | null;
+          email: string;
+          room_id: number;
+          role?: 'admin' | 'staff' | 'camper';
+          created_at?: string;
+        };
+        Update: {
+          id?: number;
+          first_name?: string;
+          last_name?: string;
+          phone?: string | null;
+          email?: string;
+          room_id?: number;
+          role?: 'admin' | 'staff' | 'camper';
+          created_at?: string;
+        };
+      };
     };
     Views: {
       letters_with_rooms: {

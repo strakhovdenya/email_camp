@@ -3,16 +3,19 @@ export function letterHtmlTemplate({
   note,
   photoUrl,
   createdAt,
+  userName,
 }: {
   roomNumber: string;
   note?: string;
   photoUrl?: string;
   createdAt?: string;
+  userName?: string;
 }) {
   return `
   <div style="font-family: Arial, sans-serif; background: #f6f8fa; padding: 32px;">
     <div style="max-width: 480px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 32px;">
       <h2 style="color: #2563eb; text-align: center; margin-bottom: 16px;">Новое письмо для комнаты <span style="color: #111;">${roomNumber}</span></h2>
+      ${userName ? `<div style="text-align:center; margin-bottom:10px; font-size:16px;"><b>Получатель:</b> ${userName}</div>` : ''}
       <p style="font-size: 16px; color: #222; margin-bottom: 16px;">
         <b>Описание:</b> ${note ? note : '<span style="color:#888;">(нет описания)</span>'}
       </p>

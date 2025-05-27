@@ -5,6 +5,7 @@ interface AddLetterInput {
   room_number: string;
   note?: string;
   photo_url?: string;
+  user_id?: number;
 }
 
 export function useAddLetter(roomNumber?: string) {
@@ -26,6 +27,7 @@ export function useAddLetter(roomNumber?: string) {
             sync_status: 'pending',
             note: input.note ?? null,
             photo_url: input.photo_url ?? null,
+            user_id: input.user_id ?? null,
           },
         ])
         .select()

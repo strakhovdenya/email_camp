@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { useUsers } from '@/hooks/useUsers';
 
 interface AddLetterFormProps {
   onRoomNumberChange: (roomNumber: string) => void;
@@ -21,10 +22,12 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   const [note, setNote] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const { data: users = [], isLoading: usersLoading } = useUsers(roomNumber);
 
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
-    if (!roomNumber.trim()) return;
+    if (!roomNumber.trim() || !selectedUserId) return;
 
     void (async (): Promise<void> => {
       try {
@@ -39,10 +42,12 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
             .getPublicUrl(fileName);
           photoUrl = publicUrlData?.publicUrl;
         }
+        const selectedUser = users.find((u) => u.id === selectedUserId);
         await addLetter.mutateAsync({
           room_number: roomNumber,
           note: note.trim() || undefined,
           photo_url: photoUrl,
+          user_id: selectedUserId,
         });
         toast.success('Письмо успешно добавлено!');
         const errorBase = 'Ошибка при отправке уведомления';
@@ -55,6 +60,8 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
               note,
               photoUrl,
               createdAt: new Date().toLocaleString(),
+              userEmail: selectedUser?.email,
+              userName: selectedUser ? `${selectedUser.first_name} ${selectedUser.last_name}` : '',
             }),
           });
           const result = await res.json();
@@ -71,6 +78,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
         setNote('');
         setPhoto(null);
         setPhotoPreview(null);
+        setSelectedUserId(null);
       } catch (error) {
         console.error('Ошибка при добавлении письма:', error);
       }
@@ -143,6 +151,28 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
             style={{ objectFit: 'contain' }}
           />
         )}
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="user" className="text-sm font-medium text-gray-700">
+          Получатель письма
+        </label>
+        <select
+          id="user"
+          value={selectedUserId ?? ''}
+          onChange={(e) => setSelectedUserId(Number(e.target.value) || null)}
+          className="rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition w-full shadow-sm"
+          required
+          disabled={usersLoading || users.length === 0}
+        >
+          <option value="" disabled>
+            {usersLoading ? 'Загрузка...' : 'Выберите пользователя'}
+          </option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.last_name} {user.first_name} ({user.email})
+            </option>
+          ))}
+        </select>
       </div>
       <button
         type="submit"
