@@ -43,7 +43,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           photoUrl = publicUrlData?.publicUrl;
         }
         const selectedUser = users.find((u) => u.id === selectedUserId);
-        await addLetter.mutateAsync({
+        const letter = await addLetter.mutateAsync({
           room_number: roomNumber,
           note: note.trim() || undefined,
           photo_url: photoUrl,
@@ -51,17 +51,15 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
         });
         toast.success('Письмо успешно добавлено!');
         const errorBase = 'Ошибка при отправке уведомления';
-        try {
+        if (letter && letter.id) {
           const res = await fetch('/api/send-email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              roomNumber,
-              note,
+              letterId: letter.id,
+              recipientEmail: selectedUser?.email,
+              letterNote: note,
               photoUrl,
-              createdAt: new Date().toLocaleString(),
-              userEmail: selectedUser?.email,
-              userName: selectedUser ? `${selectedUser.first_name} ${selectedUser.last_name}` : '',
             }),
           });
           const result = await res.json();
@@ -71,8 +69,6 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
             const errorMsg = result?.error?.message || result?.data?.error?.message || errorBase;
             toast.error(`${errorBase}: ${errorMsg}`);
           }
-        } catch (e) {
-          toast.error(errorBase);
         }
         onRoomNumberChange(roomNumber);
         setNote('');

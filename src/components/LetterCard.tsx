@@ -1,5 +1,10 @@
 import React from 'react';
-import { CheckCircleIcon, ClockIcon, UserIcon } from '@heroicons/react/24/outline';
+import {
+  CheckCircleIcon,
+  ClockIcon,
+  UserIcon,
+  ExclamationCircleIcon,
+} from '@heroicons/react/24/outline';
 
 interface Letter {
   id: number;
@@ -10,6 +15,7 @@ interface Letter {
   photo_url?: string;
   first_name?: string;
   last_name?: string;
+  recipient_notified?: boolean;
 }
 
 interface LetterCardProps {
@@ -25,7 +31,7 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
         letter.status === 'delivered' ? 'opacity-60' : ''
       }`}
     >
-      <div className="flex-shrink-0 flex flex-col items-center justify-center">
+      <div className="flex-shrink-0 flex flex-col items-center justify-center gap-2">
         {letter.status === 'delivered' ? (
           <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600">
             <CheckCircleIcon className="w-5 h-5" />
@@ -35,8 +41,17 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
             <ClockIcon className="w-5 h-5" />
           </span>
         )}
+        {!letter.recipient_notified && (
+          <span
+            className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-600"
+            title="Email-уведомление не отправлено"
+          >
+            <ExclamationCircleIcon className="w-4 h-4" />
+          </span>
+        )}
       </div>
-      <div className="flex-1 min-w-0">
+
+      <div className="flex-grow">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
           <span className="font-semibold text-gray-900 text-base">Письмо #{letter.id}</span>
           {(letter.last_name || letter.first_name) && (
@@ -62,7 +77,7 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
             </span>
           )}
         </div>
-        <div className="mt-1 flex items-center gap-2">
+        <div className="mt-2 flex flex-wrap items-center gap-2">
           <span
             className={`text-xs font-medium rounded px-2 py-1 inline-block ${
               letter.status === 'delivered'
@@ -72,15 +87,20 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
           >
             {letter.status === 'delivered' ? 'Доставлено' : 'Ожидает доставки'}
           </span>
+          {!letter.recipient_notified && (
+            <span className="text-xs font-medium rounded px-2 py-1 inline-block bg-red-100 text-red-700">
+              Нет email-уведомления
+            </span>
+          )}
           {letter.note && (
-            <span className="ml-2 text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">
+            <span className="text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">
               {letter.note}
             </span>
           )}
           {letter.photo_url && (
             <button
               type="button"
-              className="ml-2 text-blue-500 hover:text-blue-700"
+              className="text-blue-500 hover:text-blue-700"
               title="Посмотреть фото"
               onClick={() => window.open(letter.photo_url, '_blank')}
             >
@@ -110,8 +130,8 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, onDeliver, deliv
               </svg>
             </button>
           )}
-          {onDeliver && letter.status === 'pending' && (
-            <button className="btn ml-2" onClick={onDeliver} disabled={deliverLoading}>
+          {onDeliver && letter.status !== 'delivered' && (
+            <button className="btn" onClick={onDeliver} disabled={deliverLoading}>
               {deliverLoading ? 'Выдача...' : 'Выдать'}
             </button>
           )}

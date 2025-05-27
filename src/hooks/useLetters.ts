@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import toast from 'react-hot-toast';
 
 interface AddLetterInput {
   room_number: string;
@@ -12,12 +13,31 @@ export function useAddLetter(roomNumber?: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (input: AddLetterInput) => {
+      // Получаем данные пользователя, если указан user_id
+      let userEmail: string | undefined;
+      if (input.user_id) {
+        const { data: user, error: userError } = await supabase
+          .from('users')
+          .select('email')
+          .eq('id', input.user_id)
+          .single();
+
+        if (userError) {
+          console.error('Error fetching user:', userError);
+        } else {
+          userEmail = user.email;
+        }
+      }
+
+      // Создаем письмо
       const { data: room, error: roomError } = await supabase
         .from('rooms')
         .select('id')
         .eq('room_number', input.room_number)
         .single();
+
       if (roomError) throw roomError;
+
       const { data, error } = await supabase
         .from('letters')
         .insert([
@@ -28,11 +48,41 @@ export function useAddLetter(roomNumber?: string) {
             note: input.note ?? null,
             photo_url: input.photo_url ?? null,
             user_id: input.user_id ?? null,
+            recipient_notified: false,
           },
         ])
         .select()
         .single();
+
       if (error) throw error;
+
+      // Если есть email пользователя, отправляем уведомление
+      if (userEmail) {
+        try {
+          const response = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              letterId: data.id,
+              recipientEmail: userEmail,
+              letterNote: input.note,
+              photoUrl: input.photo_url,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error sending email:', errorData);
+            toast.error('Ошибка отправки email-уведомления');
+          }
+        } catch (error) {
+          console.error('Error sending email:', error);
+          toast.error('Ошибка отправки email-уведомления');
+        }
+      }
+
       return data;
     },
     onSuccess: () => {
@@ -40,6 +90,10 @@ export function useAddLetter(roomNumber?: string) {
       if (roomNumber) {
         void queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
       }
+    },
+    onError: (error) => {
+      console.error('Error adding letter:', error);
+      toast.error('Ошибка при добавлении письма');
     },
   });
 }
@@ -57,6 +111,7 @@ export function useMarkAsDelivered(roomNumber?: string) {
         .eq('id', letterId)
         .select()
         .single();
+
       if (error) throw error;
       return data;
     },
@@ -65,6 +120,11 @@ export function useMarkAsDelivered(roomNumber?: string) {
       if (roomNumber) {
         void queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
       }
+      toast.success('Письмо выдано!');
+    },
+    onError: (error) => {
+      console.error('Error marking letter as delivered:', error);
+      toast.error('Ошибка при выдаче письма');
     },
   });
 }

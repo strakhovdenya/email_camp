@@ -50,6 +50,7 @@ SELECT
     l.note,
     l.photo_url,
     l.user_id,
+    l.recipient_notified,
     u.first_name,
     u.last_name,
     r.room_number,
