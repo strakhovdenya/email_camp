@@ -5,7 +5,6 @@ import { useAddLetter } from '@/hooks/useLetters';
 import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
 import Image from 'next/image';
-import toast from 'react-hot-toast';
 import { useUsers } from '@/hooks/useUsers';
 
 interface AddLetterFormProps {
@@ -48,7 +47,6 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           photo_url: photoUrl,
           user_id: selectedUserId,
         });
-        toast.success('Letter added successfully!');
         onRoomNumberChange(roomNumber);
         setNote('');
         setPhoto(null);

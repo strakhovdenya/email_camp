@@ -75,11 +75,13 @@ export function useAddLetter(roomNumber?: string) {
           if (!response.ok) {
             const errorData = await response.json();
             console.error('Error sending email:', errorData);
-            toast.error('Ошибка отправки email-уведомления');
+            toast.error('Failed to send email notification to user.');
+          } else {
+            toast.success('Email notification sent to user!');
           }
         } catch (error) {
           console.error('Error sending email:', error);
-          toast.error('Ошибка отправки email-уведомления');
+          toast.error('Failed to send email notification to user.');
         }
       }
 
@@ -90,10 +92,11 @@ export function useAddLetter(roomNumber?: string) {
       if (roomNumber) {
         void queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
       }
+      toast.success('Letter added successfully!');
     },
     onError: (error) => {
       console.error('Error adding letter:', error);
-      toast.error('Ошибка при добавлении письма');
+      toast.error('Error adding letter. Please try again.');
     },
   });
 }
