@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { supabase } from '@/lib/supabase';
+import { letterHtmlTemplate } from '@/lib/emailTemplates';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -54,22 +55,20 @@ export async function POST(request: Request) {
       subject = `Room ${room.room_number}: ${letterNote}`;
     }
 
+    // Use the template for the email HTML
+    const html = letterHtmlTemplate({
+      roomNumber: room.room_number,
+      note: letterNote,
+      photoUrl,
+      createdAt: letter.created_at,
+      userName: recipientName,
+    });
+
     const { data: emailData, error: emailError } = await resend.emails.send({
       from: 'Mail <noreply@resend.dev>',
       to: recipientEmail,
       subject: subject,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;">
-          <h1 style="color: #1e40af; margin-bottom: 20px;">You have a new letter!</h1>
-          <p style="color: #374151; margin-bottom: 16px;">A letter is waiting for you in room ${room.room_number}.</p>
-          ${letterNote ? `<p style=\"color: #374151; margin-bottom: 16px;\"><strong>Description:</strong> ${letterNote}</p>` : ''}
-          ${photoUrl ? `<p style=\"color: #374151; margin-bottom: 16px;\"><strong>Photo:</strong> <a href=\"${photoUrl}\" style=\"color: #2563eb;\">View photo</a></p>` : ''}
-          <p style="color: #374151; margin-bottom: 16px;"><strong>Received at:</strong> ${new Date(letter.created_at).toLocaleString()}</p>
-          <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
-            <p style="color: #6b7280; font-size: 14px;">This is an automated notification. Please do not reply to this email.</p>
-          </div>
-        </div>
-      `,
+      html: html,
     });
 
     if (emailError) {

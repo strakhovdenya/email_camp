@@ -42,34 +42,13 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
             .getPublicUrl(fileName);
           photoUrl = publicUrlData?.publicUrl;
         }
-        const selectedUser = users.find((u) => u.id === selectedUserId);
-        const letter = await addLetter.mutateAsync({
+        await addLetter.mutateAsync({
           room_number: roomNumber,
           note: note.trim() || undefined,
           photo_url: photoUrl,
           user_id: selectedUserId,
         });
         toast.success('Letter added successfully!');
-        const errorBase = 'Notification sending error';
-        if (letter && letter.id) {
-          const res = await fetch('/api/send-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              letterId: letter.id,
-              recipientEmail: selectedUser?.email,
-              letterNote: note,
-              photoUrl,
-            }),
-          });
-          const result = await res.json();
-          if (res.ok && !result?.error && !result?.data?.error) {
-            toast.success('Notification sent!');
-          } else {
-            const errorMsg = result?.error?.message || result?.data?.error?.message || errorBase;
-            toast.error(`${errorBase}: ${errorMsg}`);
-          }
-        }
         onRoomNumberChange(roomNumber);
         setNote('');
         setPhoto(null);
