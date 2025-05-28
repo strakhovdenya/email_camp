@@ -1,29 +1,38 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
-interface RoomWithLetters {
+interface RoomWithPendingLetters {
   room_number: string;
-  letters_count: number;
-}
-
-interface RoomData {
-  room_number: string;
-  letters: { count: number }[];
+  pending_count: number;
 }
 
 export const useRoomsWithLetters = () => {
-  const { data: rooms = [], isLoading } = useQuery<RoomWithLetters[]>({
+  const { data: rooms = [], isLoading } = useQuery<RoomWithPendingLetters[]>({
     queryKey: ['rooms-with-letters'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Получаем все комнаты с id и room_number
+      const { data: roomsData, error: roomsError } = await supabase
         .from('rooms')
-        .select('room_number, letters:letters(count)')
+        .select('id, room_number')
         .order('room_number', { ascending: true });
-      if (error) throw error;
-      return (data || []).map((room: RoomData) => ({
-        room_number: room.room_number,
-        letters_count: room.letters?.[0]?.count || 0,
-      }));
+      if (roomsError) throw roomsError;
+
+      // Для каждой комнаты считаем количество писем со статусом 'pending' по room_id
+      const result = await Promise.all(
+        (roomsData || []).map(async (room) => {
+          const { count, error: pendingError } = await supabase
+            .from('letters')
+            .select('*', { count: 'exact', head: true })
+            .eq('room_id', room.id)
+            .eq('status', 'pending');
+          if (pendingError) throw pendingError;
+          return {
+            room_number: room.room_number,
+            pending_count: count || 0,
+          };
+        })
+      );
+      return result;
     },
   });
   return { rooms, isLoading };
