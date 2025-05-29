@@ -3,7 +3,9 @@
 import React from 'react';
 import { useRoomsWithLetters } from '@/hooks/useRoomsWithLetters';
 import { PlusIcon, InboxArrowDownIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { RoomCard } from '@/components/ui/RoomCard';
 
 export default function Home(): React.ReactElement {
   const { rooms, isLoading } = useRoomsWithLetters();
@@ -17,51 +19,34 @@ export default function Home(): React.ReactElement {
         Rooms and undelivered letters
       </h2>
       {isLoading ? (
-        <div className="text-gray-500 text-center py-8">Loading...</div>
+        <div className="grid grid-cols-1 gap-6">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-20 w-full" />
+          ))}
+        </div>
       ) : rooms.length === 0 ? (
         <div className="text-gray-500 text-center py-8">No rooms found.</div>
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {rooms.map((room) => (
-            <div
-              key={room.room_number}
-              className="bg-white rounded-2xl shadow-md px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-lg transition-shadow border border-gray-100"
-            >
-              <div className="flex flex-col gap-1 flex-1 min-w-0">
-                <span className="font-bold text-lg text-gray-900 truncate">
-                  Room {room.room_number}
-                </span>
-                <span className="inline-flex items-center gap-2 mt-1">
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-semibold shadow-sm ${
-                      room.pending_count > 0
-                        ? 'bg-red-100 text-red-700 border border-red-200'
-                        : 'bg-green-100 text-green-700 border border-green-200'
-                    }`}
-                  >
-                    {room.pending_count > 0 ? `${room.pending_count} undelivered` : 'All delivered'}
-                  </span>
-                </span>
-              </div>
-              <div className="flex gap-2 flex-shrink-0">
-                <Link
-                  href={`/room/${room.room_number}`}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
-                  title="Add letter"
-                >
-                  <PlusIcon className="w-5 h-5" />
-                  <span className="hidden sm:inline">Add letter</span>
-                </Link>
-                <Link
-                  href={`/deliver/${room.room_number}`}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 transition"
-                  title="Deliver letters"
-                >
-                  <InboxArrowDownIcon className="w-5 h-5" />
-                  <span className="hidden sm:inline">Deliver</span>
-                </Link>
-              </div>
-            </div>
+            <RoomCard key={room.room_number} room={room}>
+              <Button
+                href={`/room/${room.room_number}`}
+                leftIcon={<PlusIcon className="w-5 h-5" />}
+                className="bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-400"
+                title="Add letter"
+              >
+                <span className="hidden sm:inline">Add letter</span>
+              </Button>
+              <Button
+                href={`/deliver/${room.room_number}`}
+                leftIcon={<InboxArrowDownIcon className="w-5 h-5" />}
+                className="bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-400"
+                title="Deliver letters"
+              >
+                <span className="hidden sm:inline">Deliver</span>
+              </Button>
+            </RoomCard>
           ))}
         </div>
       )}

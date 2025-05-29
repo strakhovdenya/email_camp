@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LetterCard } from './LetterCard';
+import { LetterCard } from './ui/LetterCard';
 
 interface Letter {
   id: number;
@@ -54,12 +54,17 @@ export const LetterList: React.FC<LetterListProps> = ({
           ) : (
             <div className="flex flex-col gap-4">
               {pending.map((letter) => (
-                <LetterCard
-                  key={letter.id}
-                  letter={letter}
-                  onDeliver={onDeliver ? () => onDeliver(letter.id) : undefined}
-                  deliverLoading={deliverLoading}
-                />
+                <LetterCard key={letter.id} letter={letter}>
+                  {onDeliver && (
+                    <button
+                      onClick={() => onDeliver(letter.id)}
+                      disabled={deliverLoading}
+                      className="px-3 py-1 rounded bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition disabled:opacity-50"
+                    >
+                      {deliverLoading ? 'Delivering...' : 'Deliver'}
+                    </button>
+                  )}
+                </LetterCard>
               ))}
             </div>
           ))}
