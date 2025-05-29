@@ -92,6 +92,7 @@ export function useAddLetter(roomNumber?: string) {
       if (roomNumber) {
         void queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
       }
+      void queryClient.invalidateQueries({ queryKey: ['rooms-with-letters'] });
       toast.success('Letter added successfully!');
     },
     onError: (error) => {
