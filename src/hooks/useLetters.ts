@@ -9,6 +9,25 @@ interface AddLetterInput {
   user_id?: number;
 }
 
+// Query keys
+export const QUERY_KEYS = {
+  LETTERS: 'letters',
+  ROOMS_WITH_LETTERS: 'rooms-with-letters',
+  USERS: 'users',
+};
+
+// Утилита для инвалидации связанных с письмами запросов
+export function invalidateMailQueries(
+  queryClient: ReturnType<typeof useQueryClient>,
+  roomNumber?: string
+) {
+  void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LETTERS] });
+  if (roomNumber) {
+    void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LETTERS, roomNumber] });
+  }
+  void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ROOMS_WITH_LETTERS] });
+}
+
 export function useAddLetter(roomNumber?: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -88,11 +107,7 @@ export function useAddLetter(roomNumber?: string) {
       return data;
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['letters'] });
-      if (roomNumber) {
-        void queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
-      }
-      void queryClient.invalidateQueries({ queryKey: ['rooms-with-letters'] });
+      invalidateMailQueries(queryClient, roomNumber);
       toast.success('Letter added successfully!');
     },
     onError: (error) => {
@@ -120,10 +135,7 @@ export function useMarkAsDelivered(roomNumber?: string) {
       return data;
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['letters'] });
-      if (roomNumber) {
-        void queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
-      }
+      invalidateMailQueries(queryClient, roomNumber);
       toast.success('Письмо выдано!');
     },
     onError: (error) => {

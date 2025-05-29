@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import { QUERY_KEYS } from './useLetters';
 
 export interface RoomLetter {
   id: number;
@@ -19,7 +20,7 @@ export interface RoomLetter {
 
 export function useRoomLetters(roomNumber: string) {
   return useQuery<RoomLetter[]>({
-    queryKey: ['letters', roomNumber],
+    queryKey: [QUERY_KEYS.LETTERS, roomNumber],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('letters_with_rooms')

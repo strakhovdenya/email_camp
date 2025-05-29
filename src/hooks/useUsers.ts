@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/database.types';
+import { QUERY_KEYS } from './useLetters';
 
 export type User = Database['public']['Tables']['users']['Row'];
 
 export function useUsers(roomNumber: string) {
   return useQuery<User[]>({
-    queryKey: ['users', roomNumber],
+    queryKey: [QUERY_KEYS.USERS, roomNumber],
     queryFn: async () => {
       // Получаем id комнаты по номеру
       const { data: room, error: roomError } = await supabase

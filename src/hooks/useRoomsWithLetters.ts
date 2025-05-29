@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import { QUERY_KEYS } from './useLetters';
 
 interface RoomWithPendingLetters {
   room_number: string;
@@ -8,7 +9,7 @@ interface RoomWithPendingLetters {
 
 export const useRoomsWithLetters = () => {
   const { data: rooms = [], isLoading } = useQuery<RoomWithPendingLetters[]>({
-    queryKey: ['rooms-with-letters'],
+    queryKey: [QUERY_KEYS.ROOMS_WITH_LETTERS],
     queryFn: async () => {
       // Получаем все комнаты с id и room_number
       const { data: roomsData, error: roomsError } = await supabase

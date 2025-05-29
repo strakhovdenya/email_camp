@@ -8,6 +8,7 @@ import { LetterList } from '@/components/LetterList';
 import toast from 'react-hot-toast';
 import { useRoomLetters } from '@/hooks/useRoomLetters';
 import { useUsers } from '@/hooks/useUsers';
+import { invalidateMailQueries } from '@/hooks/useLetters';
 
 interface DeliverPageProps {
   params: { roomNumber: string };
@@ -36,7 +37,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
         .eq('id', id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['letters', roomNumber] });
+      invalidateMailQueries(queryClient, roomNumber);
       toast.success('Letter delivered!');
     },
   });
