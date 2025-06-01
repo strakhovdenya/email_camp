@@ -149,10 +149,32 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
       </div>
       <button
         type="submit"
-        disabled={addLetter.isPending || !roomNumber.trim()}
+        disabled={addLetter.isPending || addLetter.notifying || !roomNumber.trim()}
         className="w-full bg-blue-600 text-white text-base font-semibold px-4 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition disabled:opacity-50"
       >
-        {addLetter.isPending ? 'Adding...' : 'Add letter'}
+        {addLetter.isPending || addLetter.notifying ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+            </svg>
+            Sending...
+          </span>
+        ) : (
+          'Add letter'
+        )}
       </button>
       {addLetter.isError && (
         <p className="text-red-500 text-sm mt-2 text-center">

@@ -65,6 +65,7 @@ export interface Database {
           room_id: number;
           role: 'admin' | 'staff' | 'camper';
           created_at: string;
+          channels_for_notification: string[];
         };
         Insert: {
           id?: number;
@@ -75,6 +76,7 @@ export interface Database {
           room_id: number;
           role?: 'admin' | 'staff' | 'camper';
           created_at?: string;
+          channels_for_notification?: string[];
         };
         Update: {
           id?: number;
@@ -85,6 +87,7 @@ export interface Database {
           room_id?: number;
           role?: 'admin' | 'staff' | 'camper';
           created_at?: string;
+          channels_for_notification?: string[];
         };
       };
     };

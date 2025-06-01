@@ -10,5 +10,6 @@ CREATE TABLE users (
   email TEXT NOT NULL,
   room_id BIGINT NOT NULL REFERENCES rooms(id),
   role user_role NOT NULL DEFAULT 'camper',
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  channels_for_notification TEXT[]
 ); 
