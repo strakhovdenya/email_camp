@@ -8,4 +8,5 @@ export interface Letter {
   first_name?: string;
   last_name?: string;
   recipient_notified?: boolean;
+  notification_statuses?: Record<string, 'sent' | 'failed'>;
 }

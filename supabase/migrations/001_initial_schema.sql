@@ -51,6 +51,7 @@ SELECT
     l.photo_url,
     l.user_id,
     l.recipient_notified,
+    l.notification_statuses,
     u.first_name,
     u.last_name,
     r.room_number,
@@ -79,3 +80,4 @@ CREATE POLICY "Enable update for all users" ON users
   USING (true);
 
 ALTER TABLE letters ADD COLUMN user_id BIGINT REFERENCES users(id);
+ALTER TABLE letters ADD COLUMN notification_statuses jsonb DEFAULT '{}';
