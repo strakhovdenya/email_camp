@@ -12,12 +12,14 @@ interface AddLetterFormProps {
   initialRoomNumber?: string;
 }
 
+type AddLetterWithNotifying = ReturnType<typeof useAddLetter> & { notifying: boolean };
+
 export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   onRoomNumberChange,
   initialRoomNumber = '',
 }): React.ReactElement => {
   const [roomNumber, setRoomNumber] = useState(initialRoomNumber);
-  const addLetter = useAddLetter();
+  const addLetter = useAddLetter() as AddLetterWithNotifying;
   const [note, setNote] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);

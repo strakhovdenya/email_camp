@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, UseMutationResult } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import toast from 'react-hot-toast';
 import { NotificationToast } from '@/components/ui/NotificationToast';
 import React from 'react';
+import type { Letter } from '@/components/ui/LetterCard/types';
 
 interface AddLetterInput {
   room_number: string;
@@ -30,12 +31,16 @@ export function invalidateMailQueries(
   void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ROOMS_WITH_LETTERS] });
 }
 
-export function useAddLetter(roomNumber?: string) {
+type UseAddLetterResult = UseMutationResult<Letter, Error, AddLetterInput, unknown> & {
+  notifying: boolean;
+};
+
+export function useAddLetter(roomNumber?: string): UseAddLetterResult {
   const queryClient = useQueryClient();
   // Состояние для loader
   const [notifying, setNotifying] = React.useState(false);
 
-  const mutation = useMutation({
+  const mutation = useMutation<Letter, Error, AddLetterInput>({
     mutationFn: async (input: AddLetterInput) => {
       // Создаем письмо
       const { data: room, error: roomError } = await supabase
