@@ -1,4 +1,5 @@
 import { INotifier, NotificationMessage } from './types';
+import { sendTelegramNotification } from './telegramNotificationService';
 
 export class TelegramNotifier implements INotifier {
   async send(
@@ -8,10 +9,12 @@ export class TelegramNotifier implements INotifier {
       telegram_chat_id?: string | null;
       channels_for_notification: string[];
     },
-    message: NotificationMessage
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    _message: NotificationMessage
   ): Promise<{ success: boolean; error?: string }> {
-    // TODO: Implement Telegram notification
-    console.log('Telegram notification would be sent to user:', user.id, 'with message:', message);
-    return { success: true };
+    if (!user.telegram_chat_id) {
+      return { success: false, error: 'No telegram_chat_id' };
+    }
+    return await sendTelegramNotification();
   }
 }
