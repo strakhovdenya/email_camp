@@ -1,29 +1,38 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import type { Database } from '@/lib/database.types';
-import { QUERY_KEYS } from './useLetters';
+import { Database } from '@/types/supabase';
 
-export type User = Database['public']['Tables']['users']['Row'];
+type User = Database['public']['Tables']['users']['Row'];
 
-export function useUsers(roomNumber: string) {
+export function useUsers(roomNumber?: string) {
   return useQuery<User[]>({
-    queryKey: [QUERY_KEYS.USERS, roomNumber],
+    queryKey: ['users', roomNumber],
     queryFn: async () => {
-      // Получаем id комнаты по номеру
-      const { data: room, error: roomError } = await supabase
-        .from('rooms')
-        .select('id')
-        .eq('room_number', roomNumber)
-        .single();
-      if (roomError || !room) throw roomError || new Error('Комната не найдена');
-      // Получаем пользователей этой комнаты
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('room_id', room.id)
-        .order('last_name', { ascending: true });
-      if (error) throw error;
-      return data || [];
+      if (roomNumber) {
+        // Получаем id комнаты по номеру
+        const { data: room, error: roomError } = await supabase
+          .from('rooms')
+          .select('id')
+          .eq('room_number', roomNumber)
+          .single();
+        if (roomError || !room) throw roomError || new Error('Комната не найдена');
+        // Получаем пользователей этой комнаты
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('room_id', room.id)
+          .order('last_name', { ascending: true });
+        if (error) throw error;
+        return data || [];
+      } else {
+        // Все пользователи
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .order('last_name', { ascending: true });
+        if (error) throw error;
+        return data || [];
+      }
     },
   });
 }
