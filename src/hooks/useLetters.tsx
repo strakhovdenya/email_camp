@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient, UseMutationResult } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import toast from 'react-hot-toast';
-import { NotificationToast } from '@/components/ui/NotificationToast';
+import { useToast } from '@/components/ui/Toast';
+import { TOAST_TYPES } from '@/constants/toastTypes';
 import React from 'react';
 import type { Letter } from '@/components/ui/LetterCard/types';
 
@@ -37,6 +37,7 @@ type UseAddLetterResult = UseMutationResult<Letter, Error, AddLetterInput, unkno
 
 export function useAddLetter(roomNumber?: string): UseAddLetterResult {
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
   // Состояние для loader
   const [notifying, setNotifying] = React.useState(false);
 
@@ -86,40 +87,14 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
             }),
           });
           if (response.ok) {
-            const resJson = await response.json();
-            const result = resJson.result || {};
-            const statuses: { channel: 'email' | 'telegram'; success: boolean }[] = [];
-            if ('email' in result)
-              statuses.push({ channel: 'email', success: !!result.email.success });
-            if ('telegram' in result)
-              statuses.push({ channel: 'telegram', success: !!result.telegram.success });
-            toast.custom(() => <NotificationToast statuses={statuses} />, { duration: 5000 });
+            // Можно расширить ToastProvider для кастомных компонентов
+            showToast('Уведомления отправлены', TOAST_TYPES.INFO);
           } else {
-            toast.custom(
-              () => (
-                <NotificationToast
-                  statuses={[
-                    { channel: 'email', success: false },
-                    { channel: 'telegram', success: false },
-                  ]}
-                />
-              ),
-              { duration: 5000 }
-            );
+            showToast('Ошибка при отправке уведомлений', TOAST_TYPES.ERROR);
           }
         } catch (error) {
           console.error('Error notifying user:', error);
-          toast.custom(
-            () => (
-              <NotificationToast
-                statuses={[
-                  { channel: 'email', success: false },
-                  { channel: 'telegram', success: false },
-                ]}
-              />
-            ),
-            { duration: 5000 }
-          );
+          showToast('Ошибка при отправке уведомлений', TOAST_TYPES.ERROR);
         } finally {
           setNotifying(false);
         }
@@ -129,11 +104,11 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
     },
     onSuccess: () => {
       invalidateMailQueries(queryClient, roomNumber);
-      toast.success('Letter added successfully!');
+      showToast('Письмо успешно добавлено!', TOAST_TYPES.SUCCESS);
     },
     onError: (error) => {
       console.error('Error adding letter:', error);
-      toast.error('Error adding letter. Please try again.');
+      showToast('Ошибка при добавлении письма. Попробуйте ещё раз.', TOAST_TYPES.ERROR);
     },
   });
 
@@ -142,6 +117,7 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
 
 export function useMarkAsDelivered(roomNumber?: string) {
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
   return useMutation({
     mutationFn: async (letterId: number) => {
       const { data, error } = await supabase
@@ -159,11 +135,11 @@ export function useMarkAsDelivered(roomNumber?: string) {
     },
     onSuccess: () => {
       invalidateMailQueries(queryClient, roomNumber);
-      toast.success('Письмо выдано!');
+      showToast('Письмо выдано!', TOAST_TYPES.SUCCESS);
     },
     onError: (error) => {
       console.error('Error marking letter as delivered:', error);
-      toast.error('Ошибка при выдаче письма');
+      showToast('Ошибка при выдаче письма', TOAST_TYPES.ERROR);
     },
   });
 }

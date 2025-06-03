@@ -8,6 +8,8 @@ import SearchInput from '@/components/admin/SearchInput';
 import AdminTable from '@/components/admin/AdminTable';
 import ActionButton from '@/components/admin/ActionButton';
 import type { Room } from '@/types/supabase';
+import { useToast } from '@/components/ui/Toast';
+import { TOAST_TYPES } from '@/constants/toastTypes';
 
 const columns = [
   { key: 'room_number', label: 'Номер комнаты' },
@@ -29,9 +31,22 @@ export default function RoomsPage() {
     },
   });
 
+  const { showToast } = useToast();
+
   const filteredRooms = rooms.filter((room: Room) =>
     room.room_number.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDelete = async (room: Room) => {
+    if (!window.confirm(`Удалить комнату ${room.room_number}?`)) return;
+    const { error } = await supabase.from('rooms').delete().eq('id', room.id);
+    if (error) {
+      showToast('Ошибка при удалении комнаты', TOAST_TYPES.ERROR);
+    } else {
+      showToast('Комната успешно удалена', TOAST_TYPES.SUCCESS);
+      // обновить список, если реализовано
+    }
+  };
 
   return (
     <div>
@@ -67,7 +82,11 @@ export default function RoomsPage() {
               <ActionButton color="primary" icon={<span>✏️</span>} className="mr-2">
                 Редактировать
               </ActionButton>
-              <ActionButton color="danger" icon={<span>🗑️</span>}>
+              <ActionButton
+                color="danger"
+                icon={<span>🗑️</span>}
+                onClick={() => handleDelete(room)}
+              >
                 Удалить
               </ActionButton>
             </td>

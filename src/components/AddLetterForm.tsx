@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
 import { useUsers } from '@/hooks/useUsers';
 import { PhotoDropzone } from './ui';
+import { useToast } from '@/components/ui/Toast';
+import { TOAST_TYPES } from '@/constants/toastTypes';
 
 interface AddLetterFormProps {
   onRoomNumberChange: (roomNumber: string) => void;
@@ -25,6 +27,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const { data: users = [], isLoading: usersLoading } = useUsers(roomNumber);
+  const { showToast } = useToast();
 
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
@@ -49,12 +52,14 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           photo_url: photoUrl,
           user_id: selectedUserId,
         });
+        showToast('Письмо успешно добавлено', TOAST_TYPES.SUCCESS);
         onRoomNumberChange(roomNumber);
         setNote('');
         setPhoto(null);
         setPhotoPreview(null);
         setSelectedUserId(null);
       } catch (error) {
+        showToast('Ошибка при добавлении письма', TOAST_TYPES.ERROR);
         console.error('Error adding letter:', error);
       }
     })();

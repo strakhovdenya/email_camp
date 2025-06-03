@@ -15,13 +15,13 @@ interface Letter {
 interface LetterListProps {
   letters: Letter[];
   onDeliver?: (id: number) => void;
-  deliverLoading?: boolean;
+  deliverLoadingId: number | null;
 }
 
 export const LetterList: React.FC<LetterListProps> = ({
   letters,
   onDeliver,
-  deliverLoading,
+  deliverLoadingId,
 }): React.ReactElement => {
   const [showPending, setShowPending] = useState(true);
   const [showDelivered, setShowDelivered] = useState(false);
@@ -58,10 +58,10 @@ export const LetterList: React.FC<LetterListProps> = ({
                   {onDeliver && (
                     <button
                       onClick={() => onDeliver(letter.id)}
-                      disabled={deliverLoading}
+                      disabled={deliverLoadingId !== null}
                       className="px-3 py-1 rounded bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition disabled:opacity-50"
                     >
-                      {deliverLoading ? 'Delivering...' : 'Deliver'}
+                      {deliverLoadingId === letter.id ? 'Delivering...' : 'Deliver'}
                     </button>
                   )}
                 </LetterCard>

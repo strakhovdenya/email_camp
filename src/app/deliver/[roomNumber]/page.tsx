@@ -5,10 +5,11 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { LetterList } from '@/components/LetterList';
-import toast from 'react-hot-toast';
+import { useToast } from '@/components/ui/Toast';
 import { useRoomLetters } from '@/hooks/useRoomLetters';
 import { useUsers } from '@/hooks/useUsers';
 import { invalidateMailQueries } from '@/hooks/useLetters';
+import { TOAST_TYPES } from '@/constants/toastTypes';
 
 interface DeliverPageProps {
   params: { roomNumber: string };
@@ -21,7 +22,9 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
   const { data: letters = [] } = useRoomLetters(roomNumber);
   const { data: users = [] } = useUsers(roomNumber);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [deliverLoadingId, setDeliverLoadingId] = useState<number | null>(null);
   const count = letters.length;
+  const { showToast } = useToast();
 
   // Фильтруем письма по выбранному пользователю
   const filteredLetters = selectedUserId
@@ -31,14 +34,22 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
   // Мутация для выдачи письма
   const mutation = useMutation({
     mutationFn: async (id: number) => {
-      await supabase
-        .from('letters')
-        .update({ status: 'delivered', delivered_at: new Date().toISOString() })
-        .eq('id', id);
+      setDeliverLoadingId(id);
+      try {
+        await supabase
+          .from('letters')
+          .update({ status: 'delivered', delivered_at: new Date().toISOString() })
+          .eq('id', id);
+      } finally {
+        setDeliverLoadingId(null);
+      }
     },
     onSuccess: () => {
       invalidateMailQueries(queryClient, roomNumber);
-      toast.success('Letter delivered!');
+      showToast('Письмо выдано!', TOAST_TYPES.SUCCESS);
+    },
+    onError: () => {
+      showToast('Ошибка при выдаче письма', TOAST_TYPES.ERROR);
     },
   });
 
@@ -74,15 +85,10 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
           ))}
         </select>
       </div>
-      {mutation.isError && (
-        <div className="mb-4 text-center text-red-500">
-          Error delivering letter. Please try again.
-        </div>
-      )}
       <LetterList
         letters={filteredLetters}
         onDeliver={(id) => mutation.mutate(id)}
-        deliverLoading={mutation.isPending}
+        deliverLoadingId={deliverLoadingId}
       />
     </main>
   );

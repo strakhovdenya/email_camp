@@ -35,7 +35,7 @@ export default function RoomPage({ params }: RoomPageProps): React.ReactElement 
       </section>
       <section className="bg-white rounded-xl shadow-md px-4 py-5">
         <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">List of letters</h2>
-        <LetterList letters={letters} />
+        <LetterList letters={letters} deliverLoadingId={null} />
       </section>
     </main>
   );

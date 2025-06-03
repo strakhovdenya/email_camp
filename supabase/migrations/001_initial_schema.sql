@@ -32,10 +32,12 @@ ALTER TABLE rooms ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Enable read access for all users" ON letters FOR SELECT USING (true);
 CREATE POLICY "Enable insert for all users" ON letters FOR INSERT WITH CHECK (true);
 CREATE POLICY "Enable update for all users" ON letters FOR UPDATE USING (true);
+CREATE POLICY "Enable delete for all users" ON letters FOR DELETE USING (true);
 
 CREATE POLICY "Enable read access for all users" ON rooms FOR SELECT USING (true);
 CREATE POLICY "Enable insert for all users" ON rooms FOR INSERT WITH CHECK (true);
 CREATE POLICY "Enable update for all users" ON rooms FOR UPDATE USING (true);
+CREATE POLICY "Enable delete for all users" ON rooms FOR DELETE USING (true);
 
 -- Create view for letters with room information
 -- Обновляем view letters_with_rooms: добавляем first_name и last_name пользователя
@@ -78,6 +80,10 @@ CREATE POLICY "Enable insert for all users" ON users
 CREATE POLICY "Enable update for all users" ON users
   FOR UPDATE
   USING (true);
+
+CREATE POLICY "Enable delete for all users" ON users
+  FOR DELETE
+USING (true);
 
 ALTER TABLE letters ADD COLUMN user_id BIGINT REFERENCES users(id);
 ALTER TABLE letters ADD COLUMN notification_statuses jsonb DEFAULT '{}';

@@ -10,7 +10,9 @@ export interface Database {
           email: string | null;
           first_name: string | null;
           last_name: string | null;
+          phone: string | null;
           room_id: string | null;
+          role: 'admin' | 'staff' | 'camper';
           channels_for_notification: string[] | null;
         };
         Insert: {
@@ -19,7 +21,9 @@ export interface Database {
           email?: string | null;
           first_name?: string | null;
           last_name?: string | null;
+          phone?: string | null;
           room_id?: string | null;
+          role?: 'admin' | 'staff' | 'camper';
           channels_for_notification?: string[] | null;
         };
         Update: {
@@ -28,7 +32,9 @@ export interface Database {
           email?: string | null;
           first_name?: string | null;
           last_name?: string | null;
+          phone?: string | null;
           room_id?: string | null;
+          role?: 'admin' | 'staff' | 'camper';
           channels_for_notification?: string[] | null;
         };
       };
