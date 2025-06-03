@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
 import { useUsers } from '@/hooks/useUsers';
 import { PhotoDropzone } from './ui';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
 
 interface AddLetterFormProps {

@@ -10,7 +10,7 @@ import UserModal from '@/components/admin/UserModal';
 import WarningModal from '@/components/admin/WarningModal';
 import { User } from '@/types/supabase';
 import { supabase } from '@/lib/supabase';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
 
 const columns = [
@@ -79,7 +79,13 @@ export default function UsersPage() {
           },
         ]);
         if (error) throw error;
+        console.log('Пользователь успешно создан', data);
         showToast('Пользователь успешно создан', TOAST_TYPES.SUCCESS);
+        setTimeout(() => {
+          setModalOpen(false);
+          setModalUser(null);
+          refetch();
+        }, 1000);
       }
       setModalOpen(false);
       setModalUser(null);

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ToastProvider } from '@/components/ui/Toast';
+import { ToastProvider } from '@/providers/ToastProvider';
 
 const queryClient = new QueryClient();
 

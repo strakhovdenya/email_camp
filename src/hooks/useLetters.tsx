@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient, UseMutationResult } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
 import React from 'react';
 import type { Letter } from '@/components/ui/LetterCard/types';

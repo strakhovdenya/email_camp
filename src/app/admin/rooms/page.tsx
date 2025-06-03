@@ -8,7 +8,7 @@ import SearchInput from '@/components/admin/SearchInput';
 import AdminTable from '@/components/admin/AdminTable';
 import ActionButton from '@/components/admin/ActionButton';
 import type { Room } from '@/types/supabase';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
 
 const columns = [

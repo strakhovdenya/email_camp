@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { LetterList } from '@/components/LetterList';
-import { useToast } from '@/components/ui/Toast';
+import { useToast } from '@/providers/ToastProvider';
 import { useRoomLetters } from '@/hooks/useRoomLetters';
 import { useUsers } from '@/hooks/useUsers';
 import { invalidateMailQueries } from '@/hooks/useLetters';
