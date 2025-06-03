@@ -4,8 +4,8 @@ import React, { useState, FormEvent } from 'react';
 import { useAddLetter } from '@/hooks/useLetters';
 import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
-import Image from 'next/image';
 import { useUsers } from '@/hooks/useUsers';
+import { PhotoDropzone } from './ui';
 
 interface AddLetterFormProps {
   onRoomNumberChange: (roomNumber: string) => void;
@@ -60,18 +60,20 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
     })();
   };
 
-  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Сжимаем фото перед загрузкой
-      const compressedFile = await imageCompression(file, {
-        maxSizeMB: 0.2, // максимум 200 КБ
-        maxWidthOrHeight: 1024, // максимум 1024px по ширине или высоте
-        useWebWorker: true,
-      });
-      setPhoto(compressedFile);
-      setPhotoPreview(URL.createObjectURL(compressedFile));
-    }
+  const handlePhotoAccepted = async (file: File) => {
+    // Сжимаем фото перед загрузкой
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: 0.2, // максимум 200 КБ
+      maxWidthOrHeight: 1024, // максимум 1024px по ширине или высоте
+      useWebWorker: true,
+    });
+    setPhoto(compressedFile);
+    setPhotoPreview(URL.createObjectURL(compressedFile));
+  };
+
+  const handleRemovePhoto = () => {
+    setPhoto(null);
+    setPhotoPreview(null);
   };
 
   return (
@@ -105,27 +107,12 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
         />
       </div>
       <div className="flex flex-col gap-1">
-        <label htmlFor="photo" className="text-sm font-medium text-gray-700">
-          Letter photo (take a picture)
-        </label>
-        <input
-          type="file"
-          id="photo"
-          accept="image/*"
-          capture="environment"
-          onChange={handlePhotoChange}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-base"
+        <label className="text-sm font-medium text-gray-700">Letter photo (take a picture)</label>
+        <PhotoDropzone
+          onFileAccepted={handlePhotoAccepted}
+          previewUrl={photoPreview}
+          onRemove={photo ? handleRemovePhoto : undefined}
         />
-        {photoPreview && (
-          <Image
-            src={photoPreview}
-            alt="Letter photo"
-            className="mt-2 max-h-40 rounded"
-            width={200}
-            height={200}
-            style={{ objectFit: 'contain' }}
-          />
-        )}
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="user" className="text-sm font-medium text-gray-700">

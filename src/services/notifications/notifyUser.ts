@@ -1,44 +1,44 @@
-import { sendEmailNotification } from './emailNotificationService';
-import { sendTelegramNotification } from './telegramNotificationService';
+import { EmailNotifier } from './EmailNotifier';
+import { TelegramNotifier } from './TelegramNotifier';
+import { NotificationDispatcher } from './NotificationDispatcher';
+import type { ChannelType, NotificationMessage } from './types';
 import { supabase } from '@/lib/supabase';
 
-type NotifyUserParams = {
+const dispatcher = new NotificationDispatcher({
+  email: new EmailNotifier(),
+  telegram: new TelegramNotifier(),
+});
+
+export async function notifyUser({
+  user,
+  letterId,
+  letterNote,
+  photoUrl,
+}: {
   user: {
-    email: string;
-    channels_for_notification: string[];
+    id: number;
+    email?: string;
     telegram_chat_id?: string | null;
+    channels_for_notification: string[];
   };
   letterId: number;
   letterNote?: string;
   photoUrl?: string;
-};
+}) {
+  const message: NotificationMessage = { letterId, letterNote, photoUrl };
+  const channels = user.channels_for_notification as ChannelType[];
+  const result = await dispatcher.notify(user, message, channels);
 
-export async function notifyUser(params: NotifyUserParams) {
-  const results: Record<string, unknown> = {};
+  // Сохраняем статусы в letter
   const notificationStatuses: Record<string, 'sent' | 'failed'> = {};
-
-  if (params.user.channels_for_notification.includes('email')) {
-    const emailResult = await sendEmailNotification({
-      letterId: params.letterId,
-      recipientEmail: params.user.email,
-      letterNote: params.letterNote,
-      photoUrl: params.photoUrl,
-    });
-    results.email = emailResult;
-    notificationStatuses.email = emailResult.success ? 'sent' : 'failed';
+  for (const ch of channels) {
+    const chResult = result[ch];
+    notificationStatuses[ch] = chResult && chResult.success ? 'sent' : 'failed';
   }
-
-  if (params.user.channels_for_notification.includes('telegram') && params.user.telegram_chat_id) {
-    const telegramResult = await sendTelegramNotification();
-    results.telegram = telegramResult;
-    notificationStatuses.telegram = telegramResult.success ? 'sent' : 'failed';
-  }
-
-  // Обновляем поле notification_statuses в письме
   await supabase
     .from('letters')
     .update({ notification_statuses: notificationStatuses })
-    .eq('id', params.letterId);
+    .eq('id', letterId);
 
-  return results;
+  return result;
 }
