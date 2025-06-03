@@ -1,29 +1,40 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useUsers } from '@/hooks/useUsers';
-import SectionHeader from '@/components/admin/SectionHeader';
-import SearchInput from '@/components/admin/SearchInput';
-import AdminTable from '@/components/admin/AdminTable';
-import ActionButton from '@/components/admin/ActionButton';
-import UserModal from '@/components/admin/UserModal';
-import WarningModal from '@/components/admin/WarningModal';
 import { User } from '@/types/supabase';
-import { supabase } from '@/lib/supabase';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
-import dynamic from 'next/dynamic';
+import UserModal from './UserModal';
+import WarningModal from './WarningModal';
+import { supabase } from '@/lib/supabase';
 
-const columns = [
-  { key: 'name', label: 'Имя' },
-  { key: 'email', label: 'Email' },
-  { key: 'channels', label: 'Каналы уведомлений' },
-  { key: 'actions', label: '', className: 'text-right' },
-];
+const MobileUserCard: React.FC<{
+  user: User;
+  onEdit: (user: User) => void;
+  onDelete: (user: User) => void;
+}> = ({ user, onEdit, onDelete }) => (
+  <div className="bg-white rounded-xl shadow p-4 mb-3 flex flex-col">
+    <div className="font-bold text-base mb-1">
+      {user.last_name} {user.first_name}
+    </div>
+    <div className="text-xs text-gray-500 mb-2">{user.email}</div>
+    <div className="flex gap-2 mt-auto">
+      <button
+        className="flex-1 py-2 rounded bg-blue-600 text-white text-sm font-semibold"
+        onClick={() => onEdit(user)}
+      >
+        ✏️ Редактировать
+      </button>
+      <button
+        className="flex-1 py-2 rounded bg-red-600 text-white text-sm font-semibold"
+        onClick={() => onDelete(user)}
+      >
+        🗑️ Удалить
+      </button>
+    </div>
+  </div>
+);
 
-const MobileUsers = dynamic(() => import('@/components/admin/MobileUsers'), { ssr: false });
-
-export default function UsersPage() {
+const MobileUsers: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [modalUser, setModalUser] = useState<User | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -32,13 +43,6 @@ export default function UsersPage() {
   const [deleteCascadeUser, setDeleteCascadeUser] = useState<User | null>(null);
   const { data: users = [], isLoading, refetch } = useUsers();
   const { showToast } = useToast();
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(window.innerWidth <= 768);
-  }, []);
-
-  if (isMobile) return <MobileUsers />;
 
   const filteredUsers = users.filter(
     (user: User) =>
@@ -60,7 +64,6 @@ export default function UsersPage() {
   const handleSave = async (data: Partial<User>) => {
     try {
       if (data.id) {
-        // Обновление существующего пользователя
         const { error } = await supabase
           .from('users')
           .update({
@@ -76,7 +79,6 @@ export default function UsersPage() {
         if (error) throw error;
         showToast('Пользователь успешно обновлён', TOAST_TYPES.SUCCESS);
       } else {
-        // Создание нового пользователя
         const { error } = await supabase.from('users').insert([
           {
             first_name: data.first_name,
@@ -89,25 +91,17 @@ export default function UsersPage() {
           },
         ]);
         if (error) throw error;
-        console.log('Пользователь успешно создан', data);
         showToast('Пользователь успешно создан', TOAST_TYPES.SUCCESS);
-        setTimeout(() => {
-          setModalOpen(false);
-          setModalUser(null);
-          refetch();
-        }, 1000);
       }
       setModalOpen(false);
       setModalUser(null);
       refetch();
     } catch (error) {
-      console.error('Error saving user:', error);
       showToast('Ошибка при сохранении пользователя', TOAST_TYPES.ERROR);
     }
   };
 
   const handleDelete = async (user: User) => {
-    // Проверяем, есть ли письма для пользователя
     const { count, error } = await supabase
       .from('letters')
       .select('id', { count: 'exact', head: true })
@@ -119,7 +113,7 @@ export default function UsersPage() {
     }
     if (count && count > 0) {
       setWarningMessage(
-        'Сначала удалите все письма, связанные с этим пользователем.\nВы можете сделать это автоматически.'
+        'Сначала удалите все письма, связанные с этим пользователем. Вы можете сделать это автоматически.'
       );
       setDeleteCascadeUser(user);
       setWarningOpen(true);
@@ -138,7 +132,6 @@ export default function UsersPage() {
   const handleCascadeDelete = async () => {
     if (!deleteCascadeUser) return;
     setWarningOpen(false);
-    // Удаляем все письма пользователя
     const { error: lettersError } = await supabase
       .from('letters')
       .delete()
@@ -148,7 +141,6 @@ export default function UsersPage() {
       setDeleteCascadeUser(null);
       return;
     }
-    // Удаляем пользователя
     const { error: userError } = await supabase
       .from('users')
       .delete()
@@ -163,62 +155,32 @@ export default function UsersPage() {
   };
 
   return (
-    <div>
-      <SectionHeader
-        icon={
-          <span role="img" aria-label="users">
-            👥
-          </span>
-        }
-        title="Пользователи"
-        description="Список всех пользователей системы, их email и каналы уведомлений."
-      />
-      <div className="flex justify-between items-center mb-4">
-        <SearchInput
+    <div className="p-2 pb-20 min-h-screen bg-gray-50">
+      <div className="sticky top-0 z-10 bg-gray-50 pb-2">
+        <input
+          type="text"
           value={searchQuery}
-          onChange={setSearchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Поиск пользователей..."
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base mb-2"
         />
-        <ActionButton color="primary" icon={<span>＋</span>} onClick={handleAdd}>
-          Добавить
-        </ActionButton>
       </div>
-      <AdminTable
-        columns={columns}
-        data={filteredUsers}
-        isLoading={isLoading}
-        emptyText="Пользователи не найдены"
-        renderRow={(user: User) => (
-          <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-            <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
-              {user.last_name} {user.first_name}
-            </td>
-            <td className="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
-              {user.email}
-            </td>
-            <td className="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
-              {user.channels_for_notification?.join(', ') || '—'}
-            </td>
-            <td className="px-4 py-3 whitespace-nowrap text-right">
-              <ActionButton
-                color="primary"
-                icon={<span>✏️</span>}
-                className="mr-2"
-                onClick={() => handleEdit(user)}
-              >
-                Редактировать
-              </ActionButton>
-              <ActionButton
-                color="danger"
-                icon={<span>🗑️</span>}
-                onClick={() => handleDelete(user)}
-              >
-                Удалить
-              </ActionButton>
-            </td>
-          </tr>
-        )}
-      />
+      {isLoading ? (
+        <div className="text-center py-8 text-gray-400">Загрузка...</div>
+      ) : filteredUsers.length === 0 ? (
+        <div className="text-center py-8 text-gray-400">Пользователи не найдены</div>
+      ) : (
+        filteredUsers.map((user) => (
+          <MobileUserCard key={user.id} user={user} onEdit={handleEdit} onDelete={handleDelete} />
+        ))
+      )}
+      <button
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-blue-600 text-white text-3xl shadow-lg flex items-center justify-center"
+        onClick={handleAdd}
+        aria-label="Добавить пользователя"
+      >
+        +
+      </button>
       <UserModal
         user={modalUser}
         open={modalOpen}
@@ -239,4 +201,6 @@ export default function UsersPage() {
       />
     </div>
   );
-}
+};
+
+export default MobileUsers;

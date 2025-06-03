@@ -20,6 +20,7 @@ export const useToast = () => {
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
+
   const showToast = useCallback((message: string, type: Toast['type'] = 'info') => {
     const id = Date.now() + Math.random();
     setToasts((prev) => [...prev, { id, message, type }]);
@@ -32,8 +33,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ showToast }}>
       {children}
       <div
-        className="fixed z-[9999] flex flex-col gap-2 min-w-[200px] max-w-[90vw] px-2
-          bottom-4 right-4 !bottom-4 !right-4"
+        className="fixed z-[9999] flex flex-col gap-2 min-w-[200px] max-w-[90vw] px-2 bottom-4 right-4"
         style={{
           maxWidth: 320,
           position: 'fixed',
