@@ -12,7 +12,7 @@ export const PhotoDropzone: React.FC<PhotoDropzoneProps> = ({
   onFileAccepted,
   previewUrl,
   onRemove,
-  maxSizeMB = 2,
+  maxSizeMB = 10,
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -63,8 +63,8 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   const handlePhotoAccepted = async (file: File) => {
     // Сжимаем фото перед загрузкой
     const compressedFile = await imageCompression(file, {
-      maxSizeMB: 0.2, // максимум 200 КБ
-      maxWidthOrHeight: 1024, // максимум 1024px по ширине или высоте
+      maxSizeMB: 1, // максимум 1 МБ
+      maxWidthOrHeight: 2048, // максимум 2048px по ширине или высоте
       useWebWorker: true,
     });
     setPhoto(compressedFile);
