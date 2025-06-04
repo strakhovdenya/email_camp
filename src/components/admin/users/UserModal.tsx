@@ -9,9 +9,10 @@ interface UserModalProps {
   open: boolean;
   onClose: () => void;
   onSave: (user: Partial<User>) => void;
+  loading?: boolean;
 }
 
-const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave }) => {
+const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, loading }) => {
   const [firstName, setFirstName] = useState(user?.first_name || '');
   const [lastName, setLastName] = useState(user?.last_name || '');
   const [email, setEmail] = useState(user?.email || '');
@@ -19,7 +20,6 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave }) =>
   const [roomId, setRoomId] = useState<string | null>(user?.room_id?.toString() || null);
   const [role, setRole] = useState<'admin' | 'staff' | 'camper'>(user?.role || 'camper');
   const [channels, setChannels] = useState<string[]>(user?.channels_for_notification || []);
-  const [loading, setLoading] = useState(false);
 
   const { data: rooms = [] } = useQuery({
     queryKey: ['rooms'],
@@ -54,7 +54,6 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave }) =>
     if (!firstName || !lastName || !email || !roomId) {
       return;
     }
-    setLoading(true);
     await onSave({
       id: user?.id,
       first_name: firstName,
@@ -65,7 +64,6 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave }) =>
       role,
       channels_for_notification: channels,
     });
-    setLoading(false);
   };
 
   if (!open) return null;

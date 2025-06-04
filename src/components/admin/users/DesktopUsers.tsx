@@ -23,6 +23,7 @@ const DesktopUsers: React.FC = () => {
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
   const [deleteCascadeUser, setDeleteCascadeUser] = useState<User | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const { data: users = [], isLoading, refetch } = useUsers();
   const { saveUser, deleteUser, cascadeDeleteUser } = useUserActions(refetch);
 
@@ -44,10 +45,15 @@ const DesktopUsers: React.FC = () => {
   };
 
   const handleSave = async (data: Partial<User>) => {
-    const ok = await saveUser(data);
-    if (ok) {
-      setModalOpen(false);
-      setModalUser(null);
+    setIsSaving(true);
+    try {
+      const ok = await saveUser(data);
+      if (ok) {
+        setModalOpen(false);
+        setModalUser(null);
+      }
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -134,6 +140,7 @@ const DesktopUsers: React.FC = () => {
           setModalUser(null);
         }}
         onSave={handleSave}
+        loading={isSaving}
       />
       <WarningModal
         open={warningOpen}
