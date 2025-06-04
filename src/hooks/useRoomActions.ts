@@ -35,16 +35,31 @@ export function useRoomActions(refetch?: () => void) {
   };
 
   const deleteRoom = async (room: Room) => {
-    try {
-      const { error } = await supabase.from('rooms').delete().eq('id', room.id);
-      if (error) throw error;
-      showToast('Комната успешно удалена', TOAST_TYPES.SUCCESS);
-      refetch?.();
-      return true;
-    } catch (error) {
+    // Проверяем, есть ли пользователи в этой комнате
+    const { count, error: userError } = await supabase
+      .from('users')
+      .select('id', { count: 'exact', head: true })
+      .eq('room_id', room.id);
+    if (userError) {
+      showToast('Ошибка при проверке пользователей комнаты', TOAST_TYPES.ERROR);
+      return false;
+    }
+    if (count && count > 0) {
+      showToast(
+        'Сначала удалите или переместите всех пользователей из этой комнаты',
+        TOAST_TYPES.ERROR
+      );
+      return 'users_exist';
+    }
+    // Если пользователей нет — удаляем комнату
+    const { error } = await supabase.from('rooms').delete().eq('id', room.id);
+    if (error) {
       showToast('Ошибка при удалении комнаты', TOAST_TYPES.ERROR);
       return false;
     }
+    showToast('Комната успешно удалена', TOAST_TYPES.SUCCESS);
+    refetch?.();
+    return true;
   };
 
   return { saveRoom, deleteRoom, showToast };
