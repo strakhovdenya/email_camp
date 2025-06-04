@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useUsers } from '@/hooks/useUsers';
 import { User } from '@/types/supabase';
-import { useToast } from '@/providers/ToastProvider';
-import { TOAST_TYPES } from '@/constants/toastTypes';
 import UserModal from './UserModal';
 import WarningModal from './WarningModal';
-import { supabase } from '@/lib/supabase';
+import { useUserActions } from '@/hooks/useUserActions';
 
 const channelIcons: Record<string, string> = {
   email: '✉️',
@@ -67,7 +65,7 @@ const MobileUsers: React.FC = () => {
   const [warningMessage, setWarningMessage] = useState('');
   const [deleteCascadeUser, setDeleteCascadeUser] = useState<User | null>(null);
   const { data: users = [], isLoading, refetch } = useUsers();
-  const { showToast } = useToast();
+  const { saveUser, deleteUser, cascadeDeleteUser } = useUserActions(refetch);
 
   const filteredUsers = users.filter(
     (user: User) =>
@@ -87,96 +85,29 @@ const MobileUsers: React.FC = () => {
   };
 
   const handleSave = async (data: Partial<User>) => {
-    try {
-      if (data.id) {
-        const { error } = await supabase
-          .from('users')
-          .update({
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-            phone: data.phone,
-            room_id: data.room_id,
-            role: data.role,
-            channels_for_notification: data.channels_for_notification,
-          })
-          .eq('id', data.id);
-        if (error) throw error;
-        showToast('Пользователь успешно обновлён', TOAST_TYPES.SUCCESS);
-      } else {
-        const { error } = await supabase.from('users').insert([
-          {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-            phone: data.phone,
-            room_id: data.room_id,
-            role: data.role,
-            channels_for_notification: data.channels_for_notification,
-          },
-        ]);
-        if (error) throw error;
-        showToast('Пользователь успешно создан', TOAST_TYPES.SUCCESS);
-      }
+    const ok = await saveUser(data);
+    if (ok) {
       setModalOpen(false);
       setModalUser(null);
-      refetch();
-    } catch (error) {
-      showToast('Ошибка при сохранении пользователя', TOAST_TYPES.ERROR);
     }
   };
 
   const handleDelete = async (user: User) => {
-    const { count, error } = await supabase
-      .from('letters')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id);
-    if (error) {
-      setWarningMessage('Ошибка при проверке писем пользователя.');
-      setWarningOpen(true);
-      return;
-    }
-    if (count && count > 0) {
+    const result = await deleteUser(user);
+    if (result === 'cascade_required') {
       setWarningMessage(
         'Сначала удалите все письма, связанные с этим пользователем. Вы можете сделать это автоматически.'
       );
       setDeleteCascadeUser(user);
       setWarningOpen(true);
-      return;
-    }
-    if (!window.confirm(`Удалить пользователя ${user.last_name} ${user.first_name}?`)) return;
-    const { error: delError } = await supabase.from('users').delete().eq('id', user.id);
-    if (delError) {
-      showToast('Ошибка при удалении пользователя', TOAST_TYPES.ERROR);
-    } else {
-      showToast('Пользователь успешно удалён', TOAST_TYPES.SUCCESS);
-      refetch();
     }
   };
 
   const handleCascadeDelete = async () => {
     if (!deleteCascadeUser) return;
-    setWarningOpen(false);
-    const { error: lettersError } = await supabase
-      .from('letters')
-      .delete()
-      .eq('user_id', deleteCascadeUser.id);
-    if (lettersError) {
-      showToast('Ошибка при удалении писем пользователя', TOAST_TYPES.ERROR);
-      setDeleteCascadeUser(null);
-      return;
-    }
-    const { error: userError } = await supabase
-      .from('users')
-      .delete()
-      .eq('id', deleteCascadeUser.id);
-    if (userError) {
-      showToast('Ошибка при удалении пользователя', TOAST_TYPES.ERROR);
-    } else {
-      showToast('Пользователь и все письма удалены', TOAST_TYPES.SUCCESS);
-      refetch();
-    }
+    await cascadeDeleteUser(deleteCascadeUser);
     setDeleteCascadeUser(null);
+    setWarningOpen(false);
   };
 
   return (
@@ -222,7 +153,7 @@ const MobileUsers: React.FC = () => {
           setWarningOpen(false);
           setDeleteCascadeUser(null);
         }}
-        onConfirm={deleteCascadeUser ? handleCascadeDelete : undefined}
+        onConfirm={handleCascadeDelete}
       />
     </div>
   );

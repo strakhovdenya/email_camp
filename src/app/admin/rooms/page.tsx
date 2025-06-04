@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import SectionHeader from '@/components/admin/SectionHeader';
@@ -10,12 +10,16 @@ import ActionButton from '@/components/admin/ActionButton';
 import type { Room } from '@/types/supabase';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
+import dynamic from 'next/dynamic';
+import { MOBILE_BREAKPOINT } from '@/constants/breakpoints';
 
 const columns = [
   { key: 'room_number', label: 'Номер комнаты' },
   { key: 'created_at', label: 'Создана' },
   { key: 'actions', label: '', className: 'text-right' },
 ];
+
+const MobileRooms = dynamic(() => import('@/components/admin/MobileRooms'), { ssr: false });
 
 export default function RoomsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,6 +37,11 @@ export default function RoomsPage() {
 
   const { showToast } = useToast();
 
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+  }, []);
+
   const filteredRooms = rooms.filter((room: Room) =>
     room.room_number.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -47,6 +56,8 @@ export default function RoomsPage() {
       // обновить список, если реализовано
     }
   };
+
+  if (isMobile) return <MobileRooms />;
 
   return (
     <div>
