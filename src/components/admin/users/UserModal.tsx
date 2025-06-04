@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { User } from '@/types/supabase';
 import { NOTIFICATION_CHANNELS } from '@/constants/notificationChannels';
 import { useQuery } from '@tanstack/react-query';
@@ -33,7 +33,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setFirstName(user?.first_name || '');
     setLastName(user?.last_name || '');
     setEmail(user?.email || '');
@@ -43,6 +43,10 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
     setChannels(user?.channels_for_notification || []);
   }, [user, open]);
 
+  useEffect(() => {
+    if (role !== 'camper') setRoomId(null);
+  }, [role]);
+
   const handleChannelToggle = (channel: string) => {
     setChannels((prev) =>
       prev.includes(channel) ? prev.filter((c) => c !== channel) : [...prev, channel]
@@ -51,7 +55,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName || !lastName || !email || !roomId) {
+    if (!firstName || !lastName || !email || (role === 'camper' && !roomId)) {
       return;
     }
     await onSave({
@@ -60,7 +64,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
       last_name: lastName,
       email,
       phone,
-      room_id: roomId,
+      room_id: role === 'camper' ? roomId : null,
       role,
       channels_for_notification: channels,
     });
@@ -122,24 +126,26 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Комната
-            </label>
-            <select
-              value={roomId || ''}
-              onChange={(e) => setRoomId(e.target.value || null)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
-              required
-            >
-              <option value="">Выберите комнату</option>
-              {rooms.map((room) => (
-                <option key={room.id} value={room.id}>
-                  {room.room_number}
-                </option>
-              ))}
-            </select>
-          </div>
+          {role === 'camper' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Комната
+              </label>
+              <select
+                value={roomId || ''}
+                onChange={(e) => setRoomId(e.target.value || null)}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
+                required
+              >
+                <option value="">Выберите комнату</option>
+                {rooms.map((room) => (
+                  <option key={room.id} value={room.id}>
+                    {room.room_number}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Роль
@@ -154,24 +160,26 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
               <option value="admin">Admin</option>
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Каналы уведомлений
-            </label>
-            <div className="space-y-2">
-              {NOTIFICATION_CHANNELS.map((channel) => (
-                <label key={channel} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={channels.includes(channel)}
-                    onChange={() => handleChannelToggle(channel)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-400"
-                  />
-                  <span className="text-gray-700 dark:text-gray-300">{channel}</span>
-                </label>
-              ))}
+          {role === 'camper' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Каналы уведомлений
+              </label>
+              <div className="space-y-2">
+                {NOTIFICATION_CHANNELS.map((channel) => (
+                  <label key={channel} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={channels.includes(channel)}
+                      onChange={() => handleChannelToggle(channel)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-400"
+                    />
+                    <span className="text-gray-700 dark:text-gray-300">{channel}</span>
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex justify-end space-x-3 mt-6">
             <button
               type="button"
