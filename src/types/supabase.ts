@@ -106,5 +106,17 @@ export type LetterWithRelations = Database['public']['Tables']['letters']['Row']
   users: Pick<Database['public']['Tables']['users']['Row'], 'first_name' | 'last_name'> | null;
 };
 
-export type User = Database['public']['Tables']['users']['Row'];
+export interface User {
+  id: string;
+  created_at: string;
+  email: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  room_id: string | null;
+  role: 'admin' | 'staff' | 'camper';
+  channels_for_notification: string[] | null;
+  room?: { room_number: string } | null;
+}
+
 export type Room = Database['public']['Tables']['rooms']['Row'];

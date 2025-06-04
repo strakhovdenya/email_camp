@@ -12,6 +12,8 @@ import { useUserActions } from '@/hooks/useUserActions';
 const columns = [
   { key: 'name', label: 'Имя' },
   { key: 'email', label: 'Email' },
+  { key: 'room', label: 'Комната' },
+  { key: 'role', label: 'Тип' },
   { key: 'channels', label: 'Каналы уведомлений' },
   { key: 'actions', label: '', className: 'text-right' },
 ];
@@ -108,6 +110,14 @@ const DesktopUsers: React.FC = () => {
             </td>
             <td className="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
               {user.email}
+            </td>
+            <td className="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
+              {user.room?.room_number || '—'}
+            </td>
+            <td className="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
+              <span className="inline-block rounded px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-700">
+                {user.role}
+              </span>
             </td>
             <td className="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
               {user.channels_for_notification?.join(', ') || '—'}

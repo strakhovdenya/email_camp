@@ -25,6 +25,12 @@ const MobileUserCard: React.FC<MobileUserCardProps> = ({ user, onEdit, onDelete 
       {user.last_name} {user.first_name}
     </div>
     <div className="text-xs text-gray-500 mb-1">{user.email}</div>
+    {user.room?.room_number && (
+      <div className="text-xs text-gray-500 mb-1">Комната: {user.room.room_number}</div>
+    )}
+    <span className="inline-block rounded px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-700 mb-1">
+      {user.role}
+    </span>
     {user.channels_for_notification && user.channels_for_notification.length > 0 && (
       <div className="flex flex-wrap gap-2 mb-2">
         {user.channels_for_notification.map((ch) => (

@@ -4,7 +4,7 @@ import React, { useState, FormEvent } from 'react';
 import { useAddLetter } from '@/hooks/useLetters';
 import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
-import { useUsers } from '@/hooks/useUsers';
+import { useUsersByRoom } from '@/hooks/useUsersByRoom';
 import { PhotoDropzone } from './ui';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
@@ -26,7 +26,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const { data: users = [], isLoading: usersLoading } = useUsers(roomNumber);
+  const { data: users = [], isLoading: usersLoading } = useUsersByRoom(roomNumber);
   const { showToast } = useToast();
 
   const handleSubmit = (e: FormEvent): void => {

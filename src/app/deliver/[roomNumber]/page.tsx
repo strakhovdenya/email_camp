@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { LetterList } from '@/components/LetterList';
 import { useToast } from '@/providers/ToastProvider';
 import { useRoomLetters } from '@/hooks/useRoomLetters';
-import { useUsers } from '@/hooks/useUsers';
+import { useUsersByRoom } from '@/hooks/useUsersByRoom';
 import { invalidateMailQueries } from '@/hooks/useLetters';
 import { TOAST_TYPES } from '@/constants/toastTypes';
 
@@ -20,7 +20,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data: letters = [] } = useRoomLetters(roomNumber);
-  const { data: users = [] } = useUsers(roomNumber);
+  const { data: users = [] } = useUsersByRoom(roomNumber);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [deliverLoadingId, setDeliverLoadingId] = useState<number | null>(null);
   const count = letters.length;
