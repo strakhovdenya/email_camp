@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
 import dynamic from 'next/dynamic';
+import { MOBILE_BREAKPOINT } from '@/constants/breakpoints';
 
 const columns = [
   { key: 'name', label: 'Имя' },
@@ -35,7 +36,7 @@ export default function UsersPage() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth <= 768);
+    setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
   }, []);
 
   if (isMobile) return <MobileUsers />;
