@@ -1,12 +1,10 @@
-export interface Letter {
-  id: number;
-  created_at: string;
-  delivered_at?: string | null;
+import type { LetterWithRelations } from '@/types/supabase';
+
+export interface Letter extends Omit<LetterWithRelations, 'status' | 'notification_statuses'> {
   status: 'pending' | 'delivered';
+  notification_statuses?: Record<string, 'sent' | 'failed'>;
   note?: string;
-  photo_url?: string;
+  delivered_at?: string | null;
   first_name?: string;
   last_name?: string;
-  recipient_notified?: boolean;
-  notification_statuses?: Record<string, 'sent' | 'failed'>;
 }

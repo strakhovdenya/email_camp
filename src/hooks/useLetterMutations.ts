@@ -119,7 +119,7 @@ export function useMarkAsDelivered(roomNumber?: string) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   return useMutation({
-    mutationFn: async (letterId: number) => {
+    mutationFn: async (letterId: string) => {
       const { data, error } = await supabase
         .from('letters')
         .update({

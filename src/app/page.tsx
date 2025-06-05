@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { RoomCard } from '@/components/ui/RoomCard';
 
 export default function Home(): React.ReactElement {
-  const { rooms, isLoading } = useRoomsWithLetters();
+  const { data: rooms = [], isLoading } = useRoomsWithLetters();
 
   return (
     <main className="max-w-2xl mx-auto px-2 py-8 sm:px-4">

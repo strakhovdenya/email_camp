@@ -3,7 +3,7 @@ import React from 'react';
 import { AddLetterForm } from '@/components/AddLetterForm';
 import { LetterList } from '@/components/LetterList';
 import { useRouter } from 'next/navigation';
-import { useRoomLetters } from '@/hooks/useRoomLetters';
+import { useLettersByRoom } from '@/hooks/useLettersByRoom';
 
 interface RoomPageProps {
   params: { roomNumber: string };
@@ -12,7 +12,7 @@ interface RoomPageProps {
 export default function RoomPage({ params }: RoomPageProps): React.ReactElement {
   const { roomNumber } = params;
   const router = useRouter();
-  const { data: letters = [] } = useRoomLetters(roomNumber);
+  const { data: letters = [] } = useLettersByRoom(roomNumber);
   const count = letters.length;
 
   return (

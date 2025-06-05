@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, FormEvent } from 'react';
-import { useAddLetter } from '@/hooks/useLetters';
+import { useAddLetter } from '@/hooks/useLetterMutations';
 import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
 import { useUsersByRoom } from '@/hooks/useUsersByRoom';
@@ -52,7 +52,6 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           photo_url: photoUrl,
           user_id: selectedUserId,
         });
-        showToast('Письмо успешно добавлено', TOAST_TYPES.SUCCESS);
         onRoomNumberChange(roomNumber);
         setNote('');
         setPhoto(null);

@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import { LetterCard } from './ui/LetterCard';
-
-interface Letter {
-  id: number;
-  room_id: number;
-  created_at: string;
-  delivered_at: string | null;
-  status: 'pending' | 'delivered';
-  sync_status: 'pending' | 'synced' | 'failed';
-  note?: string;
-  photo_url?: string;
-}
+import type { LetterWithRelations } from '@/types/supabase';
+import type { Letter } from './ui/LetterCard/types';
 
 interface LetterListProps {
-  letters: Letter[];
-  onDeliver?: (id: number) => void;
-  deliverLoadingId: number | null;
+  letters: LetterWithRelations[];
+  onDeliver?: (id: string) => void;
+  deliverLoadingId: string | null;
 }
 
 export const LetterList: React.FC<LetterListProps> = ({
@@ -54,7 +45,7 @@ export const LetterList: React.FC<LetterListProps> = ({
           ) : (
             <div className="flex flex-col gap-4">
               {pending.map((letter) => (
-                <LetterCard key={letter.id} letter={letter}>
+                <LetterCard key={letter.id} letter={letter as Letter}>
                   {onDeliver && (
                     <button
                       onClick={() => onDeliver(letter.id)}
@@ -84,7 +75,7 @@ export const LetterList: React.FC<LetterListProps> = ({
           ) : (
             <div className="flex flex-col gap-4">
               {delivered.map((letter) => (
-                <LetterCard key={letter.id} letter={letter} />
+                <LetterCard key={letter.id} letter={letter as Letter} />
               ))}
             </div>
           ))}

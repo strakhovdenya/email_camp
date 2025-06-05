@@ -1,15 +1,11 @@
 'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { LetterList } from '@/components/LetterList';
-import { useToast } from '@/providers/ToastProvider';
-import { useRoomLetters } from '@/hooks/useRoomLetters';
+import { useLettersByRoom } from '@/hooks/useLettersByRoom';
 import { useUsersByRoom } from '@/hooks/useUsersByRoom';
-import { invalidateMailQueries } from '@/hooks/useLetters';
-import { TOAST_TYPES } from '@/constants/toastTypes';
+import { useMarkAsDelivered } from '@/hooks/useLetterMutations';
 
 interface DeliverPageProps {
   params: { roomNumber: string };
@@ -17,41 +13,18 @@ interface DeliverPageProps {
 
 export default function DeliverPage({ params }: DeliverPageProps): React.ReactElement {
   const roomNumber = params.roomNumber;
-  const queryClient = useQueryClient();
   const router = useRouter();
-  const { data: letters = [] } = useRoomLetters(roomNumber);
+  const { data: letters = [] } = useLettersByRoom(roomNumber);
   const { data: users = [] } = useUsersByRoom(roomNumber);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [deliverLoadingId, setDeliverLoadingId] = useState<number | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const count = letters.length;
-  const { showToast } = useToast();
 
   // Фильтруем письма по выбранному пользователю
   const filteredLetters = selectedUserId
-    ? letters.filter((letter) => letter.user_id === selectedUserId)
+    ? letters.filter((letter) => String(letter.users?.id) === selectedUserId)
     : letters;
 
-  // Мутация для выдачи письма
-  const mutation = useMutation({
-    mutationFn: async (id: number) => {
-      setDeliverLoadingId(id);
-      try {
-        await supabase
-          .from('letters')
-          .update({ status: 'delivered', delivered_at: new Date().toISOString() })
-          .eq('id', id);
-      } finally {
-        setDeliverLoadingId(null);
-      }
-    },
-    onSuccess: () => {
-      invalidateMailQueries(queryClient, roomNumber);
-      showToast('Письмо выдано!', TOAST_TYPES.SUCCESS);
-    },
-    onError: () => {
-      showToast('Ошибка при выдаче письма', TOAST_TYPES.ERROR);
-    },
-  });
+  const mutation = useMarkAsDelivered(roomNumber);
 
   return (
     <main className="max-w-xl mx-auto px-2 py-6 sm:px-4">
@@ -74,7 +47,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
         <select
           id="userFilter"
           value={selectedUserId ?? ''}
-          onChange={(e) => setSelectedUserId(Number(e.target.value) || null)}
+          onChange={(e) => setSelectedUserId(e.target.value || null)}
           className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition shadow-sm"
         >
           <option value="">All users</option>
@@ -88,7 +61,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
       <LetterList
         letters={filteredLetters}
         onDeliver={(id) => mutation.mutate(id)}
-        deliverLoadingId={deliverLoadingId}
+        deliverLoadingId={mutation.isPending ? mutation.variables : null}
       />
     </main>
   );

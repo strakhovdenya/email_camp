@@ -103,11 +103,14 @@ export interface Database {
 // Extended types for joined relations
 export type LetterWithRelations = Database['public']['Tables']['letters']['Row'] & {
   rooms: Pick<Database['public']['Tables']['rooms']['Row'], 'room_number'> | null;
-  users: Pick<Database['public']['Tables']['users']['Row'], 'first_name' | 'last_name'> | null;
+  users: Pick<
+    Database['public']['Tables']['users']['Row'],
+    'id' | 'first_name' | 'last_name' | 'email'
+  > | null;
 };
 
 export interface User {
-  id: string;
+  id: number;
   created_at: string;
   email: string | null;
   first_name: string | null;
