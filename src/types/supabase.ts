@@ -107,6 +107,8 @@ export type LetterWithRelations = Database['public']['Tables']['letters']['Row']
     Database['public']['Tables']['users']['Row'],
     'id' | 'first_name' | 'last_name' | 'email'
   > | null;
+  note?: string | null;
+  delivered_at?: string | null;
 };
 
 export interface User {

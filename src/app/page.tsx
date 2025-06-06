@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRoomsWithLetters } from '@/hooks/useRoomsWithLetters';
 import { PlusIcon, InboxArrowDownIcon } from '@heroicons/react/24/outline';
-import { Button } from '@/components/ui/Button';
+import { LinkButton } from '@/components/ui/LinkButton';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { RoomCard } from '@/components/ui/RoomCard';
 
@@ -30,22 +30,22 @@ export default function Home(): React.ReactElement {
         <div className="grid grid-cols-1 gap-6">
           {rooms.map((room) => (
             <RoomCard key={room.room_number} room={room}>
-              <Button
+              <LinkButton
                 href={`/room/${room.room_number}`}
                 leftIcon={<PlusIcon className="w-5 h-5" />}
                 className="bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-400"
                 title="Add letter"
               >
                 <span className="hidden sm:inline">Add letter</span>
-              </Button>
-              <Button
+              </LinkButton>
+              <LinkButton
                 href={`/deliver/${room.room_number}`}
                 leftIcon={<InboxArrowDownIcon className="w-5 h-5" />}
                 className="bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-400"
                 title="Deliver letters"
               >
                 <span className="hidden sm:inline">Deliver</span>
-              </Button>
+              </LinkButton>
             </RoomCard>
           ))}
         </div>

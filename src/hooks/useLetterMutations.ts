@@ -24,7 +24,6 @@ export function invalidateMailQueries(
   queryClient: ReturnType<typeof useQueryClient>,
   roomNumber?: string
 ) {
-  void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LETTERS] });
   if (roomNumber) {
     void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.LETTERS, roomNumber] });
   }
