@@ -1,9 +1,13 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Toast {
   id: number;
   message: string;
-  type?: 'success' | 'error' | 'info';
+  type?: 'success' | 'error' | 'info' | 'warning';
 }
 
 interface ToastContextType {
@@ -29,31 +33,48 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }, 3500);
   }, []);
 
+  const handleClose = (id: number) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div
-        className="fixed z-[9999] flex flex-col gap-2 min-w-[200px] max-w-[90vw] px-2 bottom-4 right-4"
-        style={{
-          maxWidth: 320,
-          position: 'fixed',
-          bottom: '1rem',
-          right: '1rem',
-          zIndex: 9999,
-        }}
-      >
-        {toasts.map((toast) => (
-          <div
+      <div>
+        {toasts.map((toast, idx) => (
+          <Snackbar
             key={toast.id}
-            className={`px-5 py-3 rounded-lg shadow-lg text-white font-medium
-              ${toast.type === 'success' ? 'bg-green-600' : toast.type === 'error' ? 'bg-red-600' : 'bg-gray-800'}`}
-            style={{
-              animation: 'fadeIn 0.3s ease-in-out',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-            }}
+            open
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            autoHideDuration={3500}
+            onClose={() => handleClose(toast.id)}
+            style={{ zIndex: 14000, marginBottom: idx * 70 }}
           >
-            {toast.message}
-          </div>
+            <Alert
+              onClose={() => handleClose(toast.id)}
+              severity={toast.type || 'info'}
+              variant="filled"
+              sx={{
+                minWidth: 220,
+                boxShadow: 4,
+                fontWeight: 500,
+                fontSize: '1rem',
+                alignItems: 'center',
+              }}
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => handleClose(toast.id)}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              }
+            >
+              {toast.message}
+            </Alert>
+          </Snackbar>
         ))}
       </div>
     </ToastContext.Provider>
