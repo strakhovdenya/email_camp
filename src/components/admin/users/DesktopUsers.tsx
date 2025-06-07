@@ -26,6 +26,7 @@ import {
   tableWrapperClass,
   tableHeaderRowClass,
 } from '../common/tableStyles';
+import Tooltip from '@mui/material/Tooltip';
 
 const roleColors: Record<string, string> = {
   admin: '#2563eb',
@@ -232,26 +233,30 @@ const DesktopUsers: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell className={tableCellClass}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          size="small"
-                          startIcon={<EditIcon fontSize="small" />}
-                          sx={{ borderRadius: 2, fontWeight: 600, mr: 1, textTransform: 'none' }}
-                          onClick={() => handleEdit(user)}
-                        >
-                          Редактировать
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          size="small"
-                          startIcon={<DeleteIcon fontSize="small" />}
-                          sx={{ borderRadius: 2, fontWeight: 600, textTransform: 'none' }}
-                          onClick={() => handleDelete(user)}
-                        >
-                          Удалить
-                        </Button>
+                        <div className="flex gap-2">
+                          <Tooltip title="Редактировать">
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              size="small"
+                              sx={{ minWidth: 0, p: 1, borderRadius: '50%' }}
+                              onClick={() => handleEdit(user)}
+                            >
+                              <EditIcon fontSize="small" />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title="Удалить">
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              size="small"
+                              sx={{ minWidth: 0, p: 1, borderRadius: '50%' }}
+                              onClick={() => handleDelete(user)}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </Button>
+                          </Tooltip>
+                        </div>
                       </TableCell>
                     </motion.tr>
                   ))}

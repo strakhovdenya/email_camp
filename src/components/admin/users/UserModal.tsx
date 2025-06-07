@@ -17,6 +17,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
+import FormLabel from '@mui/material/FormLabel';
 
 interface UserModalProps {
   user: User | null;
@@ -97,13 +98,13 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
         },
       }}
     >
-      <DialogTitle sx={{ pb: 1 }}>
+      <DialogTitle sx={{ pb: 1, fontSize: 20 }}>
         <span className="text-xl font-semibold">
           {user ? 'Редактировать пользователя' : 'Добавить пользователя'}
         </span>
       </DialogTitle>
       <form onSubmit={handleSubmit}>
-        <DialogContent sx={{ pt: 2 }}>
+        <DialogContent sx={{ pt: 1, pb: 1 }}>
           <div className="space-y-4">
             <TextField
               label="Фамилия"
@@ -112,7 +113,8 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
               fullWidth
               required
               variant="outlined"
-              sx={{ mb: 2 }}
+              size="small"
+              sx={{ mb: 1 }}
             />
             <TextField
               label="Имя"
@@ -121,7 +123,8 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
               fullWidth
               required
               variant="outlined"
-              sx={{ mb: 2 }}
+              size="small"
+              sx={{ mb: 1 }}
             />
             <TextField
               label="Email"
@@ -131,7 +134,8 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
               fullWidth
               required
               variant="outlined"
-              sx={{ mb: 2 }}
+              size="small"
+              sx={{ mb: 1 }}
             />
             <TextField
               label="Телефон"
@@ -140,14 +144,16 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
               onChange={(e) => setPhone(e.target.value)}
               fullWidth
               variant="outlined"
-              sx={{ mb: 2 }}
+              size="small"
+              sx={{ mb: 1 }}
             />
-            <FormControl fullWidth sx={{ mb: 2 }}>
+            <FormControl fullWidth sx={{ mb: 1 }} size="small">
               <InputLabel>Роль</InputLabel>
               <Select
                 value={role}
                 label="Роль"
                 onChange={(e) => setRole(e.target.value as 'admin' | 'staff' | 'camper')}
+                size="small"
               >
                 <MenuItem value="camper">Camper</MenuItem>
                 <MenuItem value="staff">Staff</MenuItem>
@@ -156,13 +162,14 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
             </FormControl>
             {role === 'camper' && (
               <>
-                <FormControl fullWidth sx={{ mb: 2 }}>
+                <FormControl fullWidth sx={{ mb: 1 }} size="small">
                   <InputLabel>Комната</InputLabel>
                   <Select
                     value={roomId || ''}
                     label="Комната"
                     onChange={(e) => setRoomId(e.target.value || null)}
                     required
+                    size="small"
                   >
                     <MenuItem value="">Выберите комнату</MenuItem>
                     {rooms.map((room) => (
@@ -172,9 +179,11 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
                     ))}
                   </Select>
                 </FormControl>
-                <FormControl component="fieldset" sx={{ mb: 2 }}>
-                  <InputLabel sx={{ mb: 1 }}>Каналы уведомлений</InputLabel>
-                  <FormGroup>
+                <FormControl component="fieldset" sx={{ mb: 1 }}>
+                  <FormLabel component="legend" sx={{ fontSize: 14, mb: 0.5 }}>
+                    Каналы уведомлений
+                  </FormLabel>
+                  <FormGroup row>
                     {NOTIFICATION_CHANNELS.map((channel) => (
                       <FormControlLabel
                         key={channel}
@@ -187,10 +196,13 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
                               '&.Mui-checked': {
                                 color: '#2563eb',
                               },
+                              p: 0.5,
                             }}
+                            size="small"
                           />
                         }
-                        label={channel}
+                        label={<span style={{ fontSize: 13 }}>{channel}</span>}
+                        sx={{ mr: 2 }}
                       />
                     ))}
                   </FormGroup>
@@ -199,7 +211,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
             )}
           </div>
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 3 }}>
+        <DialogActions sx={{ px: 2, pb: 2 }}>
           <Button
             onClick={onClose}
             variant="outlined"
