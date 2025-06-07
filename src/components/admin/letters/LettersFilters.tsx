@@ -2,6 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { LETTER_STATUS_FILTERS, LetterStatusFilter } from '@/constants/letterStatus';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
+import { CheckCircle2, Clock, List } from 'lucide-react';
 
 interface LettersFiltersProps {
   filter: {
@@ -12,6 +18,12 @@ interface LettersFiltersProps {
   };
   onChange: (filter: LettersFiltersProps['filter']) => void;
 }
+
+const statusIcons = {
+  all: <List className="w-4 h-4 mr-1 text-gray-400" />,
+  pending: <Clock className="w-4 h-4 mr-1 text-yellow-500" />,
+  delivered: <CheckCircle2 className="w-4 h-4 mr-1 text-green-500" />,
+};
 
 export const LettersFilters: React.FC<LettersFiltersProps> = ({ filter, onChange }) => {
   const [mounted, setMounted] = useState(false);
@@ -26,15 +38,15 @@ export const LettersFilters: React.FC<LettersFiltersProps> = ({ filter, onChange
   }, [filter]);
 
   if (!mounted) {
-    return <div className="flex flex-wrap gap-2 mb-4" />;
+    return <div className="flex flex-wrap gap-3 mb-6" />;
   }
 
   return (
-    <div className="flex flex-wrap gap-2 mb-4">
+    <div className="flex flex-wrap gap-3 mb-6 bg-white/60 backdrop-blur-md rounded-xl p-4 shadow-md">
       <input
         type="text"
         placeholder="ID письма"
-        className="border rounded px-2 py-1 text-sm"
+        className="border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-150 shadow-sm"
         value={localFilter.id}
         onChange={(e) => {
           const newFilter = { ...localFilter, id: e.target.value };
@@ -46,7 +58,7 @@ export const LettersFilters: React.FC<LettersFiltersProps> = ({ filter, onChange
       <input
         type="text"
         placeholder="Комната"
-        className="border rounded px-2 py-1 text-sm"
+        className="border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-150 shadow-sm"
         value={localFilter.room}
         onChange={(e) => {
           const newFilter = { ...localFilter, room: e.target.value };
@@ -58,7 +70,7 @@ export const LettersFilters: React.FC<LettersFiltersProps> = ({ filter, onChange
       <input
         type="text"
         placeholder="Получатель"
-        className="border rounded px-2 py-1 text-sm"
+        className="border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-150 shadow-sm"
         value={localFilter.recipient}
         onChange={(e) => {
           const newFilter = { ...localFilter, recipient: e.target.value };
@@ -67,22 +79,45 @@ export const LettersFilters: React.FC<LettersFiltersProps> = ({ filter, onChange
         }}
         style={{ minWidth: 120 }}
       />
-      <select
-        className="border rounded px-2 py-1 text-sm"
-        value={localFilter.status}
-        onChange={(e) => {
-          const newFilter = { ...localFilter, status: e.target.value as LetterStatusFilter };
-          setLocalFilter(newFilter);
-          onChange(newFilter);
-        }}
-        style={{ minWidth: 120 }}
+      <FormControl
+        size="small"
+        sx={{ minWidth: 140, background: 'white', borderRadius: 2, boxShadow: 1 }}
       >
-        {LETTER_STATUS_FILTERS.map((status) => (
-          <option key={status} value={status}>
-            {status === 'all' ? 'Все статусы' : status === 'pending' ? 'Ожидает' : 'Выдано'}
-          </option>
-        ))}
-      </select>
+        <InputLabel id="status-select-label">Статус</InputLabel>
+        <Select
+          labelId="status-select-label"
+          value={localFilter.status}
+          label="Статус"
+          onChange={(e) => {
+            const newFilter = { ...localFilter, status: e.target.value as LetterStatusFilter };
+            setLocalFilter(newFilter);
+            onChange(newFilter);
+          }}
+          sx={{
+            borderRadius: 2,
+            fontWeight: 500,
+            fontSize: '1rem',
+            '.MuiSelect-select': { display: 'flex', alignItems: 'center' },
+          }}
+          renderValue={(selected) => (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {statusIcons[selected as LetterStatusFilter]}
+              <span>
+                {selected === 'all' ? 'Все статусы' : selected === 'pending' ? 'Ожидает' : 'Выдано'}
+              </span>
+            </Box>
+          )}
+        >
+          {LETTER_STATUS_FILTERS.map((status) => (
+            <MenuItem key={status} value={status} sx={{ display: 'flex', alignItems: 'center' }}>
+              {statusIcons[status as LetterStatusFilter]}
+              <span style={{ marginLeft: 4 }}>
+                {status === 'all' ? 'Все статусы' : status === 'pending' ? 'Ожидает' : 'Выдано'}
+              </span>
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
   );
 };
