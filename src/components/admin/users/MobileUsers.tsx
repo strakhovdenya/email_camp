@@ -5,6 +5,10 @@ import UserModal from './UserModal';
 import WarningModal from './WarningModal';
 import { useUserActions } from '@/hooks/useUserActions';
 import MobileUserCard from './MobileUserCard';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import TextField from '@mui/material/TextField';
+import { AnimatePresence } from 'framer-motion';
 
 const MobileUsers: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,14 +70,16 @@ const MobileUsers: React.FC = () => {
   };
 
   return (
-    <div className="p-2 pb-20 min-h-screen bg-gray-50">
-      <div className="sticky top-0 z-10 bg-gray-50 pb-2">
-        <input
-          type="text"
+    <div className="p-2 pb-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
+      <div className="sticky top-0 z-10 bg-white/70 backdrop-blur-md pb-2 rounded-b-2xl shadow-md">
+        <TextField
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Поиск пользователей..."
-          className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base mb-2"
+          variant="outlined"
+          size="small"
+          fullWidth
+          sx={{ borderRadius: 2, background: 'white', mt: 1, mb: 1 }}
         />
       </div>
       {isLoading ? (
@@ -81,17 +87,26 @@ const MobileUsers: React.FC = () => {
       ) : filteredUsers.length === 0 ? (
         <div className="text-center py-8 text-gray-400">Пользователи не найдены</div>
       ) : (
-        filteredUsers.map((user) => (
-          <MobileUserCard key={user.id} user={user} onEdit={handleEdit} onDelete={handleDelete} />
-        ))
+        <AnimatePresence>
+          {filteredUsers.map((user) => (
+            <MobileUserCard key={user.id} user={user} onEdit={handleEdit} onDelete={handleDelete} />
+          ))}
+        </AnimatePresence>
       )}
-      <button
-        className="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-blue-600 text-white text-3xl shadow-lg flex items-center justify-center"
-        onClick={handleAdd}
+      <Fab
+        color="primary"
         aria-label="Добавить пользователя"
+        onClick={handleAdd}
+        sx={{
+          position: 'fixed',
+          bottom: 80,
+          right: 24,
+          boxShadow: 4,
+          background: 'linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)',
+        }}
       >
-        +
-      </button>
+        <AddIcon />
+      </Fab>
       <UserModal
         user={modalUser}
         open={modalOpen}

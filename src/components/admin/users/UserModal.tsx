@@ -3,6 +3,20 @@ import type { User } from '@/types/supabase';
 import { NOTIFICATION_CHANNELS } from '@/constants/notificationChannels';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface UserModalProps {
   user: User | null;
@@ -70,135 +84,160 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
     });
   };
 
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+        },
+      }}
+    >
+      <DialogTitle sx={{ pb: 1 }}>
+        <span className="text-xl font-semibold">
           {user ? 'Редактировать пользователя' : 'Добавить пользователя'}
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Фамилия
-            </label>
-            <input
-              type="text"
+        </span>
+      </DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent sx={{ pt: 2 }}>
+          <div className="space-y-4">
+            <TextField
+              label="Фамилия"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
+              fullWidth
               required
+              variant="outlined"
+              sx={{ mb: 2 }}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Имя
-            </label>
-            <input
-              type="text"
+            <TextField
+              label="Имя"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
+              fullWidth
               required
+              variant="outlined"
+              sx={{ mb: 2 }}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Email
-            </label>
-            <input
+            <TextField
+              label="Email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
+              fullWidth
               required
+              variant="outlined"
+              sx={{ mb: 2 }}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Телефон
-            </label>
-            <input
+            <TextField
+              label="Телефон"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
+              fullWidth
+              variant="outlined"
+              sx={{ mb: 2 }}
             />
-          </div>
-          {role === 'camper' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Комната
-              </label>
-              <select
-                value={roomId || ''}
-                onChange={(e) => setRoomId(e.target.value || null)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
-                required
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>Роль</InputLabel>
+              <Select
+                value={role}
+                label="Роль"
+                onChange={(e) => setRole(e.target.value as 'admin' | 'staff' | 'camper')}
               >
-                <option value="">Выберите комнату</option>
-                {rooms.map((room) => (
-                  <option key={room.id} value={room.id}>
-                    {room.room_number}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Роль
-            </label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value as 'admin' | 'staff' | 'camper')}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition"
-            >
-              <option value="camper">Camper</option>
-              <option value="staff">Staff</option>
-              <option value="admin">Admin</option>
-            </select>
+                <MenuItem value="camper">Camper</MenuItem>
+                <MenuItem value="staff">Staff</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+              </Select>
+            </FormControl>
+            {role === 'camper' && (
+              <>
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <InputLabel>Комната</InputLabel>
+                  <Select
+                    value={roomId || ''}
+                    label="Комната"
+                    onChange={(e) => setRoomId(e.target.value || null)}
+                    required
+                  >
+                    <MenuItem value="">Выберите комнату</MenuItem>
+                    {rooms.map((room) => (
+                      <MenuItem key={room.id} value={room.id}>
+                        {room.room_number}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl component="fieldset" sx={{ mb: 2 }}>
+                  <InputLabel sx={{ mb: 1 }}>Каналы уведомлений</InputLabel>
+                  <FormGroup>
+                    {NOTIFICATION_CHANNELS.map((channel) => (
+                      <FormControlLabel
+                        key={channel}
+                        control={
+                          <Checkbox
+                            checked={channels.includes(channel)}
+                            onChange={() => handleChannelToggle(channel)}
+                            sx={{
+                              color: '#3b82f6',
+                              '&.Mui-checked': {
+                                color: '#2563eb',
+                              },
+                            }}
+                          />
+                        }
+                        label={channel}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+              </>
+            )}
           </div>
-          {role === 'camper' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Каналы уведомлений
-              </label>
-              <div className="space-y-2">
-                {NOTIFICATION_CHANNELS.map((channel) => (
-                  <label key={channel} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={channels.includes(channel)}
-                      onChange={() => handleChannelToggle(channel)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-400"
-                    />
-                    <span className="text-gray-700 dark:text-gray-300">{channel}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-          <div className="flex justify-end space-x-3 mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition"
-            >
-              Отмена
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition disabled:opacity-50"
-            >
-              {loading ? 'Сохранение...' : user ? 'Сохранить' : 'Добавить'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button
+            onClick={onClose}
+            variant="outlined"
+            sx={{
+              borderRadius: 2,
+              textTransform: 'none',
+              fontWeight: 600,
+              px: 3,
+            }}
+          >
+            Отмена
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={loading}
+            sx={{
+              borderRadius: 2,
+              textTransform: 'none',
+              fontWeight: 600,
+              px: 3,
+              background: 'linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)',
+              '&:hover': {
+                background: 'linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%)',
+              },
+            }}
+          >
+            {loading ? (
+              <CircularProgress size={24} sx={{ color: 'white' }} />
+            ) : user ? (
+              'Сохранить'
+            ) : (
+              'Добавить'
+            )}
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 

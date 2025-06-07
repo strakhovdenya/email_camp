@@ -42,7 +42,7 @@ export const LettersFilters: React.FC<LettersFiltersProps> = ({ filter, onChange
   }
 
   return (
-    <div className="flex flex-wrap gap-3 mb-6 bg-white/60 backdrop-blur-md rounded-xl p-4 shadow-md">
+    <div className="flex flex-wrap gap-3 mb-0.5 bg-white/60 backdrop-blur-md rounded-xl p-4 shadow-md">
       <input
         type="text"
         placeholder="ID письма"

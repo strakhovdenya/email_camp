@@ -58,7 +58,7 @@ export default function LettersPageClient() {
   if (!mounted) {
     // На сервере и до маунта рендерим skeleton/заглушку
     return (
-      <div className="space-y-4">
+      <div className="space-y-1">
         <LettersFilters filter={filter} onChange={setFilter} />
         <div className="flex items-center justify-center min-h-[200px]">
           <div className="w-full max-w-2xl space-y-4">
@@ -72,7 +72,7 @@ export default function LettersPageClient() {
   }
 
   return (
-    <div className="space-y-4">
+    <div>
       <LettersFilters filter={filter} onChange={setFilter} />
       {isLoading ? (
         <div className="flex items-center justify-center min-h-[200px]">
@@ -105,7 +105,7 @@ export default function LettersPageClient() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 32 }}
               transition={{ duration: 0.5, type: 'spring', bounce: 0.2 }}
-              className="container mx-auto py-8"
+              className="container mx-auto py-4"
             >
               <DesktopLettersTable
                 letters={filteredLetters}

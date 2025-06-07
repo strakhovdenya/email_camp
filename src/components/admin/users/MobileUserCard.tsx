@@ -1,16 +1,22 @@
 import React from 'react';
 import { User } from '@/types/supabase';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { motion } from 'framer-motion';
 
-const channelIcons: Record<string, string> = {
+const roleColors: Record<string, string> = {
+  admin: '#2563eb',
+  staff: '#059669',
+  camper: '#f59e42',
+};
+
+const channelIcons: Record<string, React.ReactNode> = {
   email: '✉️',
   sms: '📱',
   push: '📢',
-};
-
-const channelColors: Record<string, string> = {
-  email: 'bg-blue-100 text-blue-700',
-  sms: 'bg-green-100 text-green-700',
-  push: 'bg-yellow-100 text-yellow-700',
 };
 
 interface MobileUserCardProps {
@@ -20,45 +26,83 @@ interface MobileUserCardProps {
 }
 
 const MobileUserCard: React.FC<MobileUserCardProps> = ({ user, onEdit, onDelete }) => (
-  <div className="bg-white rounded-xl shadow p-4 mb-3 flex flex-col">
-    <div className="font-bold text-base mb-1">
-      {user.last_name} {user.first_name}
-    </div>
-    <div className="text-xs text-gray-500 mb-1">{user.email}</div>
-    {user.room?.room_number && (
-      <div className="text-xs text-gray-500 mb-1">Комната: {user.room.room_number}</div>
-    )}
-    <span className="inline-block rounded px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-700 mb-1">
-      {user.role}
-    </span>
-    {user.channels_for_notification && user.channels_for_notification.length > 0 && (
-      <div className="flex flex-wrap gap-2 mb-2">
-        {user.channels_for_notification.map((ch) => (
-          <span
-            key={ch}
-            className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${channelColors[ch] || 'bg-gray-100 text-gray-700'}`}
-          >
-            <span>{channelIcons[ch] || '🔔'}</span>
-            {ch}
+  <motion.div
+    initial={{ opacity: 0, y: 24 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: 24 }}
+    transition={{ duration: 0.35, type: 'spring', bounce: 0.18 }}
+    className="group rounded-2xl border border-blue-100 bg-white/60 backdrop-blur-lg text-card-foreground shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-[1.01] p-4 mb-4 flex flex-col"
+  >
+    <div className="flex items-center gap-3 mb-2">
+      <Avatar sx={{ width: 40, height: 40, bgcolor: '#3b82f6', fontSize: 18 }}>
+        {user.first_name?.[0] || ''}
+        {user.last_name?.[0] || ''}
+      </Avatar>
+      <div className="flex flex-col min-w-0">
+        <span className="font-semibold text-base truncate">
+          {user.last_name} {user.first_name}
+        </span>
+        <span className="text-xs text-gray-500 truncate">{user.email}</span>
+        {user.room?.room_number && (
+          <span className="text-xs text-blue-700 font-medium">
+            Комната: {user.room.room_number}
           </span>
-        ))}
+        )}
       </div>
-    )}
+    </div>
+    <div className="flex items-center gap-2 mb-2">
+      <Chip
+        label={user.role}
+        size="small"
+        sx={{
+          bgcolor: roleColors[user.role] || '#e5e7eb',
+          color: '#fff',
+          fontWeight: 600,
+          textTransform: 'capitalize',
+        }}
+      />
+      {user.channels_for_notification && user.channels_for_notification.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {user.channels_for_notification.map((ch) => (
+            <Chip
+              key={ch}
+              label={ch}
+              size="small"
+              icon={<span style={{ fontSize: '1.1em' }}>{channelIcons[ch] || '🔔'}</span>}
+              sx={{
+                bgcolor: '#f3f4f6',
+                color: '#2563eb',
+                fontWeight: 500,
+                mr: 0.5,
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
     <div className="flex gap-2 mt-auto">
-      <button
-        className="flex-1 py-2 rounded bg-blue-600 text-white text-sm font-semibold"
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<EditIcon fontSize="small" />}
+        sx={{ borderRadius: 2, fontWeight: 600, flex: 1, textTransform: 'none' }}
         onClick={() => onEdit(user)}
       >
-        ✏️ Редактировать
-      </button>
-      <button
-        className="flex-1 py-2 rounded bg-red-600 text-white text-sm font-semibold"
+        Редактировать
+      </Button>
+      <Button
+        variant="outlined"
+        color="error"
+        size="small"
+        startIcon={<DeleteIcon fontSize="small" />}
+        sx={{ borderRadius: 2, fontWeight: 600, flex: 1, textTransform: 'none' }}
         onClick={() => onDelete(user)}
       >
-        🗑️ Удалить
-      </button>
+        Удалить
+      </Button>
     </div>
-  </div>
+  </motion.div>
 );
 
 export default MobileUserCard;
