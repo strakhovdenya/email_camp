@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { LetterCard } from './ui/LetterCard';
 import type { LetterWithRelations } from '@/types/supabase';
 import type { Letter } from './ui/LetterCard/types';
+import { motion, AnimatePresence } from 'framer-motion';
+import Button from '@mui/material/Button';
 
 interface LetterListProps {
   letters: LetterWithRelations[];
@@ -29,56 +31,101 @@ export const LetterList: React.FC<LetterListProps> = ({
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-6">
       <div>
-        <button
-          type="button"
-          className="w-full flex items-center justify-between text-lg font-semibold mb-3 text-gray-800 focus:outline-none"
+        <Button
+          fullWidth
+          variant="text"
+          sx={{
+            justifyContent: 'space-between',
+            fontWeight: 600,
+            fontSize: 18,
+            mb: 1,
+            color: '#1e293b',
+          }}
           onClick={() => setShowPending((v) => !v)}
+          endIcon={
+            <span className={`transition-transform ${showPending ? 'rotate-90' : ''}`}>▶</span>
+          }
         >
-          <span>Ожидают доставки: {pending.length}</span>
-          <span className={`transition-transform ${showPending ? 'rotate-90' : ''}`}>▶</span>
-        </button>
-        {showPending &&
-          (pending.length === 0 ? (
-            <div className="text-center text-gray-400">Нет писем, ожидающих доставки</div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {pending.map((letter) => (
-                <LetterCard key={letter.id} letter={letter as Letter}>
-                  {onDeliver && (
-                    <button
-                      onClick={() => onDeliver(letter.id)}
-                      disabled={deliverLoadingId !== null}
-                      className="px-3 py-1 rounded bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition disabled:opacity-50"
-                    >
-                      {deliverLoadingId === letter.id ? 'Delivering...' : 'Deliver'}
-                    </button>
-                  )}
-                </LetterCard>
-              ))}
-            </div>
-          ))}
+          Ожидают доставки: {pending.length}
+        </Button>
+        <AnimatePresence initial={false}>
+          {showPending && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {pending.length === 0 ? (
+                <div className="text-center text-gray-400">Нет писем, ожидающих доставки</div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {pending.map((letter) => (
+                    <LetterCard key={letter.id} letter={letter as Letter}>
+                      {onDeliver && (
+                        <Button
+                          onClick={() => onDeliver(letter.id)}
+                          disabled={deliverLoadingId !== null}
+                          variant="contained"
+                          size="small"
+                          sx={{
+                            borderRadius: 2,
+                            fontWeight: 600,
+                            textTransform: 'none',
+                            minWidth: 120,
+                          }}
+                        >
+                          {deliverLoadingId === letter.id ? 'Выдача...' : 'Выдать'}
+                        </Button>
+                      )}
+                    </LetterCard>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <div>
-        <button
-          type="button"
-          className="w-full flex items-center justify-between text-lg font-semibold mb-3 text-gray-800 focus:outline-none"
+        <Button
+          fullWidth
+          variant="text"
+          sx={{
+            justifyContent: 'space-between',
+            fontWeight: 600,
+            fontSize: 18,
+            mb: 1,
+            color: '#1e293b',
+          }}
           onClick={() => setShowDelivered((v) => !v)}
+          endIcon={
+            <span className={`transition-transform ${showDelivered ? 'rotate-90' : ''}`}>▶</span>
+          }
         >
-          <span>Полученные письма: {delivered.length}</span>
-          <span className={`transition-transform ${showDelivered ? 'rotate-90' : ''}`}>▶</span>
-        </button>
-        {showDelivered &&
-          (delivered.length === 0 ? (
-            <div className="text-center text-gray-300">Нет полученных писем</div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {delivered.map((letter) => (
-                <LetterCard key={letter.id} letter={letter as Letter} />
-              ))}
-            </div>
-          ))}
+          Полученные письма: {delivered.length}
+        </Button>
+        <AnimatePresence initial={false}>
+          {showDelivered && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {delivered.length === 0 ? (
+                <div className="text-center text-gray-300">Нет полученных писем</div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {delivered.map((letter) => (
+                    <LetterCard key={letter.id} letter={letter as Letter} />
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

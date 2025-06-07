@@ -1,5 +1,6 @@
 import React from 'react';
-import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { CheckCircle2, Clock } from 'lucide-react';
+import Tooltip from '@mui/material/Tooltip';
 
 interface StatusIconProps {
   status: 'pending' | 'delivered';
@@ -7,11 +8,15 @@ interface StatusIconProps {
 
 export const StatusIcon: React.FC<StatusIconProps> = ({ status }) =>
   status === 'delivered' ? (
-    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600">
-      <CheckCircleIcon className="w-5 h-5" />
-    </span>
+    <Tooltip title="Письмо выдано" arrow>
+      <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-green-100 text-green-600 shadow">
+        <CheckCircle2 className="w-6 h-6" />
+      </span>
+    </Tooltip>
   ) : (
-    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100 text-yellow-600">
-      <ClockIcon className="w-5 h-5" />
-    </span>
+    <Tooltip title="Ожидает выдачи" arrow>
+      <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-yellow-100 text-yellow-600 shadow">
+        <Clock className="w-6 h-6" />
+      </span>
+    </Tooltip>
   );

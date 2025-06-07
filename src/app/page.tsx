@@ -2,21 +2,24 @@
 
 import React from 'react';
 import { useRoomsWithLetters } from '@/hooks/useRoomsWithLetters';
-import { PlusIcon, InboxArrowDownIcon } from '@heroicons/react/24/outline';
+import { Plus, Inbox } from 'lucide-react';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { RoomCard } from '@/components/ui/RoomCard';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { motion } from 'framer-motion';
 
 export default function Home(): React.ReactElement {
   const { data: rooms = [], isLoading } = useRoomsWithLetters();
 
   return (
-    <main className="max-w-2xl mx-auto px-2 py-8 sm:px-4">
-      <h1 className="text-4xl font-extrabold mb-8 text-center text-blue-700 tracking-tight">
+    <main className="max-w-2xl mx-auto px-0 sm:px-4 py-4 sm:py-8">
+      <h1 className="text-3xl sm:text-4xl font-extrabold mb-4 sm:mb-8 text-center text-blue-700 tracking-tight">
         Email Camp
       </h1>
-      <h2 className="text-xl font-semibold mb-6 text-gray-700 text-center">
-        Rooms and undelivered letters
+      <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-700 text-center">
+        Комнаты и письма, ожидающие выдачи
       </h2>
       {isLoading ? (
         <div className="grid grid-cols-1 gap-6">
@@ -25,30 +28,51 @@ export default function Home(): React.ReactElement {
           ))}
         </div>
       ) : rooms.length === 0 ? (
-        <div className="text-gray-500 text-center py-8">No rooms found.</div>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card elevation={2} className="rounded-2xl">
+            <CardContent className="py-8 text-center text-gray-500 text-lg">
+              Нет комнат с письмами.
+            </CardContent>
+          </Card>
+        </motion.div>
       ) : (
-        <div className="grid grid-cols-1 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="grid grid-cols-1 gap-6"
+        >
           {rooms.map((room) => (
             <RoomCard key={room.room_number} room={room}>
               <LinkButton
                 href={`/room/${room.room_number}`}
-                leftIcon={<PlusIcon className="w-5 h-5" />}
-                className="bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-400"
-                title="Add letter"
+                leftIcon={<Plus className="w-5 h-5" />}
+                color="primary"
+                variant="contained"
+                size="small"
+                className="min-w-[44px]"
+                title="Добавить письмо"
               >
-                <span className="hidden sm:inline">Add letter</span>
+                <span className="hidden sm:inline">Добавить</span>
               </LinkButton>
               <LinkButton
                 href={`/deliver/${room.room_number}`}
-                leftIcon={<InboxArrowDownIcon className="w-5 h-5" />}
-                className="bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-400"
-                title="Deliver letters"
+                leftIcon={<Inbox className="w-5 h-5" />}
+                color="success"
+                variant="contained"
+                size="small"
+                className="min-w-[44px]"
+                title="Выдать письма"
               >
-                <span className="hidden sm:inline">Deliver</span>
+                <span className="hidden sm:inline">Выдать</span>
               </LinkButton>
             </RoomCard>
           ))}
-        </div>
+        </motion.div>
       )}
     </main>
   );

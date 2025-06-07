@@ -8,6 +8,16 @@ import { useUsersByRoom } from '@/hooks/useUsersByRoom';
 import { PhotoDropzone } from './ui';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface AddLetterFormProps {
   onRoomNumberChange: (roomNumber: string) => void;
@@ -81,99 +91,90 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-stretch">
-      <div className="flex flex-col gap-1">
-        <label htmlFor="roomNumber" className="text-sm font-medium text-gray-700">
-          Room number
-        </label>
-        <input
-          type="text"
-          id="roomNumber"
-          value={roomNumber}
-          onChange={(e) => setRoomNumber(e.target.value)}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition w-full shadow-sm"
-          placeholder="Enter room number"
-          required
-        />
-      </div>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="note" className="text-sm font-medium text-gray-700">
-          Letter description
-        </label>
-        <input
-          type="text"
-          id="note"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition w-full shadow-sm"
-          placeholder="For example: for mom, from grandma, important..."
-          maxLength={100}
-        />
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-gray-700">Letter photo (take a picture)</label>
-        <PhotoDropzone
-          onFileAccepted={handlePhotoAccepted}
-          previewUrl={photoPreview}
-          onRemove={photo ? handleRemovePhoto : undefined}
-        />
-      </div>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="user" className="text-sm font-medium text-gray-700">
-          Letter recipient
-        </label>
-        <select
-          id="user"
-          value={selectedUserId ?? ''}
-          onChange={(e) => setSelectedUserId(Number(e.target.value) || null)}
-          className="rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition w-full shadow-sm"
-          required
-          disabled={usersLoading || users.length === 0}
-        >
-          <option value="" disabled>
-            {usersLoading ? 'Loading...' : 'Select recipient'}
-          </option>
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.last_name} {user.first_name} ({user.email})
-            </option>
-          ))}
-        </select>
-      </div>
-      <button
-        type="submit"
-        disabled={addLetter.isPending || addLetter.notifying || !roomNumber.trim()}
-        className="w-full bg-blue-600 text-white text-base font-semibold px-4 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition disabled:opacity-50"
-      >
-        {addLetter.isPending || addLetter.notifying ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg
-              className="animate-spin h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
+    <Card elevation={3} sx={{ borderRadius: 3, mb: 2 }}>
+      <form onSubmit={handleSubmit}>
+        <CardContent sx={{ pb: 1 }}>
+          <TextField
+            label="Номер комнаты"
+            value={roomNumber}
+            onChange={(e) => setRoomNumber(e.target.value)}
+            fullWidth
+            required
+            variant="outlined"
+            size="small"
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Описание письма"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            fullWidth
+            variant="outlined"
+            size="small"
+            sx={{ mb: 2 }}
+            placeholder="Например: для мамы, от бабушки..."
+            inputProps={{ maxLength: 100 }}
+          />
+          <div className="mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Фото письма (по желанию)
+            </label>
+            <PhotoDropzone
+              onFileAccepted={handlePhotoAccepted}
+              previewUrl={photoPreview}
+              onRemove={photo ? handleRemovePhoto : undefined}
+            />
+          </div>
+          <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+            <InputLabel id="user-label">Получатель</InputLabel>
+            <Select
+              labelId="user-label"
+              value={selectedUserId ?? ''}
+              label="Получатель"
+              onChange={(e) => setSelectedUserId(Number(e.target.value) || null)}
+              required
+              disabled={usersLoading || users.length === 0}
             >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-            </svg>
-            Sending...
-          </span>
-        ) : (
-          'Add letter'
+              <MenuItem value="" disabled>
+                {usersLoading ? 'Загрузка...' : 'Выберите получателя'}
+              </MenuItem>
+              {users.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.last_name} {user.first_name} ({user.email})
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </CardContent>
+        <CardActions sx={{ justifyContent: 'flex-end', pb: 2, pr: 2 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={addLetter.isPending || addLetter.notifying || !roomNumber.trim()}
+            sx={{
+              borderRadius: 2,
+              textTransform: 'none',
+              fontWeight: 600,
+              px: 3,
+              background: 'linear-gradient(90deg, #3b82f6 0%, #2563eb 100%)',
+              '&:hover': {
+                background: 'linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%)',
+              },
+            }}
+          >
+            {addLetter.isPending || addLetter.notifying ? (
+              <CircularProgress size={22} sx={{ color: 'white' }} />
+            ) : (
+              'Добавить письмо'
+            )}
+          </Button>
+        </CardActions>
+        {addLetter.isError && (
+          <p className="text-red-500 text-sm mt-2 text-center">
+            Ошибка при добавлении письма. Попробуйте ещё раз.
+          </p>
         )}
-      </button>
-      {addLetter.isError && (
-        <p className="text-red-500 text-sm mt-2 text-center">
-          Error adding letter. Please try again.
-        </p>
-      )}
-    </form>
+      </form>
+    </Card>
   );
 };

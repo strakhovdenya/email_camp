@@ -1,9 +1,12 @@
 import React from 'react';
 import type { Letter } from './types';
+import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
+import { CheckCircle2, AlertCircle, Mail, Send, XCircle } from 'lucide-react';
 
-const CHANNEL_LABELS: Record<string, string> = {
-  email: 'Email',
-  telegram: 'Telegram',
+const CHANNEL_LABELS: Record<string, { label: string; icon: React.ReactElement }> = {
+  email: { label: 'Email', icon: <Mail className="w-4 h-4" /> },
+  telegram: { label: 'Telegram', icon: <Send className="w-4 h-4" /> },
   // Добавляй новые каналы здесь
 };
 
@@ -13,56 +16,113 @@ export const LetterStatusBadges: React.FC<{ letter: Letter }> = ({ letter }) => 
 
   return (
     <>
-      <span
-        className={`text-xs font-medium rounded px-2 py-1 inline-block ${
-          letter.status === 'delivered'
-            ? 'bg-green-100 text-green-700'
-            : 'bg-yellow-100 text-yellow-800'
-        }`}
-      >
-        {letter.status === 'delivered' ? 'Delivered' : 'Awaiting delivery'}
-      </span>
+      <Chip
+        icon={
+          <>
+            {letter.status === 'delivered' ? (
+              <CheckCircle2 className="w-4 h-4 text-green-500" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-yellow-500" />
+            )}
+          </>
+        }
+        label={letter.status === 'delivered' ? 'Выдано' : 'Ожидает выдачи'}
+        size="small"
+        sx={{
+          bgcolor: letter.status === 'delivered' ? 'rgba(34,197,94,0.08)' : 'rgba(253,224,71,0.12)',
+          color: letter.status === 'delivered' ? 'rgb(22,163,74)' : 'rgb(202,138,4)',
+          fontWeight: 500,
+          fontSize: 13,
+          mr: 0.5,
+        }}
+      />
       {/* Новая логика: по notification_statuses */}
       {hasStatuses
-        ? Object.entries(CHANNEL_LABELS).map(([channel, label]) => {
+        ? Object.entries(CHANNEL_LABELS).map(([channel, { label, icon }]) => {
             const status = statuses?.[channel];
+            const chipIcon = React.isValidElement(icon) ? icon : undefined;
             if (status === 'sent') {
               return (
-                <span
-                  key={channel}
-                  className="text-xs font-medium rounded px-2 py-1 inline-block bg-green-100 text-green-700"
-                >
-                  {label} notified
-                </span>
+                <Tooltip key={channel} title={`${label}: уведомление отправлено`} arrow>
+                  <Chip
+                    icon={chipIcon}
+                    label={label}
+                    size="small"
+                    sx={{
+                      bgcolor: 'rgba(34,197,94,0.08)',
+                      color: 'rgb(22,163,74)',
+                      fontWeight: 500,
+                      fontSize: 13,
+                      mr: 0.5,
+                    }}
+                  />
+                </Tooltip>
               );
             } else if (status === 'failed') {
               return (
-                <span
-                  key={channel}
-                  className="text-xs font-medium rounded px-2 py-1 inline-block bg-red-100 text-red-700"
-                >
-                  {label} failed
-                </span>
+                <Tooltip key={channel} title={`${label}: ошибка отправки`} arrow>
+                  <Chip
+                    icon={<XCircle className="w-4 h-4 text-red-500" />}
+                    label={label}
+                    size="small"
+                    sx={{
+                      bgcolor: 'rgba(239,68,68,0.08)',
+                      color: 'rgb(220,38,38)',
+                      fontWeight: 500,
+                      fontSize: 13,
+                      mr: 0.5,
+                    }}
+                  />
+                </Tooltip>
               );
             } else {
               return (
-                <span
-                  key={channel}
-                  className="text-xs font-medium rounded px-2 py-1 inline-block bg-gray-100 text-gray-600"
-                >
-                  No {label} notification
-                </span>
+                <Tooltip key={channel} title={`${label}: уведомление не отправлено`} arrow>
+                  <Chip
+                    icon={chipIcon}
+                    label={label}
+                    size="small"
+                    sx={{
+                      bgcolor: 'rgba(203,213,225,0.18)',
+                      color: 'rgb(71,85,105)',
+                      fontWeight: 500,
+                      fontSize: 13,
+                      mr: 0.5,
+                    }}
+                  />
+                </Tooltip>
               );
             }
           })
         : // Старая логика для писем без notification_statuses
           !letter.recipient_notified && (
-            <span className="text-xs font-medium rounded px-2 py-1 inline-block bg-red-100 text-red-700">
-              No email notification
-            </span>
+            <Tooltip title="Email: уведомление не отправлено" arrow>
+              <Chip
+                icon={<Mail className="w-4 h-4 text-red-400" />}
+                label="Email"
+                size="small"
+                sx={{
+                  bgcolor: 'rgba(239,68,68,0.08)',
+                  color: 'rgb(220,38,38)',
+                  fontWeight: 500,
+                  fontSize: 13,
+                  mr: 0.5,
+                }}
+              />
+            </Tooltip>
           )}
       {letter.note && (
-        <span className="text-xs text-blue-700 bg-blue-50 rounded px-2 py-1">{letter.note}</span>
+        <Chip
+          label={letter.note}
+          size="small"
+          sx={{
+            bgcolor: 'rgba(59,130,246,0.08)',
+            color: 'rgb(37,99,235)',
+            fontWeight: 500,
+            fontSize: 13,
+            mr: 0.5,
+          }}
+        />
       )}
     </>
   );

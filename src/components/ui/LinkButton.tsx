@@ -1,28 +1,30 @@
 import * as React from 'react';
-import Link, { LinkProps } from 'next/link';
+import NextLink from 'next/link';
+import Button, { ButtonProps } from '@mui/material/Button';
 import { cn } from '@/lib/utils';
 
-export interface LinkButtonProps extends LinkProps {
-  children: React.ReactNode;
-  className?: string;
+export interface LinkButtonProps extends Omit<ButtonProps, 'href'> {
+  href: string;
   leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   title?: string;
 }
 
 export const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
-  ({ children, className, leftIcon, title, ...props }, ref) => (
-    <Link
+  ({ children, className, leftIcon, rightIcon, title, href, ...props }, ref) => (
+    <Button
       ref={ref}
-      className={cn(
-        'inline-flex items-center px-4 py-2 rounded-lg font-semibold shadow focus:outline-none focus:ring-2 focus:ring-offset-2 transition',
-        className
-      )}
+      component={NextLink}
+      href={href}
+      className={cn('rounded-full font-semibold transition-all', className)}
+      startIcon={leftIcon}
+      endIcon={rightIcon}
       title={title}
+      disableElevation
       {...props}
     >
-      {leftIcon && <span className="mr-2">{leftIcon}</span>}
       {children}
-    </Link>
+    </Button>
   )
 );
 LinkButton.displayName = 'LinkButton';
