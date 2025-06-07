@@ -12,8 +12,7 @@ import Avatar from '@mui/material/Avatar';
 import { CheckCircle2, Clock, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { formatSafeDate } from '@/lib/utils';
 import type { LetterWithRelations } from '@/types/supabase';
 import {
   tableRowClass,
@@ -106,14 +105,10 @@ export function DesktopLettersTable({ letters, onDeliver, deliverLoadingId }: Pr
                       </Tooltip>
                     </TableCell>
                     <TableCell className={tableCellClass + ' text-gray-500'}>
-                      {format(new Date(letter.created_at), 'dd.MM.yyyy HH:mm', { locale: ru })}
+                      {formatSafeDate(letter.created_at)}
                     </TableCell>
                     <TableCell className={tableCellClass + ' text-gray-500'}>
-                      {letter.delivered_at ? (
-                        format(new Date(letter.delivered_at), 'dd.MM.yyyy HH:mm', { locale: ru })
-                      ) : (
-                        <span className="text-gray-400">-</span>
-                      )}
+                      {formatSafeDate(letter.delivered_at)}
                     </TableCell>
                     <TableCell
                       className={tableCellClass + ' text-gray-600 italic max-w-[120px] truncate'}

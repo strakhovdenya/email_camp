@@ -23,8 +23,7 @@ import {
   tableWrapperClass,
   tableHeaderRowClass,
 } from '../common/tableStyles';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { formatSafeDate } from '@/lib/utils';
 
 const columns = [
   { key: 'room_number', label: 'Номер', width: 90 },
@@ -121,7 +120,7 @@ const DesktopRooms: React.FC = () => {
                       {room.room_number}
                     </TableCell>
                     <TableCell className={tableCellClass + ' text-gray-500'}>
-                      {format(new Date(room.created_at), 'dd.MM.yyyy HH:mm', { locale: ru })}
+                      {formatSafeDate(room.created_at)}
                     </TableCell>
                     <TableCell className={tableCellClass}>
                       <div className="flex gap-2 justify-end">

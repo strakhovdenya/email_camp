@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { LetterWithRelations } from '@/types/supabase';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
 import { ChevronDown, ChevronUp, Mail, CheckCircle2, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatSafeDate } from '@/lib/utils';
 import Image from 'next/image';
 import Button from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
@@ -113,7 +111,7 @@ export function MobileLettersTable({
                   {letter.status === 'delivered' ? 'Выдано' : 'Ожидает'}
                 </span>
                 <span className="text-sm text-gray-500">
-                  {format(new Date(letter.created_at), 'dd MMM yyyy', { locale: ru })}
+                  {formatSafeDate(letter.created_at, 'dd MMM yyyy')}
                 </span>
               </div>
 
@@ -164,7 +162,7 @@ export function MobileLettersTable({
                     <div className="text-sm">
                       <span className="font-medium text-gray-700">Выдано:</span>
                       <p className="mt-2 text-gray-600">
-                        {format(new Date(letter.delivered_at), 'dd MMM yyyy HH:mm', { locale: ru })}
+                        {formatSafeDate(letter.delivered_at, 'dd MMM yyyy HH:mm')}
                       </p>
                     </div>
                   )}

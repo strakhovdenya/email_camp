@@ -1,22 +1,12 @@
 import React, { useMemo } from 'react';
 import { Clock, CheckCircle2 } from 'lucide-react';
 import type { Letter } from './types';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { formatSafeDate } from '@/lib/utils';
 import Chip from '@mui/material/Chip';
 
 export const LetterDates: React.FC<{ letter: Letter }> = ({ letter }) => {
-  const createdAt = useMemo(
-    () => format(new Date(letter.created_at), 'dd.MM.yyyy HH:mm', { locale: ru }),
-    [letter.created_at]
-  );
-  const deliveredAt = useMemo(
-    () =>
-      letter.delivered_at
-        ? format(new Date(letter.delivered_at), 'dd.MM.yyyy HH:mm', { locale: ru })
-        : '',
-    [letter.delivered_at]
-  );
+  const createdAt = useMemo(() => formatSafeDate(letter.created_at), [letter.created_at]);
+  const deliveredAt = useMemo(() => formatSafeDate(letter.delivered_at), [letter.delivered_at]);
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
       <span className="flex items-center gap-1 text-xs text-gray-500">

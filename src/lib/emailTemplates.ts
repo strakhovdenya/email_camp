@@ -1,3 +1,5 @@
+import { formatSafeDate } from './utils';
+
 export function letterHtmlTemplate({
   roomNumber,
   note,
@@ -28,7 +30,7 @@ export function letterHtmlTemplate({
       `
           : ''
       }
-      ${createdAt ? `<div style="text-align:right; color:#888; font-size:13px;">${createdAt}</div>` : ''}
+      ${createdAt ? `<div style="text-align:right; color:#888; font-size:13px;">${formatSafeDate(createdAt)}</div>` : ''}
       <div style="margin-top: 24px; text-align: center; color: #888; font-size: 13px;">
         Email Camp &copy; ${new Date().getFullYear()}
       </div>
