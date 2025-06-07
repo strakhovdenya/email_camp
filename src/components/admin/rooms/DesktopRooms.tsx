@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
 import { useRooms } from '@/hooks/useRooms';
-import SectionHeader from '@/components/admin/SectionHeader';
 import SearchInput from '@/components/admin/SearchInput';
-import AdminTable from '@/components/admin/AdminTable';
-import ActionButton from '@/components/admin/ActionButton';
 import { useRoomActions } from '@/hooks/useRoomActions';
 import type { Room } from '@/types/supabase';
 import RoomModal from './RoomModal';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import {
+  tableRowClass,
+  tableCellClass,
+  tableHeadClass,
+  tableWrapperClass,
+  tableHeaderRowClass,
+} from '../common/tableStyles';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 const columns = [
-  { key: 'room_number', label: 'Номер комнаты' },
-  { key: 'created_at', label: 'Создана' },
-  { key: 'actions', label: '', className: 'text-right' },
+  { key: 'room_number', label: 'Номер', width: 90 },
+  { key: 'created_at', label: 'Создана', width: 110 },
+  { key: 'actions', label: '', width: 70 },
 ];
 
 const DesktopRooms: React.FC = () => {
@@ -54,55 +72,90 @@ const DesktopRooms: React.FC = () => {
   };
 
   return (
-    <div>
-      <SectionHeader
-        icon={
-          <span role="img" aria-label="rooms">
-            🏠
-          </span>
-        }
-        title="Комнаты"
-        description="Список всех комнат в системе."
-      />
+    <div className="w-full min-w-0">
       <div className="flex justify-between items-center mb-4">
         <SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="Поиск комнат..." />
-        <ActionButton color="primary" icon={<span>＋</span>} onClick={handleAdd}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          sx={{ borderRadius: 2, fontWeight: 600, ml: 2, textTransform: 'none', boxShadow: 2 }}
+          onClick={handleAdd}
+        >
           Добавить
-        </ActionButton>
+        </Button>
       </div>
-      <AdminTable
-        columns={columns}
-        data={filteredRooms}
-        isLoading={isLoading}
-        emptyText="Комнаты не найдены"
-        renderRow={(room: Room) => (
-          <tr key={room.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-            <td className="px-4 py-3 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">
-              {room.room_number}
-            </td>
-            <td className="px-4 py-3 whitespace-nowrap text-gray-700 dark:text-gray-300">
-              {new Date(room.created_at).toLocaleDateString()}
-            </td>
-            <td className="px-4 py-3 whitespace-nowrap text-right">
-              <ActionButton
-                color="primary"
-                icon={<span>✏️</span>}
-                className="mr-2"
-                onClick={() => handleEdit(room)}
-              >
-                Редактировать
-              </ActionButton>
-              <ActionButton
-                color="danger"
-                icon={<span>🗑️</span>}
-                onClick={() => handleDelete(room)}
-              >
-                Удалить
-              </ActionButton>
-            </td>
-          </tr>
-        )}
-      />
+      <div className={tableWrapperClass}>
+        <TableContainer component={Paper} sx={{ background: 'transparent', boxShadow: 'none' }}>
+          <Table className="w-full">
+            <TableHead>
+              <TableRow className={tableHeaderRowClass}>
+                {columns.map((col) => (
+                  <TableCell key={col.key} className={tableHeadClass} style={{ width: col.width }}>
+                    {col.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {isLoading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <TableRow key={i}>
+                    {columns.map((col) => (
+                      <TableCell key={col.key} className={tableCellClass}>
+                        {/* skeleton */}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : filteredRooms.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length} align="center">
+                    Комнаты не найдены
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredRooms.map((room) => (
+                  <TableRow key={room.id} className={tableRowClass}>
+                    <TableCell className={tableCellClass + ' font-semibold text-gray-800'}>
+                      {room.room_number}
+                    </TableCell>
+                    <TableCell className={tableCellClass + ' text-gray-500'}>
+                      {format(new Date(room.created_at), 'dd.MM.yyyy HH:mm', { locale: ru })}
+                    </TableCell>
+                    <TableCell className={tableCellClass}>
+                      <div className="flex gap-2 justify-end">
+                        <Tooltip title="Редактировать">
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            size="small"
+                            sx={{ minWidth: 0, p: 1, borderRadius: '50%' }}
+                            onClick={() => handleEdit(room)}
+                          >
+                            <EditIcon fontSize="small" />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip title="Удалить">
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            size="small"
+                            sx={{ minWidth: 0, p: 1, borderRadius: '50%' }}
+                            onClick={() => handleDelete(room)}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </Button>
+                        </Tooltip>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
       <RoomModal
         room={modalRoom}
         open={modalOpen}
