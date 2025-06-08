@@ -4,7 +4,7 @@ import { sendTelegramNotification } from './telegramNotificationService';
 export class TelegramNotifier implements INotifier {
   async send(
     user: {
-      id: number;
+      id: string;
       email?: string;
       telegram_chat_id?: string | null;
       channels_for_notification: string[];

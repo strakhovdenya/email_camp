@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     }
 
     type User = {
-      id: number;
+      id: string;
       email: string;
       channels_for_notification: string[];
       telegram_chat_id?: string | null | undefined;

@@ -5,51 +5,63 @@ export interface Database {
     Tables: {
       letters: {
         Row: {
-          id: number;
-          room_id: number;
+          id: string;
+          room_id: string;
           status: 'pending' | 'delivered';
           created_at: string;
           delivered_at: string | null;
           sync_status: 'pending' | 'synced' | 'failed';
           barcode_id: string;
           recipient_notified: boolean;
+          user_id: string | null;
+          notification_statuses: unknown;
+          note?: string | null;
+          photo_url?: string | null;
         };
         Insert: {
-          id?: number;
-          room_id: number;
+          id?: string;
+          room_id: string;
           status?: 'pending' | 'delivered';
           created_at?: string;
           delivered_at?: string | null;
           sync_status?: 'pending' | 'synced' | 'failed';
           barcode_id: string;
           recipient_notified?: boolean;
+          user_id?: string | null;
+          notification_statuses?: unknown;
+          note?: string | null;
+          photo_url?: string | null;
         };
         Update: {
-          id?: number;
-          room_id?: number;
+          id?: string;
+          room_id?: string;
           status?: 'pending' | 'delivered';
           created_at?: string;
           delivered_at?: string | null;
           sync_status?: 'pending' | 'synced' | 'failed';
           barcode_id?: string;
           recipient_notified?: boolean;
+          user_id?: string | null;
+          notification_statuses?: unknown;
+          note?: string | null;
+          photo_url?: string | null;
         };
       };
       rooms: {
         Row: {
-          id: number;
+          id: string;
           room_number: string;
           telegram_chat_id: string | null;
           created_at: string;
         };
         Insert: {
-          id?: number;
+          id?: string;
           room_number: string;
           telegram_chat_id?: string | null;
           created_at?: string;
         };
         Update: {
-          id?: number;
+          id?: string;
           room_number?: string;
           telegram_chat_id?: string | null;
           created_at?: string;
@@ -57,34 +69,34 @@ export interface Database {
       };
       users: {
         Row: {
-          id: number;
+          id: string;
           first_name: string;
           last_name: string;
           phone: string | null;
           email: string;
-          room_id: number;
+          room_id: string | null;
           role: 'admin' | 'staff' | 'camper';
           created_at: string;
           channels_for_notification: string[];
         };
         Insert: {
-          id?: number;
+          id?: string;
           first_name: string;
           last_name: string;
           phone?: string | null;
           email: string;
-          room_id: number;
+          room_id?: string | null;
           role?: 'admin' | 'staff' | 'camper';
           created_at?: string;
           channels_for_notification?: string[];
         };
         Update: {
-          id?: number;
+          id?: string;
           first_name?: string;
           last_name?: string;
           phone?: string | null;
           email?: string;
-          room_id?: number;
+          room_id?: string | null;
           role?: 'admin' | 'staff' | 'camper';
           created_at?: string;
           channels_for_notification?: string[];
@@ -92,20 +104,20 @@ export interface Database {
       };
     };
     Views: {
-      letters_with_rooms: {
-        Row: {
-          id: number;
-          room_id: number;
-          room_number: string;
-          telegram_chat_id: string | null;
-          status: 'pending' | 'delivered';
-          created_at: string;
-          delivered_at: string | null;
-          sync_status: 'pending' | 'synced' | 'failed';
-          barcode_id: string;
-          recipient_notified: boolean;
-        };
-      };
+      // letters_with_rooms: {
+      //   Row: {
+      //     id: number;
+      //     room_id: number;
+      //     room_number: string;
+      //     telegram_chat_id: string | null;
+      //     status: 'pending' | 'delivered';
+      //     created_at: string;
+      //     delivered_at: string | null;
+      //     sync_status: 'pending' | 'synced' | 'failed';
+      //     barcode_id: string;
+      //     recipient_notified: boolean;
+      //   };
+      // };
     };
     Functions: {
       [_ in never]: never;

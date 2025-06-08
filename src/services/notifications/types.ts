@@ -1,7 +1,7 @@
 export type ChannelType = 'email' | 'telegram';
 
 export interface NotificationMessage {
-  letterId: number;
+  letterId: string;
   letterNote?: string;
   photoUrl?: string;
 }
@@ -9,7 +9,7 @@ export interface NotificationMessage {
 export interface INotifier {
   send(
     user: {
-      id: number;
+      id: string;
       email?: string;
       telegram_chat_id?: string | null;
       channels_for_notification: string[];

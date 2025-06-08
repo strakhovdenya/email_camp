@@ -1,7 +1,12 @@
 import { INotifier, NotificationMessage } from './types';
 import { sendEmailNotification } from './emailNotificationService';
 
-type NotifierUser = Parameters<INotifier['send']>[0];
+type NotifierUser = {
+  id: string;
+  email?: string;
+  telegram_chat_id?: string | null;
+  channels_for_notification: string[];
+};
 
 export class EmailNotifier implements INotifier {
   async send(user: NotifierUser, message: NotificationMessage) {

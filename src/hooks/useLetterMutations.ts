@@ -9,7 +9,7 @@ interface AddLetterInput {
   room_number: string;
   note?: string;
   photo_url?: string;
-  user_id?: number;
+  user_id?: string;
 }
 
 // Query keys

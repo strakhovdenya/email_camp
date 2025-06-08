@@ -10,7 +10,7 @@ export async function sendEmailNotification({
   letterNote,
   photoUrl,
 }: {
-  letterId: number;
+  letterId: string;
   recipientEmail: string;
   letterNote?: string;
   photoUrl?: string;

@@ -58,33 +58,45 @@ export interface Database {
       letters: {
         Row: {
           id: string;
-          created_at: string;
           room_id: string;
-          recipient_id: string;
-          status: string;
-          photo_url: string | null;
-          notification_statuses: Json | null;
+          status: 'pending' | 'delivered';
+          created_at: string;
+          delivered_at: string | null;
+          sync_status: 'pending' | 'synced' | 'failed';
+          barcode_id: string;
           recipient_notified: boolean;
+          user_id: string | null;
+          notification_statuses: unknown;
+          note?: string | null;
+          photo_url?: string | null;
         };
         Insert: {
           id?: string;
-          created_at?: string;
           room_id: string;
-          recipient_id: string;
-          status?: string;
-          photo_url?: string | null;
-          notification_statuses?: Json | null;
+          status?: 'pending' | 'delivered';
+          created_at?: string;
+          delivered_at?: string | null;
+          sync_status?: 'pending' | 'synced' | 'failed';
+          barcode_id: string;
           recipient_notified?: boolean;
+          user_id?: string | null;
+          notification_statuses?: unknown;
+          note?: string | null;
+          photo_url?: string | null;
         };
         Update: {
           id?: string;
-          created_at?: string;
           room_id?: string;
-          recipient_id?: string;
-          status?: string;
-          photo_url?: string | null;
-          notification_statuses?: Json | null;
+          status?: 'pending' | 'delivered';
+          created_at?: string;
+          delivered_at?: string | null;
+          sync_status?: 'pending' | 'synced' | 'failed';
+          barcode_id?: string;
           recipient_notified?: boolean;
+          user_id?: string | null;
+          notification_statuses?: unknown;
+          note?: string | null;
+          photo_url?: string | null;
         };
       };
     };
@@ -112,7 +124,7 @@ export type LetterWithRelations = Database['public']['Tables']['letters']['Row']
 };
 
 export interface User {
-  id: number;
+  id: string;
   created_at: string;
   email: string | null;
   first_name: string | null;

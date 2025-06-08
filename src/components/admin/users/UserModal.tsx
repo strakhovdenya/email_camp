@@ -18,6 +18,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import CircularProgress from '@mui/material/CircularProgress';
 import FormLabel from '@mui/material/FormLabel';
+import { USER_ROLES, ROLE_ADMIN, ROLE_STAFF, ROLE_CAMPER } from '@/constants/userRoles';
 
 interface UserModalProps {
   user: User | null;
@@ -152,12 +153,18 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
               <Select
                 value={role}
                 label="Роль"
-                onChange={(e) => setRole(e.target.value as 'admin' | 'staff' | 'camper')}
+                onChange={(e) =>
+                  setRole(
+                    e.target.value as typeof ROLE_ADMIN | typeof ROLE_STAFF | typeof ROLE_CAMPER
+                  )
+                }
                 size="small"
               >
-                <MenuItem value="camper">Camper</MenuItem>
-                <MenuItem value="staff">Staff</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
+                {USER_ROLES.map((r) => (
+                  <MenuItem key={r.value} value={r.value}>
+                    {r.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             {role === 'camper' && (

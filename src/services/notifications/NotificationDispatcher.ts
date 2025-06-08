@@ -9,7 +9,7 @@ export class NotificationDispatcher {
 
   async notify(
     user: {
-      id: number;
+      id: string;
       email?: string;
       telegram_chat_id?: string | null;
       channels_for_notification: string[];

@@ -35,7 +35,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   const [note, setNote] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const { data: users = [], isLoading: usersLoading } = useUsersByRoom(roomNumber);
   const { showToast } = useToast();
 
@@ -131,7 +131,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
               labelId="user-label"
               value={selectedUserId ?? ''}
               label="Получатель"
-              onChange={(e) => setSelectedUserId(Number(e.target.value) || null)}
+              onChange={(e) => setSelectedUserId(e.target.value as string | null)}
               required
               disabled={usersLoading || users.length === 0}
             >

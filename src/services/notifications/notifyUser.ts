@@ -16,12 +16,12 @@ export async function notifyUser({
   photoUrl,
 }: {
   user: {
-    id: number;
+    id: string;
     email?: string;
     telegram_chat_id?: string | null;
     channels_for_notification: string[];
   };
-  letterId: number;
+  letterId: string;
   letterNote?: string;
   photoUrl?: string;
 }) {
