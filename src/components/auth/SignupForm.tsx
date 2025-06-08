@@ -69,17 +69,34 @@ export function SignupForm() {
       });
       console.log('Результат регистрации:', { data, error });
 
-      if (error) throw error;
+      if (error) {
+        const msg = error.message || '';
+        if (
+          msg.toLowerCase().includes('user already registered') ||
+          (msg.toLowerCase().includes('email') && msg.toLowerCase().includes('exists'))
+        ) {
+          showToast('Пользователь с таким email уже существует. Войдите в систему.', 'error');
+          router.push('/auth');
+          return;
+        }
+        showToast(msg || 'Ошибка регистрации!!', 'error');
+        return;
+      }
       const user = data.user;
-      if (!user) throw new Error('Пользователь не создан');
-
-      showToast('Проверьте почту для подтверждения регистрации', 'success');
-      setEmail('');
-      setPassword('');
-      setRole(REGISTRATION_ROLES[0].value);
-      setFirstName('');
-      setLastName('');
-      setAwaitingConfirmation(true);
+      if (user?.user_metadata?.email_verified === false) {
+        showToast('Проверьте почту для подтверждения регистрации.', 'success');
+        setEmail('');
+        setPassword('');
+        setRole(REGISTRATION_ROLES[0].value);
+        setFirstName('');
+        setLastName('');
+        setAwaitingConfirmation(true);
+        return;
+      } else {
+        showToast('Пользователь с таким email уже существует. Войдите в систему.', 'error');
+        router.push('/auth');
+        return;
+      }
     } catch (error) {
       console.error('Ошибка при регистрации:', error);
       showToast(error instanceof Error ? error.message : 'Ошибка регистрации', 'error');

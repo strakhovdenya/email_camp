@@ -18,8 +18,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Если пользователь авторизован и пытается получить доступ к страницам аутентификации
-  if (session && req.nextUrl.pathname.startsWith('/auth')) {
+  // Если пользователь авторизован и пытается получить доступ к страницам аутентификации, кроме /auth/email-verified
+  if (
+    session &&
+    req.nextUrl.pathname.startsWith('/auth') &&
+    req.nextUrl.pathname !== '/auth/email-verified'
+  ) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = '/';
     return NextResponse.redirect(redirectUrl);
