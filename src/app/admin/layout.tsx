@@ -74,6 +74,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="rounded-3xl bg-white/70 backdrop-blur-lg shadow-2xl p-4 sm:p-8">
           <h1 className="text-3xl font-bold mb-4">Admin Panel</h1>
           <AdminNav />
+          {/* <UserInfo /> */}
           {children}
         </div>
       </div>

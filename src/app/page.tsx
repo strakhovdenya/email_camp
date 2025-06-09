@@ -9,7 +9,6 @@ import { RoomCard } from '@/components/ui/RoomCard';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { motion } from 'framer-motion';
-import LogoutButton from '@/components/auth/LogoutButton';
 
 export default function Home(): React.ReactElement {
   const { data: rooms = [], isLoading } = useRoomsWithLetters();
@@ -19,9 +18,6 @@ export default function Home(): React.ReactElement {
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-4 sm:mb-8 text-center text-blue-700 tracking-tight">
         Email Camp
       </h1>
-      <div className="flex justify-end mb-4">
-        <LogoutButton />
-      </div>
       <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-700 text-center">
         Комнаты и письма, ожидающие выдачи
       </h2>

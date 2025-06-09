@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from '@mui/material/Dialog';
@@ -14,14 +14,39 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import { toast } from 'sonner';
-
-type Role = 'admin' | 'staff';
+import { supabase } from '@/lib/auth';
+import { ROLE_ADMIN, ROLE_STAFF } from '@/constants/userRoles';
 
 export function InviteAdminButton() {
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState<Role>('staff');
+  const [role, setRole] = useState<string>(ROLE_STAFF);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    supabase.auth.getUser().then(async ({ data }) => {
+      const user = data?.user;
+      if (!user) {
+        if (isMounted) setIsAdmin(false);
+        return;
+      }
+      let role = user.user_metadata?.role;
+      if (!role) {
+        const { data: userRow } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        role = userRow?.role;
+      }
+      if (isMounted) setIsAdmin(role === ROLE_ADMIN);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleInvite = async () => {
     try {
@@ -45,13 +70,15 @@ export function InviteAdminButton() {
       toast.success('Приглашение успешно отправлено');
       setIsOpen(false);
       setEmail('');
-      setRole('staff');
+      setRole(ROLE_STAFF);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to send invite');
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (!isAdmin) return null;
 
   return (
     <>
@@ -89,7 +116,7 @@ export function InviteAdminButton() {
         <DialogTitle sx={{ pb: 1, fontSize: 20 }}>
           <span className="text-xl font-semibold">Пригласить нового пользователя</span>
         </DialogTitle>
-        <DialogContent sx={{ pt: 1, pb: 1 }}>
+        <DialogContent>
           <div className="space-y-4">
             <TextField
               label="Email"
@@ -110,15 +137,15 @@ export function InviteAdminButton() {
                 id="role-select"
                 value={role}
                 label="Роль"
-                onChange={(e) => setRole(e.target.value as Role)}
+                onChange={(e) => setRole(e.target.value as string)}
               >
-                <MenuItem value="admin">Администратор</MenuItem>
-                <MenuItem value="staff">Персонал</MenuItem>
+                <MenuItem value={ROLE_ADMIN}>Администратор</MenuItem>
+                <MenuItem value={ROLE_STAFF}>Персонал</MenuItem>
               </Select>
             </FormControl>
           </div>
         </DialogContent>
-        <DialogActions sx={{ px: 2, pb: 2 }}>
+        <DialogActions>
           <Button
             onClick={() => setIsOpen(false)}
             variant="outlined"
