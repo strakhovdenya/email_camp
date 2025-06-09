@@ -36,7 +36,8 @@ CREATE TABLE letters (
   note TEXT,
   photo_url TEXT,
   user_id uuid REFERENCES users(id),
-  notification_statuses jsonb DEFAULT '{}'
+  notification_statuses jsonb DEFAULT '{}',
+  recipient_notified boolean NOT NULL DEFAULT false
 );
 
 -- Индексы

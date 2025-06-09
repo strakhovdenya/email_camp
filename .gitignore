@@ -38,4 +38,7 @@ next-env.d.ts
 **/public/worker-*.js
 **/public/sw.js.map
 **/public/workbox-*.js.map
-**/public/worker-*.js.map 
+**/public/worker-*.js.map
+
+# new rule
+google_secrets.json 

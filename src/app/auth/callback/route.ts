@@ -2,6 +2,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { Database } from '@/lib/database.types';
+import { ROLE_ADMIN } from '@/constants/userRoles';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -22,12 +23,21 @@ export async function GET(request: Request) {
     }
 
     if (session?.user) {
+      const meta = session.user.user_metadata;
+      console.log('Google user_metadata:', meta);
+      const firstName = meta.first_name || meta.full_name?.split(' ')[0] || '';
+      const lastName = meta.last_name || meta.full_name?.split(' ').slice(1).join(' ') || '';
+      let role = meta.role || '';
       // Проверяем, существует ли уже запись в таблице users
       const { data: existingUser, error: checkError } = await supabase
         .from('users')
-        .select('id')
-        .eq('id', session.user.id)
+        .select('id, role')
+        .eq('role', ROLE_ADMIN)
         .single();
+      if (!existingUser) {
+        // Первый пользователь — всегда admin
+        role = ROLE_ADMIN;
+      }
 
       if (checkError && checkError.code !== 'PGRST116') {
         // PGRST116 - запись не найдена
@@ -35,22 +45,25 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${requestUrl.origin}/auth?error=db_error`);
       }
 
-      // Если записи нет, создаем новую
-      if (!existingUser) {
-        const { error: insertError } = await supabase.from('users').insert([
-          {
-            id: session.user.id,
-            email: session.user.email,
-            role: session.user.user_metadata.role || 'staff',
-            first_name: session.user.user_metadata.first_name,
-            last_name: session.user.user_metadata.last_name,
-          },
-        ]);
+      // Если не хватает данных — редиректим на /auth/complete-profile
+      if (!firstName || !lastName || !role) {
+        return NextResponse.redirect(`${requestUrl.origin}/auth/complete-profile`);
+      }
 
-        if (insertError) {
-          console.error('Ошибка при создании записи пользователя:', insertError);
-          return NextResponse.redirect(`${requestUrl.origin}/auth?error=db_error`);
-        }
+      // Если записи нет, создаем новую
+      const { error: insertError } = await supabase.from('users').insert([
+        {
+          id: session.user.id,
+          email: session.user.email,
+          role,
+          first_name: firstName,
+          last_name: lastName,
+        },
+      ]);
+
+      if (insertError) {
+        console.error('Ошибка при создании записи пользователя:', insertError);
+        return NextResponse.redirect(`${requestUrl.origin}/auth?error=db_error`);
       }
     }
   }

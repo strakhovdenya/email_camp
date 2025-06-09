@@ -13,7 +13,7 @@ import FormControl from '@mui/material/FormControl';
 import { useToast } from '@/providers/ToastProvider';
 import { supabase } from '@/lib/auth';
 import Divider from '@mui/material/Divider';
-import { USER_ROLES } from '@/constants/userRoles';
+import { USER_ROLES, ROLE_ADMIN } from '@/constants/userRoles';
 import { useRouter } from 'next/navigation';
 
 const REGISTRATION_ROLES = USER_ROLES.filter((r) => r.canRegister);
@@ -30,6 +30,7 @@ export function SignupForm() {
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
+  const [onlyAdmin, setOnlyAdmin] = useState(false);
 
   const handleGoogleSignUp = async () => {
     setLoading(true);
@@ -131,6 +132,17 @@ export function SignupForm() {
       if (pollingRef.current) clearInterval(pollingRef.current);
     };
   }, [awaitingConfirmation, router, showToast]);
+
+  useEffect(() => {
+    // Проверяем, есть ли админ в базе
+    supabase
+      .from('users')
+      .select('id')
+      .eq('role', ROLE_ADMIN)
+      .then(({ data }) => {
+        if (!data || data.length === 0) setOnlyAdmin(true);
+      });
+  }, []);
 
   return (
     <Box className="w-full max-w-sm mx-auto p-6 space-y-6">
@@ -235,12 +247,17 @@ export function SignupForm() {
                 value={role}
                 label="Роль"
                 onChange={(e) => setRole(e.target.value as string)}
+                disabled={onlyAdmin}
               >
-                {REGISTRATION_ROLES.map((r) => (
-                  <MenuItem key={r.value} value={r.value}>
-                    {r.label}
-                  </MenuItem>
-                ))}
+                {onlyAdmin ? (
+                  <MenuItem value={ROLE_ADMIN}>Администратор</MenuItem>
+                ) : (
+                  REGISTRATION_ROLES.map((r) => (
+                    <MenuItem key={r.value} value={r.value}>
+                      {r.label}
+                    </MenuItem>
+                  ))
+                )}
               </Select>
             </FormControl>
             <Button

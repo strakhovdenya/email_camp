@@ -1,6 +1,10 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey!);
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
@@ -10,6 +14,29 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
+  // Усиленная защита: запрещаем любые POST-запросы на /auth/signup, если есть хотя бы один admin
+  if (req.nextUrl.pathname === '/auth/signup' && (req.method === 'POST' || req.method === 'GET')) {
+    const { data: admins } = await supabaseAdmin.from('users').select('id').eq('role', 'admin');
+    if (admins && admins.length > 0) {
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = '/auth';
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  // Запретить регистрацию через Google OAuth для новых пользователей
+  if (
+    req.nextUrl.pathname.startsWith('/auth/v1/authorize') &&
+    req.nextUrl.searchParams.get('provider') === 'google'
+  ) {
+    // Проверяем, есть ли пользователь с таким email в базе (можно реализовать через invite flow)
+    // Здесь просто запрещаем self-signup через Google
+    const redirectUrl = req.nextUrl.clone();
+    redirectUrl.pathname = '/auth';
+    redirectUrl.searchParams.set('error', 'google_signup_disabled');
+    return NextResponse.redirect(redirectUrl);
+  }
+
   // Если пользователь не авторизован и пытается получить доступ к защищенным маршрутам
   if (!session && !req.nextUrl.pathname.startsWith('/auth')) {
     const redirectUrl = req.nextUrl.clone();
@@ -18,11 +45,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Если пользователь авторизован и пытается получить доступ к страницам аутентификации, кроме /auth/email-verified
+  // Если пользователь авторизован и пытается получить доступ к страницам аутентификации, кроме /auth/email-verified и /auth/complete-profile
   if (
     session &&
     req.nextUrl.pathname.startsWith('/auth') &&
-    req.nextUrl.pathname !== '/auth/email-verified'
+    req.nextUrl.pathname !== '/auth/email-verified' &&
+    req.nextUrl.pathname !== '/auth/complete-profile'
   ) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = '/';
