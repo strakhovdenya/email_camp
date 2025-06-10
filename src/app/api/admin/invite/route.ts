@@ -42,7 +42,16 @@ export async function POST(request: Request) {
     });
     if (inviteError) {
       console.error('Invite error:', inviteError);
-      return NextResponse.json({ message: 'Failed to send invite' }, { status: 500 });
+      if (inviteError.status === 422 && inviteError.code === 'email_exists') {
+        return NextResponse.json(
+          { message: 'Пользователь с таким email уже зарегистрирован.' },
+          { status: 409 }
+        );
+      }
+      if (inviteError.status === 400 && inviteError.code === 'email_address_invalid') {
+        return NextResponse.json({ message: 'Некорректный формат email адреса.' }, { status: 400 });
+      }
+      return NextResponse.json({ message: 'Не удалось отправить приглашение.' }, { status: 500 });
     }
     return NextResponse.json({ success: true });
   } catch (error) {

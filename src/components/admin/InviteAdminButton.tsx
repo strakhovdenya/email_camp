@@ -13,9 +13,9 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
-import { toast } from 'sonner';
 import { supabase } from '@/lib/auth';
 import { ROLE_ADMIN, ROLE_STAFF } from '@/constants/userRoles';
+import { useToast } from '@/providers/ToastProvider';
 
 export function InviteAdminButton() {
   const [email, setEmail] = useState('');
@@ -23,6 +23,7 @@ export function InviteAdminButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     let isMounted = true;
@@ -64,15 +65,25 @@ export function InviteAdminButton() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Failed to send invite');
+        showToast(error.message || 'Ошибка при отправке приглашения', 'error');
+        return;
       }
 
-      toast.success('Приглашение успешно отправлено');
+      if (role === ROLE_ADMIN) {
+        showToast(`Приглашение для администратора отправлено на ${email}`, 'success');
+      } else if (role === ROLE_STAFF) {
+        showToast(`Приглашение для сотрудника отправлено на ${email}`, 'success');
+      } else {
+        showToast('Приглашение отправлено!', 'success');
+      }
       setIsOpen(false);
       setEmail('');
       setRole(ROLE_STAFF);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to send invite');
+      showToast(
+        error instanceof Error ? error.message : 'Ошибка при отправке приглашения',
+        'error'
+      );
     } finally {
       setIsLoading(false);
     }
