@@ -1,23 +1,35 @@
 {
   "extends": [
     "next/core-web-vitals",
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:react/recommended"
   ],
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "react"],
   "rules": {
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
-      }
-    ]
+    "@next/next/no-html-link-for-pages": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "react/display-name": "off",
+    "react/jsx-key": "error",
+    "react/jsx-no-duplicate-props": "error",
+    "react/jsx-no-undef": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/no-children-prop": "error",
+    "react/no-danger": "warn",
+    "react/no-deprecated": "error",
+    "react/no-direct-mutation-state": "error",
+    "react/no-find-dom-node": "error",
+    "react/no-is-mounted": "error",
+    "react/no-render-return-value": "error",
+    "react/no-string-refs": "error",
+    "react/no-unknown-property": "error",
+    "react/require-render-return": "error",
+    "react/self-closing-comp": "error",
+    "react/void-dom-elements-no-children": "error"
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -39,5 +51,15 @@
     "public/",
     "*.config.js",
     "*.config.mjs"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
+      }
+    }
   ]
 }

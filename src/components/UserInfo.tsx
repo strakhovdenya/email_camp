@@ -26,9 +26,18 @@ export default function UserInfo() {
       const u = data?.user;
       if (isMounted) {
         if (u) {
+          let role = u.user_metadata?.role;
+          if (!role) {
+            const { data: userRow } = await supabase
+              .from('users')
+              .select('role')
+              .eq('id', u.id)
+              .single();
+            role = userRow?.role || '';
+          }
           setUser({
             email: u.email || '',
-            role: u.user_metadata?.role || '',
+            role: role,
           });
         } else {
           setUser(null);

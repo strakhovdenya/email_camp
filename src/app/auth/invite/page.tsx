@@ -1,13 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/auth';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 
-export default function InvitePage() {
+function InviteForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -77,10 +78,24 @@ export default function InvitePage() {
           />
           {error && <Typography color="error">{error}</Typography>}
           <Button type="submit" fullWidth variant="contained" size="large" disabled={loading}>
-            Установить пароль
+            {loading ? <CircularProgress size={24} /> : 'Установить пароль'}
           </Button>
         </form>
       )}
     </Box>
+  );
+}
+
+export default function InvitePage() {
+  return (
+    <Suspense
+      fallback={
+        <Box className="w-full max-w-sm mx-auto p-6 flex justify-center">
+          <CircularProgress />
+        </Box>
+      }
+    >
+      <InviteForm />
+    </Suspense>
   );
 }
