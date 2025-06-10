@@ -40,6 +40,7 @@ export async function POST(request: Request) {
       data: { role },
       redirectTo,
     });
+
     if (inviteError) {
       console.error('Invite error:', inviteError);
       if (inviteError.status === 422 && inviteError.code === 'email_exists') {
