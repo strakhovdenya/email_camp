@@ -92,7 +92,6 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
             showToast('Ошибка при отправке уведомлений', TOAST_TYPES.ERROR);
           }
         } catch (error) {
-          console.error('Error notifying user:', error);
           showToast('Ошибка при отправке уведомлений', TOAST_TYPES.ERROR);
         } finally {
           setNotifying(false);
@@ -105,8 +104,7 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
       invalidateMailQueries(queryClient, roomNumber);
       showToast('Письмо успешно добавлено!', TOAST_TYPES.SUCCESS);
     },
-    onError: (error) => {
-      console.error('Error adding letter:', error);
+    onError: (_error) => {
       showToast('Ошибка при добавлении письма. Попробуйте ещё раз.', TOAST_TYPES.ERROR);
     },
   });
@@ -136,8 +134,7 @@ export function useMarkAsDelivered(roomNumber?: string) {
       invalidateMailQueries(queryClient, roomNumber);
       showToast('Письмо выдано!', TOAST_TYPES.SUCCESS);
     },
-    onError: (error) => {
-      console.error('Error marking letter as delivered:', error);
+    onError: (_error) => {
       showToast('Ошибка при выдаче письма', TOAST_TYPES.ERROR);
     },
   });

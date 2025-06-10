@@ -42,7 +42,6 @@ export async function POST(request: Request) {
     });
 
     if (inviteError) {
-      console.error('Invite error:', inviteError);
       if (inviteError.status === 422 && inviteError.code === 'email_exists') {
         return NextResponse.json(
           { message: 'Пользователь с таким email уже зарегистрирован.' },
@@ -56,7 +55,6 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Invite error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

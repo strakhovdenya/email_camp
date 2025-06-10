@@ -69,7 +69,6 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
         setSelectedUserId(null);
       } catch (error) {
         showToast('Ошибка при добавлении письма', TOAST_TYPES.ERROR);
-        console.error('Error adding letter:', error);
       }
     })();
   };

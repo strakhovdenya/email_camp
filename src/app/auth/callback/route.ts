@@ -18,13 +18,11 @@ export async function GET(request: Request) {
     } = await supabase.auth.exchangeCodeForSession(code);
 
     if (sessionError) {
-      console.error('Ошибка при обмене кода на сессию:', sessionError);
       return NextResponse.redirect(`${requestUrl.origin}/auth?error=invalid_code`);
     }
 
     if (session?.user) {
       const meta = session.user.user_metadata;
-      console.log('Google user_metadata:', meta);
       const firstName = meta.first_name || meta.full_name?.split(' ')[0] || '';
       const lastName = meta.last_name || meta.full_name?.split(' ').slice(1).join(' ') || '';
       let role = meta.role || '';
@@ -41,7 +39,6 @@ export async function GET(request: Request) {
 
       if (checkError && checkError.code !== 'PGRST116') {
         // PGRST116 - запись не найдена
-        console.error('Ошибка при проверке существующего пользователя:', checkError);
         return NextResponse.redirect(`${requestUrl.origin}/auth?error=db_error`);
       }
 
@@ -62,7 +59,6 @@ export async function GET(request: Request) {
       ]);
 
       if (insertError) {
-        console.error('Ошибка при создании записи пользователя:', insertError);
         return NextResponse.redirect(`${requestUrl.origin}/auth?error=db_error`);
       }
     }

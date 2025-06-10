@@ -28,7 +28,6 @@ export async function signUpWithEmail(
   password: string,
   meta: { first_name: string; last_name: string; role: string }
 ) {
-  console.log('URL для подтверждения:', `${window.location.origin}/auth/callback`);
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
