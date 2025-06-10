@@ -2,6 +2,7 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { ROLE_ADMIN } from '@/constants/userRoles';
 
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey!);
@@ -16,7 +17,7 @@ export async function middleware(req: NextRequest) {
 
   // Усиленная защита: запрещаем любые POST-запросы на /auth/signup, если есть хотя бы один admin
   if (req.nextUrl.pathname === '/auth/signup' && (req.method === 'POST' || req.method === 'GET')) {
-    const { data: admins } = await supabaseAdmin.from('users').select('id').eq('role', 'admin');
+    const { data: admins } = await supabaseAdmin.from('users').select('id').eq('role', ROLE_ADMIN);
     if (admins && admins.length > 0) {
       const redirectUrl = req.nextUrl.clone();
       redirectUrl.pathname = '/auth';

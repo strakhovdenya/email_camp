@@ -8,7 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { USER_ROLES } from '@/constants/userRoles';
+import { USER_ROLES, ROLE_ADMIN, ROLE_STAFF } from '@/constants/userRoles';
 
 const ROLE_LABELS: Record<string, string> = {};
 USER_ROLES.forEach((r) => {
@@ -78,7 +78,11 @@ export default function UserInfo() {
           <Chip
             label={ROLE_LABELS[user.role] || user.role}
             color={
-              user.role === 'admin' ? 'primary' : user.role === 'staff' ? 'secondary' : 'default'
+              user.role === ROLE_ADMIN
+                ? 'primary'
+                : user.role === ROLE_STAFF
+                  ? 'secondary'
+                  : 'default'
             }
             size="small"
             sx={{ mt: 0.5, fontWeight: 500 }}

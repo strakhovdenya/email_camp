@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import {
+  API_ERROR_EMAIL_EXISTS,
+  API_ERROR_EMAIL_INVALID,
+  API_STATUS_UNPROCESSABLE_ENTITY,
+  API_STATUS_BAD_REQUEST,
+} from '@/constants/apiErrors';
+import { ROLE_ADMIN } from '@/constants/userRoles';
 
 export async function POST(request: Request) {
   try {
@@ -21,7 +28,7 @@ export async function POST(request: Request) {
       .select('role')
       .eq('id', user.id)
       .single();
-    if (userError || !userData || userData.role !== 'admin') {
+    if (userError || !userData || userData.role !== ROLE_ADMIN) {
       return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
     }
 
@@ -42,13 +49,19 @@ export async function POST(request: Request) {
     });
 
     if (inviteError) {
-      if (inviteError.status === 422 && inviteError.code === 'email_exists') {
+      if (
+        inviteError.status === API_STATUS_UNPROCESSABLE_ENTITY &&
+        inviteError.code === API_ERROR_EMAIL_EXISTS
+      ) {
         return NextResponse.json(
           { message: 'Пользователь с таким email уже зарегистрирован.' },
           { status: 409 }
         );
       }
-      if (inviteError.status === 400 && inviteError.code === 'email_address_invalid') {
+      if (
+        inviteError.status === API_STATUS_BAD_REQUEST &&
+        inviteError.code === API_ERROR_EMAIL_INVALID
+      ) {
         return NextResponse.json({ message: 'Некорректный формат email адреса.' }, { status: 400 });
       }
       return NextResponse.json({ message: 'Не удалось отправить приглашение.' }, { status: 500 });
