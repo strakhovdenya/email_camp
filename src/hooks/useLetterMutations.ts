@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient, UseMutationResult } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
 import React from 'react';
@@ -42,70 +41,27 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
 
   const mutation = useMutation<Letter, Error, AddLetterInput>({
     mutationFn: async (input: AddLetterInput) => {
-      // Создаем письмо
-      const { data: room, error: roomError } = await supabase
-        .from('rooms')
-        .select('id')
-        .eq('room_number', input.room_number)
-        .single();
-
-      if (roomError) throw roomError;
-
-      const { data, error } = await supabase
-        .from('letters')
-        .insert([
-          {
-            room_id: room.id,
-            status: 'pending',
-            sync_status: 'pending',
-            note: input.note ?? null,
-            photo_url: input.photo_url ?? null,
-            user_id: input.user_id ?? null,
-            recipient_notified: false,
-          },
-        ])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // После добавления письма отправляем уведомления через централизованный API-роут
-      if (input.user_id) {
-        try {
-          setNotifying(true);
-          const response = await fetch('/api/notify-user', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              userId: input.user_id,
-              letterId: data.id,
-              letterNote: input.note,
-              photoUrl: input.photo_url,
-            }),
-          });
-          if (response.ok) {
-            // Можно расширить ToastProvider для кастомных компонентов
-            showToast('Уведомления отправлены', TOAST_TYPES.INFO);
-          } else {
-            showToast('Ошибка при отправке уведомлений', TOAST_TYPES.ERROR);
-          }
-        } catch (error) {
-          showToast('Ошибка при отправке уведомлений', TOAST_TYPES.ERROR);
-        } finally {
-          setNotifying(false);
-        }
+      setNotifying(true);
+      const response = await fetch('/api/letters', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+      });
+      const result = await response.json();
+      setNotifying(false);
+      if (result.type === 'success') {
+        showToast(result.message || 'Письмо успешно добавлено!', TOAST_TYPES.SUCCESS);
+        return result.data;
+      } else {
+        showToast(result.error || 'Ошибка при добавлении письма', TOAST_TYPES.ERROR);
+        throw new Error(result.error || 'Ошибка при добавлении письма');
       }
-
-      return data;
     },
     onSuccess: () => {
       invalidateMailQueries(queryClient, roomNumber);
-      showToast('Письмо успешно добавлено!', TOAST_TYPES.SUCCESS);
     },
-    onError: (_error) => {
-      showToast('Ошибка при добавлении письма. Попробуйте ещё раз.', TOAST_TYPES.ERROR);
+    onError: () => {
+      // Ошибка уже обработана через showToast в mutationFn
     },
   });
 
@@ -117,25 +73,25 @@ export function useMarkAsDelivered(roomNumber?: string) {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: async (letterId: string) => {
-      const { data, error } = await supabase
-        .from('letters')
-        .update({
-          status: 'delivered',
-          delivered_at: new Date().toISOString(),
-        })
-        .eq('id', letterId)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
+      const response = await fetch('/api/letters/deliver', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ letterId }),
+      });
+      const result = await response.json();
+      if (result.type === 'success') {
+        showToast(result.message || 'Письмо выдано!', TOAST_TYPES.SUCCESS);
+        return result.data;
+      } else {
+        showToast(result.error || 'Ошибка при выдаче письма', TOAST_TYPES.ERROR);
+        throw new Error(result.error || 'Ошибка при выдаче письма');
+      }
     },
     onSuccess: () => {
       invalidateMailQueries(queryClient, roomNumber);
-      showToast('Письмо выдано!', TOAST_TYPES.SUCCESS);
     },
-    onError: (_error) => {
-      showToast('Ошибка при выдаче письма', TOAST_TYPES.ERROR);
+    onError: () => {
+      // Ошибка уже обработана через showToast
     },
   });
 }
