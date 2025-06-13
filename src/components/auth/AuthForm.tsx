@@ -11,6 +11,7 @@ import Divider from '@mui/material/Divider';
 import { Mail, Lock } from 'lucide-react';
 import { useToast } from '@/providers/ToastProvider';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { TOAST_TYPES } from '@/constants/toastTypes';
 
 interface AuthFormProps {
   onSuccess?: () => void;
@@ -35,7 +36,7 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
       if (onSuccess) onSuccess();
       router.push('/');
     } catch (error) {
-      showToast(error instanceof Error ? error.message : 'Ошибка входа', 'error');
+      showToast(error instanceof Error ? error.message : 'Ошибка входа', TOAST_TYPES.ERROR);
     } finally {
       setLoading(false);
     }
@@ -49,7 +50,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
       if (onSuccess) onSuccess();
       router.push('/');
     } catch (error) {
-      showToast(error instanceof Error ? error.message : 'Ошибка входа через Google', 'error');
+      showToast(
+        error instanceof Error ? error.message : 'Ошибка входа через Google',
+        TOAST_TYPES.ERROR
+      );
       setLoading(false);
     }
   };

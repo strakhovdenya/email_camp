@@ -1,6 +1,5 @@
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
-import { supabase } from '@/lib/supabase';
 import { User } from '@/types/supabase';
 
 export function useUserActions(refetch?: () => void) {
@@ -8,38 +7,27 @@ export function useUserActions(refetch?: () => void) {
 
   const saveUser = async (data: Partial<User>) => {
     try {
-      if (data.id) {
-        const { error } = await supabase
-          .from('users')
-          .update({
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-            phone: data.phone,
-            room_id: data.room_id,
-            role: data.role,
-            channels_for_notification: data.channels_for_notification,
-          })
-          .eq('id', data.id);
-        if (error) throw error;
-        showToast('Пользователь успешно обновлён', TOAST_TYPES.SUCCESS);
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showToast(
+          data.id ? 'Пользователь успешно обновлён' : 'Пользователь успешно создан',
+          TOAST_TYPES.SUCCESS
+        );
+        refetch?.();
+        return true;
       } else {
-        const { error } = await supabase.from('users').insert([
-          {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-            phone: data.phone,
-            room_id: data.room_id,
-            role: data.role,
-            channels_for_notification: data.channels_for_notification,
-          },
-        ]);
-        if (error) throw error;
-        showToast('Пользователь успешно создан', TOAST_TYPES.SUCCESS);
+        showToast('Ошибка при сохранении пользователя', TOAST_TYPES.ERROR);
+        return false;
       }
-      refetch?.();
-      return true;
     } catch (error) {
       showToast('Ошибка при сохранении пользователя', TOAST_TYPES.ERROR);
       return false;
@@ -48,19 +36,22 @@ export function useUserActions(refetch?: () => void) {
 
   const deleteUser = async (user: User) => {
     try {
-      const { count, error } = await supabase
-        .from('letters')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', user.id);
-      if (error) throw error;
-      if (count && count > 0) {
+      const response = await fetch(`/api/users?id=${user.id}`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showToast('Пользователь успешно удалён', TOAST_TYPES.SUCCESS);
+        refetch?.();
+        return true;
+      } else if (result.requiresCascade) {
         return 'cascade_required';
+      } else {
+        showToast('Ошибка при удалении пользователя', TOAST_TYPES.ERROR);
+        return false;
       }
-      const { error: delError } = await supabase.from('users').delete().eq('id', user.id);
-      if (delError) throw delError;
-      showToast('Пользователь успешно удалён', TOAST_TYPES.SUCCESS);
-      refetch?.();
-      return true;
     } catch (error) {
       showToast('Ошибка при удалении пользователя', TOAST_TYPES.ERROR);
       return false;
@@ -69,16 +60,20 @@ export function useUserActions(refetch?: () => void) {
 
   const cascadeDeleteUser = async (user: User) => {
     try {
-      const { error: lettersError } = await supabase
-        .from('letters')
-        .delete()
-        .eq('user_id', user.id);
-      if (lettersError) throw lettersError;
-      const { error: userError } = await supabase.from('users').delete().eq('id', user.id);
-      if (userError) throw userError;
-      showToast('Пользователь и все письма удалены', TOAST_TYPES.SUCCESS);
-      refetch?.();
-      return true;
+      const response = await fetch(`/api/users?id=${user.id}&cascade=true`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showToast('Пользователь и все письма удалены', TOAST_TYPES.SUCCESS);
+        refetch?.();
+        return true;
+      } else {
+        showToast('Ошибка при удалении пользователя', TOAST_TYPES.ERROR);
+        return false;
+      }
     } catch (error) {
       showToast('Ошибка при удалении пользователя', TOAST_TYPES.ERROR);
       return false;

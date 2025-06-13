@@ -16,6 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { supabase } from '@/lib/auth';
 import { ROLE_ADMIN, ROLE_STAFF } from '@/constants/userRoles';
 import { useToast } from '@/providers/ToastProvider';
+import { TOAST_TYPES } from '@/constants/toastTypes';
 
 export function InviteAdminButton() {
   const [email, setEmail] = useState('');
@@ -65,16 +66,16 @@ export function InviteAdminButton() {
 
       if (!response.ok) {
         const error = await response.json();
-        showToast(error.message || 'Ошибка при отправке приглашения', 'error');
+        showToast(error.message || 'Ошибка при отправке приглашения', TOAST_TYPES.ERROR);
         return;
       }
 
       if (role === ROLE_ADMIN) {
-        showToast(`Приглашение для администратора отправлено на ${email}`, 'success');
+        showToast(`Приглашение для администратора отправлено на ${email}`, TOAST_TYPES.SUCCESS);
       } else if (role === ROLE_STAFF) {
-        showToast(`Приглашение для сотрудника отправлено на ${email}`, 'success');
+        showToast(`Приглашение для сотрудника отправлено на ${email}`, TOAST_TYPES.SUCCESS);
       } else {
-        showToast('Приглашение отправлено!', 'success');
+        showToast('Приглашение отправлено!', TOAST_TYPES.SUCCESS);
       }
       setIsOpen(false);
       setEmail('');
@@ -82,7 +83,7 @@ export function InviteAdminButton() {
     } catch (error) {
       showToast(
         error instanceof Error ? error.message : 'Ошибка при отправке приглашения',
-        'error'
+        TOAST_TYPES.ERROR
       );
     } finally {
       setIsLoading(false);

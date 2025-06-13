@@ -15,6 +15,7 @@ import { supabase } from '@/lib/auth';
 import Divider from '@mui/material/Divider';
 import { USER_ROLES, ROLE_ADMIN } from '@/constants/userRoles';
 import { useRouter } from 'next/navigation';
+import { TOAST_TYPES } from '@/constants/toastTypes';
 
 const REGISTRATION_ROLES = USER_ROLES.filter((r) => r.canRegister);
 const ALLOWED_ROLES = REGISTRATION_ROLES.map((r) => r.value);
@@ -42,7 +43,7 @@ export function SignupForm() {
     } catch (error) {
       showToast(
         error instanceof Error ? error.message : 'Ошибка регистрации через Google',
-        'error'
+        TOAST_TYPES.ERROR
       );
       setLoading(false);
     }
@@ -51,11 +52,11 @@ export function SignupForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ALLOWED_ROLES.includes(role)) {
-      showToast('Недопустимая роль', 'error');
+      showToast('Недопустимая роль', TOAST_TYPES.ERROR);
       return;
     }
     if (!firstName.trim() || !lastName.trim()) {
-      showToast('Пожалуйста, заполните имя и фамилию', 'error');
+      showToast('Пожалуйста, заполните имя и фамилию', TOAST_TYPES.ERROR);
       return;
     }
     setLoading(true);
@@ -76,16 +77,19 @@ export function SignupForm() {
           msg.toLowerCase().includes('user already registered') ||
           (msg.toLowerCase().includes('email') && msg.toLowerCase().includes('exists'))
         ) {
-          showToast('Пользователь с таким email уже существует. Войдите в систему.', 'error');
+          showToast(
+            'Пользователь с таким email уже существует. Войдите в систему.',
+            TOAST_TYPES.ERROR
+          );
           router.push('/auth');
           return;
         }
-        showToast(msg || 'Ошибка регистрации!!', 'error');
+        showToast(msg || 'Ошибка регистрации!!', TOAST_TYPES.ERROR);
         return;
       }
       const user = data.user;
       if (user?.user_metadata?.email_verified === false) {
-        showToast('Проверьте почту для подтверждения регистрации.', 'success');
+        showToast('Проверьте почту для подтверждения регистрации.', TOAST_TYPES.SUCCESS);
         setEmail('');
         setPassword('');
         setRole(REGISTRATION_ROLES[0].value);
@@ -94,13 +98,16 @@ export function SignupForm() {
         setAwaitingConfirmation(true);
         return;
       } else {
-        showToast('Пользователь с таким email уже существует. Войдите в систему.', 'error');
+        showToast(
+          'Пользователь с таким email уже существует. Войдите в систему.',
+          TOAST_TYPES.ERROR
+        );
         router.push('/auth');
         return;
       }
     } catch (error) {
       console.error('Ошибка при регистрации:', error);
-      showToast(error instanceof Error ? error.message : 'Ошибка регистрации', 'error');
+      showToast(error instanceof Error ? error.message : 'Ошибка регистрации', TOAST_TYPES.ERROR);
     } finally {
       setLoading(false);
     }
@@ -109,11 +116,11 @@ export function SignupForm() {
   const checkEmailConfirmed = async () => {
     const { data } = await supabase.auth.getUser();
     if (data?.user?.email_confirmed_at) {
-      showToast('Почта подтверждена! Выполняется вход...', 'success');
+      showToast('Почта подтверждена! Выполняется вход...', TOAST_TYPES.SUCCESS);
       setAwaitingConfirmation(false);
       router.push('/');
     } else {
-      showToast('Почта ещё не подтверждена. Попробуйте позже.', 'info');
+      showToast('Почта ещё не подтверждена. Попробуйте позже.', TOAST_TYPES.INFO);
     }
   };
 
@@ -122,7 +129,7 @@ export function SignupForm() {
     pollingRef.current = setInterval(async () => {
       const { data } = await supabase.auth.getUser();
       if (data?.user?.email_confirmed_at) {
-        showToast('Почта подтверждена! Выполняется вход...', 'success');
+        showToast('Почта подтверждена! Выполняется вход...', TOAST_TYPES.SUCCESS);
         setAwaitingConfirmation(false);
         clearInterval(pollingRef.current!);
         router.push('/');
