@@ -1,6 +1,5 @@
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
-import { supabase } from '@/lib/supabase';
 import type { Room } from '@/types/supabase';
 
 export function useRoomActions(refetch?: () => void) {
@@ -8,26 +7,27 @@ export function useRoomActions(refetch?: () => void) {
 
   const saveRoom = async (data: Partial<Room>) => {
     try {
-      if (data.id) {
-        const { error } = await supabase
-          .from('rooms')
-          .update({
-            room_number: data.room_number,
-          })
-          .eq('id', data.id);
-        if (error) throw error;
-        showToast('Комната успешно обновлена', TOAST_TYPES.SUCCESS);
+      const response = await fetch('/api/rooms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showToast(
+          data.id ? 'Комната успешно обновлена' : 'Комната успешно создана',
+          TOAST_TYPES.SUCCESS
+        );
+        refetch?.();
+        return true;
       } else {
-        const { error } = await supabase.from('rooms').insert([
-          {
-            room_number: data.room_number,
-          },
-        ]);
-        if (error) throw error;
-        showToast('Комната успешно создана', TOAST_TYPES.SUCCESS);
+        showToast('Ошибка при сохранении комнаты', TOAST_TYPES.ERROR);
+        return false;
       }
-      refetch?.();
-      return true;
     } catch (error) {
       showToast('Ошибка при сохранении комнаты', TOAST_TYPES.ERROR);
       return false;
@@ -35,32 +35,32 @@ export function useRoomActions(refetch?: () => void) {
   };
 
   const deleteRoom = async (room: Room) => {
-    // Проверяем, есть ли пользователи в этой комнате
-    const { count, error: userError } = await supabase
-      .from('users')
-      .select('id', { count: 'exact', head: true })
-      .eq('room_id', room.id);
-    if (userError) {
-      showToast('Ошибка при проверке пользователей комнаты', TOAST_TYPES.ERROR);
-      return false;
-    }
-    if (count && count > 0) {
-      showToast(
-        'Сначала удалите или переместите всех пользователей из этой комнаты',
-        TOAST_TYPES.ERROR
-      );
-      return 'users_exist';
-    }
-    // Если пользователей нет — удаляем комнату
-    const { error } = await supabase.from('rooms').delete().eq('id', room.id);
-    if (error) {
+    try {
+      const response = await fetch(`/api/rooms?id=${room.id}`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        showToast('Комната успешно удалена', TOAST_TYPES.SUCCESS);
+        refetch?.();
+        return true;
+      } else if (result.users_exist) {
+        showToast(
+          'Сначала удалите или переместите всех пользователей из этой комнаты',
+          TOAST_TYPES.ERROR
+        );
+        return 'users_exist';
+      } else {
+        showToast('Ошибка при удалении комнаты', TOAST_TYPES.ERROR);
+        return false;
+      }
+    } catch (error) {
       showToast('Ошибка при удалении комнаты', TOAST_TYPES.ERROR);
       return false;
     }
-    showToast('Комната успешно удалена', TOAST_TYPES.SUCCESS);
-    refetch?.();
-    return true;
   };
 
-  return { saveRoom, deleteRoom, showToast };
+  return { saveRoom, deleteRoom };
 }
