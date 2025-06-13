@@ -1,12 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseService } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = supabaseService.getAdminClient();
     const body = await request.json();
     const { room_number, note, photo_url, user_id } = body;
 
@@ -17,7 +14,7 @@ export async function POST(request: Request) {
       .eq('room_number', room_number)
       .single();
     if (roomError) {
-      return NextResponse.json({ error: 'Комната не найдена', type: 'error' }, { status: 400 });
+      return NextResponse.json({ error: 'Комната не найдена' }, { status: 400 });
     }
 
     // Добавляем письмо
@@ -37,36 +34,18 @@ export async function POST(request: Request) {
       .select()
       .single();
     if (error) {
-      return NextResponse.json(
-        { error: 'Ошибка при добавлении письма', type: 'error' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Ошибка при добавлении письма' }, { status: 500 });
     }
 
-    // Можно добавить вызов уведомления здесь, если нужно
-    // ...
-
-    return NextResponse.json({
-      success: true,
-      data,
-      type: 'success',
-      message: 'Письмо успешно добавлено!',
-    });
+    return NextResponse.json({ data });
   } catch (e) {
-    return NextResponse.json(
-      { error: 'Внутренняя ошибка сервера', type: 'error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 500 });
   }
 }
 
-// (Опционально) GET: получение писем
 export async function GET(request: Request) {
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = supabaseService.getRouteHandlerClient();
     const { searchParams } = new URL(request.url);
     const room_number = searchParams.get('room_number');
     let query = supabase.from('letters').select('*');

@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { supabaseService } from '@/lib/supabase/server';
 
 export async function GET() {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = supabaseService.getRouteHandlerClient();
     const { data, error } = await supabase
       .from('rooms')
       .select('*')
@@ -25,7 +24,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = supabaseService.getRouteHandlerClient();
     const data = await request.json();
 
     if (data.id) {
@@ -61,7 +60,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = supabaseService.getRouteHandlerClient();
     const { searchParams } = new URL(request.url);
     const roomId = searchParams.get('id');
 

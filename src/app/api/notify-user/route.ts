@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseService } from '@/lib/supabase/server';
 import { notifyUser } from '@/services/notifications/notifyUser';
 
 export async function POST(request: Request) {
   try {
+    const supabase = supabaseService.getAdminClient();
     const { userId, letterId, letterNote, photoUrl } = await request.json();
     if (!userId || !letterId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, result });
-  } catch (error) {
+  } catch (e) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
