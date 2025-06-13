@@ -10,7 +10,7 @@ export const LetterMeta: React.FC<{ letter: Letter }> = ({ letter }) => (
       className="font-semibold text-gray-900 truncate"
       sx={{ fontSize: { xs: 15, sm: 18 } }}
     >
-      Письмо #{letter.id}
+      {letter.note || <span className="text-gray-400">—</span>}
     </Typography>
     {(letter.last_name || letter.first_name) && (
       <span className="text-xs text-gray-700 flex items-center gap-1 truncate">

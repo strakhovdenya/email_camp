@@ -66,12 +66,9 @@ export function MobileLettersTable({
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-3 flex-wrap">
                     <Mail className="h-5 w-5 text-blue-500" />
-                    <span className="font-semibold text-lg">Письмо #{letter.id}</span>
-                    {letter.note && (
-                      <span className="ml-2 text-sm text-gray-500 italic truncate max-w-[120px]">
-                        {letter.note}
-                      </span>
-                    )}
+                    <span className="font-semibold text-lg">
+                      {letter.note || <span className="text-gray-400">—</span>}
+                    </span>
                   </div>
                   {letter.rooms?.room_number && (
                     <span className="text-sm text-gray-600 mt-1">
@@ -131,12 +128,6 @@ export function MobileLettersTable({
               {/* Расширенная информация */}
               {expandedId === letter.id && (
                 <div className="mt-6 space-y-4 border-t border-gray-100 pt-6">
-                  {letter.note && (
-                    <div className="text-sm">
-                      <span className="font-medium text-gray-700">Заметка:</span>
-                      <p className="mt-2 text-gray-600 bg-gray-50 p-3 rounded-lg">{letter.note}</p>
-                    </div>
-                  )}
                   {letter.photo_url ? (
                     <div className="text-sm">
                       <span className="font-medium text-gray-700">Фото:</span>

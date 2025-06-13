@@ -111,19 +111,6 @@ export const LetterStatusBadges: React.FC<{ letter: Letter }> = ({ letter }) => 
               />
             </Tooltip>
           )}
-      {letter.note && (
-        <Chip
-          label={letter.note}
-          size="small"
-          sx={{
-            bgcolor: 'rgba(59,130,246,0.08)',
-            color: 'rgb(37,99,235)',
-            fontWeight: 500,
-            fontSize: 13,
-            mr: 0.5,
-          }}
-        />
-      )}
     </>
   );
 };

@@ -30,13 +30,12 @@ interface Props {
 }
 
 const columns = [
-  { key: 'id', label: 'ID', width: 36 },
+  { key: 'note', label: 'Описание', width: 120 },
   { key: 'room', label: 'Комната', width: 60 },
   { key: 'user', label: 'Кому', width: 150 },
   { key: 'status', label: 'Статус', width: 90 },
   { key: 'created', label: 'Создано', width: 110 },
   { key: 'delivered', label: 'Выдано', width: 110 },
-  { key: 'note', label: 'Заметка', width: 80 },
   { key: 'photo', label: 'Фото', width: 48 },
   { key: 'actions', label: 'Действия', width: 80 },
 ];
@@ -79,7 +78,7 @@ export function DesktopLettersTable({ letters, onDeliver, deliverLoadingId }: Pr
                     className={tableRowClass}
                   >
                     <TableCell className={tableCellClass + ' font-semibold text-gray-800'}>
-                      {letter.id}
+                      {letter.note || <span className="text-gray-400">—</span>}
                     </TableCell>
                     <TableCell className={tableCellClass + ' text-blue-700 font-medium'}>
                       {letter.rooms?.room_number}
@@ -109,11 +108,6 @@ export function DesktopLettersTable({ letters, onDeliver, deliverLoadingId }: Pr
                     </TableCell>
                     <TableCell className={tableCellClass + ' text-gray-500'}>
                       {formatSafeDate(letter.delivered_at)}
-                    </TableCell>
-                    <TableCell
-                      className={tableCellClass + ' text-gray-600 italic max-w-[120px] truncate'}
-                    >
-                      {letter.note || <span className="text-gray-400">-</span>}
                     </TableCell>
                     <TableCell className={tableCellClass}>
                       {letter.photo_url ? (
