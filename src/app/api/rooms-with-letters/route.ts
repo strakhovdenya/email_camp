@@ -17,8 +17,7 @@ export async function GET() {
           sync_status,
           note,
           photo_url,
-          created_at,
-          recipient_notified
+          created_at
         )
       `
       )

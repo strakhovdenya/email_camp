@@ -1,7 +1,6 @@
 import React from 'react';
 import Card from '@mui/material/Card';
 import { StatusIcon } from './StatusIcon';
-import { EmailWarning } from './EmailWarning';
 import { LetterMeta } from './LetterMeta';
 import { LetterDates } from './LetterDates';
 import { LetterStatusBadges } from './LetterStatusBadges';
@@ -31,7 +30,6 @@ export const LetterCard: React.FC<LetterCardProps> = ({ letter, children }) => (
     >
       <div className="flex-shrink-0 flex flex-col items-center justify-center gap-2">
         <StatusIcon status={letter.status} />
-        {!letter.recipient_notified && <EmailWarning />}
       </div>
       <div className="flex-grow min-w-0">
         <LetterMeta letter={letter} />

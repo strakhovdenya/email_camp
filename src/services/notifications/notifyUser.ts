@@ -20,7 +20,6 @@ export async function notifyUser({
   letterNote?: string;
   photoUrl?: string;
 }) {
-   console.log('!!!!!!!notifyUser - function notifyUse');
   const supabase = supabaseService.getAdminClient();
   const message: NotificationMessage = { letterId, letterNote, photoUrl };
   const channels = user.channels_for_notification as ChannelType[];
@@ -32,11 +31,20 @@ export async function notifyUser({
 
   // Отправляем уведомления
   const results = await dispatcher.notify(user, message, channels);
-  console.log('!!!!!!!results', results);
-  // Сохраняем статусы уведомлений
+  
+  // Формируем статусы для notification_statuses
+  const notificationStatuses: Record<string, 'sent' | 'failed'> = {};
+  
+  // Проверяем результаты для каждого канала
+  Object.entries(results).forEach(([channel, result]) => {
+    if (result) {
+      notificationStatuses[channel] = result.success ? 'sent' : 'failed';
+    }
+  });
+
+  // Сохраняем только новый формат статусов уведомлений
   const updates = {
-    email_notified: results.email?.success || false,
-    telegram_notified: results.telegram?.success || false,
+    notification_statuses: notificationStatuses,
   };
 
   const { error: updateError } = await supabase.from('letters').update(updates).eq('id', letterId);

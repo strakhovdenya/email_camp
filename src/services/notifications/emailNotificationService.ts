@@ -86,11 +86,9 @@ export async function sendEmailNotification({
 
     if (emailError) {
       console.error('Email sending error:', emailError);
-      await supabase.from('letters').update({ recipient_notified: false }).eq('id', letterId);
       return { success: false, error: emailError.message };
     }
 
-    await supabase.from('letters').update({ recipient_notified: true }).eq('id', letterId);
     return { success: true, data: emailData };
   } catch (error) {
     console.error('Unexpected error in sendEmailNotification:', error);

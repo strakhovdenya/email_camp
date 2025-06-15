@@ -31,10 +31,8 @@ if (roomError || !roomId) {
           note: note ?? null,
           photo_url: photo_url ?? null,
           user_id: user_id ?? null,
-          recipient_notified: false,
         },
       ]).select('*');
-      console.error('insertData',insertData);
     if (insertError) {
       console.error(insertError);
       return NextResponse.json(

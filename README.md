@@ -26,7 +26,7 @@
 ## Структура базы данных
 - **rooms**: id, room_number, telegram_chat_id, created_at
 - **users**: id, first_name, last_name, phone, email, room_id, role, created_at
-- **letters**: id, room_id, status, created_at, delivered_at, sync_status, note, photo_url, user_id, recipient_notified
+- **letters**: id, room_id, status, created_at, delivered_at, sync_status, note, photo_url, user_id, notification_statuses
 
 ## Как это работает
 1. На главной странице отображается список комнат и количество писем в каждой.

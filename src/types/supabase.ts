@@ -69,8 +69,6 @@ export interface Database {
           note: string | null;
           photo_url: string | null;
           user_id: string | null;
-          email_notified: boolean;
-          telegram_notified: boolean;
           notification_statuses: Json;
         };
         Insert: {
@@ -83,8 +81,6 @@ export interface Database {
           note?: string | null;
           photo_url?: string | null;
           user_id?: string | null;
-          email_notified?: boolean;
-          telegram_notified?: boolean;
           notification_statuses?: Json;
         };
         Update: {
@@ -97,8 +93,6 @@ export interface Database {
           note?: string | null;
           photo_url?: string | null;
           user_id?: string | null;
-          email_notified?: boolean;
-          telegram_notified?: boolean;
           notification_statuses?: Json;
         };
       };

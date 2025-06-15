@@ -4,7 +4,6 @@ export interface Letter extends Omit<LetterWithRelations, 'status' | 'notificati
   status: 'pending' | 'delivered';
   notification_statuses?: Record<string, 'sent' | 'failed'>;
   note: string | null;
-  recipient_notified: boolean;
   delivered_at: string | null;
   first_name?: string;
   last_name?: string;

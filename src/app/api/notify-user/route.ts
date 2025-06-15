@@ -3,12 +3,10 @@ import { supabaseService } from '@/lib/supabase/server';
 import { notifyUser } from '@/services/notifications/notifyUser';
 
 if (!process.env.RESEND_API_KEY) {
-  console.error('!!!!!!!RESEND_API_KEY is not set in environment variables');
   throw new Error('RESEND_API_KEY is not set in environment variables');
 }
 
 export async function POST(request: Request) {
-  console.log('!!!!!!!notify-user');
   try {
     const supabase = supabaseService.getAdminClient();
     const { userId, letterId, letterNote, photoUrl } = await request.json();
