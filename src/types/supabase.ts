@@ -14,6 +14,7 @@ export interface Database {
           room_id: string | null;
           role: 'admin' | 'staff' | 'camper';
           channels_for_notification: string[] | null;
+          telegram_chat_id: string | null;
         };
         Insert: {
           id?: string;
@@ -25,6 +26,7 @@ export interface Database {
           room_id?: string | null;
           role?: 'admin' | 'staff' | 'camper';
           channels_for_notification?: string[] | null;
+          telegram_chat_id?: string | null;
         };
         Update: {
           id?: string;
@@ -36,6 +38,7 @@ export interface Database {
           room_id?: string | null;
           role?: 'admin' | 'staff' | 'camper';
           channels_for_notification?: string[] | null;
+          telegram_chat_id?: string | null;
         };
       };
       rooms: {
@@ -63,12 +66,12 @@ export interface Database {
           created_at: string;
           delivered_at: string | null;
           sync_status: 'pending' | 'synced' | 'failed';
-          barcode_id: string;
-          recipient_notified: boolean;
+          note: string | null;
+          photo_url: string | null;
           user_id: string | null;
-          notification_statuses: unknown;
-          note?: string | null;
-          photo_url?: string | null;
+          email_notified: boolean;
+          telegram_notified: boolean;
+          notification_statuses: Json;
         };
         Insert: {
           id?: string;
@@ -77,12 +80,12 @@ export interface Database {
           created_at?: string;
           delivered_at?: string | null;
           sync_status?: 'pending' | 'synced' | 'failed';
-          barcode_id: string;
-          recipient_notified?: boolean;
-          user_id?: string | null;
-          notification_statuses?: unknown;
           note?: string | null;
           photo_url?: string | null;
+          user_id?: string | null;
+          email_notified?: boolean;
+          telegram_notified?: boolean;
+          notification_statuses?: Json;
         };
         Update: {
           id?: string;
@@ -91,12 +94,12 @@ export interface Database {
           created_at?: string;
           delivered_at?: string | null;
           sync_status?: 'pending' | 'synced' | 'failed';
-          barcode_id?: string;
-          recipient_notified?: boolean;
-          user_id?: string | null;
-          notification_statuses?: unknown;
           note?: string | null;
           photo_url?: string | null;
+          user_id?: string | null;
+          email_notified?: boolean;
+          telegram_notified?: boolean;
+          notification_statuses?: Json;
         };
       };
     };
@@ -133,6 +136,7 @@ export interface User {
   room_id: string | null;
   role: 'admin' | 'staff' | 'camper';
   channels_for_notification: string[] | null;
+  telegram_chat_id: string | null;
   room?: { room_number: string } | null;
 }
 

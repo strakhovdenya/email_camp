@@ -4,7 +4,11 @@ import { supabaseService } from '@/lib/supabase/server';
 export async function GET() {
   try {
     const supabase = supabaseService.getRouteHandlerClient();
-    const { data, error } = await supabase.from('users').select('*, room:rooms(room_number)');
+    const { data, error } = await supabase
+      .from('users')
+      .select('*, room:rooms(room_number)')
+      .order('created_at', { ascending: false });
+
     if (error) throw error;
     return NextResponse.json({ success: true, data });
   } catch (error) {
@@ -34,6 +38,7 @@ export async function POST(request: Request) {
           room_id: data.room_id,
           role: data.role,
           channels_for_notification: data.channels_for_notification,
+          telegram_chat_id: data.telegram_chat_id,
         })
         .eq('id', data.id);
 
@@ -49,6 +54,7 @@ export async function POST(request: Request) {
           room_id: data.room_id,
           role: data.role,
           channels_for_notification: data.channels_for_notification,
+          telegram_chat_id: data.telegram_chat_id,
         },
       ]);
 

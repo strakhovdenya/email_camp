@@ -22,7 +22,8 @@ CREATE TABLE users (
   room_id uuid REFERENCES rooms(id),
   role user_role NOT NULL DEFAULT 'camper',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  channels_for_notification TEXT[]
+  channels_for_notification TEXT[],
+  telegram_chat_id TEXT
 );
 
 -- Таблица писем
@@ -39,6 +40,10 @@ CREATE TABLE letters (
   notification_statuses jsonb DEFAULT '{}',
   recipient_notified boolean NOT NULL DEFAULT false
 );
+
+ALTER TABLE letters 
+ADD COLUMN email_notified BOOLEAN NOT NULL DEFAULT FALSE,
+ADD COLUMN telegram_notified BOOLEAN NOT NULL DEFAULT FALSE;
 
 -- Индексы
 CREATE INDEX idx_letters_room_id ON letters(room_id);

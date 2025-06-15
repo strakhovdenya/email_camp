@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       .eq('room_number', room_number)
       .single();
     if (roomError) {
-      return NextResponse.json({ error: 'Комната не найдена' }, { status: 400 });
+      return NextResponse.json({ error: 'Комната не найдена', type: 'error' }, { status: 400 });
     }
 
     // Добавляем письмо
@@ -34,12 +34,22 @@ export async function POST(request: Request) {
       .select()
       .single();
     if (error) {
-      return NextResponse.json({ error: 'Ошибка при добавлении письма' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Ошибка при добавлении письма', type: 'error' },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ data });
+    return NextResponse.json({
+      data,
+      type: 'success',
+      message: 'Письмо успешно добавлено!',
+    });
   } catch (e) {
-    return NextResponse.json({ error: 'Внутренняя ошибка сервера' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Внутренняя ошибка сервера', type: 'error' },
+      { status: 500 }
+    );
   }
 }
 

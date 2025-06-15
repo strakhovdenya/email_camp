@@ -26,7 +26,7 @@ export async function GET() {
 
     if (error) {
       return NextResponse.json(
-        { error: 'Ошибка при получении данных', type: 'error' },
+        { success: false, error: 'Ошибка при получении данных' },
         { status: 500 }
       );
     }
@@ -41,10 +41,10 @@ export async function GET() {
       undelivered_count: room.letters?.filter((letter) => letter.status === 'pending').length || 0,
     }));
 
-    return NextResponse.json({ data: roomsWithLetters, type: 'success' });
+    return NextResponse.json({ success: true, data: roomsWithLetters });
   } catch (e) {
     return NextResponse.json(
-      { error: 'Внутренняя ошибка сервера', type: 'error' },
+      { success: false, error: 'Внутренняя ошибка сервера' },
       { status: 500 }
     );
   }

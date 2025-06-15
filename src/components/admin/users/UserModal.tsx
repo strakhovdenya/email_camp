@@ -36,6 +36,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
   const [roomId, setRoomId] = useState<string | null>(user?.room_id?.toString() || null);
   const [role, setRole] = useState<'admin' | 'staff' | 'camper'>(user?.role || 'camper');
   const [channels, setChannels] = useState<string[]>(user?.channels_for_notification || []);
+  const [telegramChatId, setTelegramChatId] = useState(user?.telegram_chat_id || '');
 
   const { data: rooms = [] } = useQuery({
     queryKey: ['rooms'],
@@ -57,6 +58,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
     setRoomId(user?.room_id?.toString() || null);
     setRole(user?.role || 'camper');
     setChannels(user?.channels_for_notification || []);
+    setTelegramChatId(user?.telegram_chat_id || '');
   }, [user, open]);
 
   useEffect(() => {
@@ -83,6 +85,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
       room_id: role === 'camper' ? roomId : null,
       role,
       channels_for_notification: channels,
+      telegram_chat_id: telegramChatId,
     });
   };
 
@@ -216,6 +219,15 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
                 </FormControl>
               </>
             )}
+            <div className="mt-4">
+              <TextField
+                label="Telegram Chat ID"
+                value={telegramChatId}
+                onChange={(e) => setTelegramChatId(e.target.value)}
+                fullWidth
+                helperText="ID чата в Telegram для отправки уведомлений"
+              />
+            </div>
           </div>
         </DialogContent>
         <DialogActions sx={{ px: 2, pb: 2 }}>

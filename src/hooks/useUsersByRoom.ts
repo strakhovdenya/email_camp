@@ -10,5 +10,10 @@ export function useUsersByRoom(roomNumber: string) {
       if (!res.ok) throw new Error(result.error || 'Ошибка при получении пользователей');
       return result.data || [];
     },
+    gcTime: 0,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
   });
 }

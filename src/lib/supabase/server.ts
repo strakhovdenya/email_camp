@@ -4,35 +4,47 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/supabase';
 
 class SupabaseService {
-  private static instance: SupabaseService;
-  private routeHandlerClient: ReturnType<typeof createRouteHandlerClient<Database>> | null = null;
-  private adminClient: ReturnType<typeof createClient<Database>> | null = null;
-
-  private constructor() {}
-
-  public static getInstance(): SupabaseService {
-    if (!SupabaseService.instance) {
-      SupabaseService.instance = new SupabaseService();
-    }
-    return SupabaseService.instance;
-  }
-
   public getRouteHandlerClient() {
-    if (!this.routeHandlerClient) {
-      this.routeHandlerClient = createRouteHandlerClient<Database>({ cookies });
-    }
-    return this.routeHandlerClient;
+    // Создаём новый клиент на каждый вызов
+    return createRouteHandlerClient<Database>({ cookies });
   }
 
   public getAdminClient() {
-    if (!this.adminClient) {
-      this.adminClient = createClient<Database>(
-        process.env.SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-      );
-    }
-    return this.adminClient;
+    // Создаём новый клиент на каждый вызов
+    return createClient<Database>(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        global: {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0',
+            apikey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+          },
+          fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+            const newInit = {
+              ...init,
+              cache: 'no-store' as const, // полностью отключаем кэш
+              headers: {
+                ...(init?.headers ?? {}),
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                apikey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+              },
+            };
+            return fetch(input, newInit);
+          },
+        },
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+        },
+        db: {
+          schema: 'public',
+        },
+      }
+    );
   }
 }
 
-export const supabaseService = SupabaseService.getInstance();
+export const supabaseService = new SupabaseService();

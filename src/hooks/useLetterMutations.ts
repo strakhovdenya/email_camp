@@ -51,6 +51,31 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
       setNotifying(false);
       if (result.type === 'success') {
         showToast(result.message || 'Письмо успешно добавлено!', TOAST_TYPES.SUCCESS);
+
+        // Отправляем уведомление
+        if (input.user_id) {
+          try {
+            const notifyResponse = await fetch('/api/notify-user', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: input.user_id,
+                letterId: result.data.id,
+                letterNote: input.note,
+                photoUrl: input.photo_url,
+              }),
+            });
+            const notifyResult = await notifyResponse.json();
+            if (notifyResult.success) {
+              showToast('Уведомление отправлено!', TOAST_TYPES.SUCCESS);
+            } else {
+              showToast('Ошибка при отправке уведомления', TOAST_TYPES.ERROR);
+            }
+          } catch (error) {
+            showToast('Ошибка при отправке уведомления', TOAST_TYPES.ERROR);
+          }
+        }
+
         return result.data;
       } else {
         showToast(result.error || 'Ошибка при добавлении письма', TOAST_TYPES.ERROR);
