@@ -252,7 +252,7 @@ export default function ShowcasePage() {
                 variant="outlined"
                 size="large"
                 startIcon={<GitHubIcon />}
-                href="https://github.com"
+                href="https://github.com/strakhovdenya/email_camp"
                 target="_blank"
                 sx={{ px: 4, py: 1.5, fontSize: '1.1rem' }}
               >

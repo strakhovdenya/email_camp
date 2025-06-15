@@ -43,13 +43,13 @@ interface GalleryItem {
   tags: string[];
 }
 
-const mockGalleryItems: GalleryItem[] = [
+const galleryItems: GalleryItem[] = [
   {
     id: '1',
     title: 'Главная страница',
     description: 'Современный дизайн главной страницы с градиентами и анимациями',
     category: 'desktop',
-    image: '/api/placeholder/800/600',
+    image: '/images/gallery/desktop/homepage.png',
     tags: ['UI/UX', 'Главная', 'Дизайн']
   },
   {
@@ -57,7 +57,7 @@ const mockGalleryItems: GalleryItem[] = [
     title: 'Список писем',
     description: 'Интерфейс управления письмами с фильтрами и поиском',
     category: 'desktop',
-    image: '/api/placeholder/800/600',
+    image: '/images/gallery/desktop/letters-list.png',
     tags: ['Письма', 'Управление', 'Фильтры']
   },
   {
@@ -65,7 +65,7 @@ const mockGalleryItems: GalleryItem[] = [
     title: 'Добавление письма',
     description: 'Форма добавления нового письма с валидацией',
     category: 'features',
-    image: '/api/placeholder/800/600',
+    image: '/images/gallery/features/add-letter-form.png',
     tags: ['Форма', 'Добавление', 'Валидация']
   },
   {
@@ -73,7 +73,7 @@ const mockGalleryItems: GalleryItem[] = [
     title: 'Админ панель',
     description: 'Панель администратора с аналитикой и управлением',
     category: 'admin',
-    image: '/api/placeholder/800/600',
+    image: '/images/gallery/admin/admin-dashboard.png',
     tags: ['Админ', 'Аналитика', 'Управление']
   },
   {
@@ -81,7 +81,7 @@ const mockGalleryItems: GalleryItem[] = [
     title: 'Мобильная версия',
     description: 'Адаптивный дизайн для мобильных устройств',
     category: 'mobile',
-    image: '/api/placeholder/400/800',
+    image: '/images/gallery/mobile/mobile-homepage.png',
     tags: ['Мобильный', 'Адаптивность', 'Responsive']
   },
   {
@@ -89,7 +89,7 @@ const mockGalleryItems: GalleryItem[] = [
     title: 'Уведомления',
     description: 'Система уведомлений Telegram и Email',
     category: 'features',
-    image: '/api/placeholder/800/600',
+    image: '/images/gallery/features/notifications.png',
     tags: ['Уведомления', 'Telegram', 'Email']
   },
   {
@@ -97,7 +97,7 @@ const mockGalleryItems: GalleryItem[] = [
     title: 'Статистика',
     description: 'Дашборд с графиками и метриками',
     category: 'admin',
-    image: '/api/placeholder/800/600',
+    image: '/images/gallery/admin/admin-stats.png',
     tags: ['Статистика', 'Графики', 'Метрики']
   },
   {
@@ -105,7 +105,7 @@ const mockGalleryItems: GalleryItem[] = [
     title: 'Настройки безопасности',
     description: 'Интерфейс управления правами доступа',
     category: 'admin',
-    image: '/api/placeholder/800/600',
+    image: '/images/gallery/admin/admin-security.png',
     tags: ['Безопасность', 'Права', 'Доступ']
   }
 ];
@@ -123,8 +123,8 @@ export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
 
   const filteredItems = selectedCategory === 'all' 
-    ? mockGalleryItems 
-    : mockGalleryItems.filter(item => item.category === selectedCategory);
+    ? galleryItems 
+    : galleryItems.filter(item => item.category === selectedCategory);
 
   const handleImageClick = (item: GalleryItem) => {
     setSelectedImage(item);
@@ -205,8 +205,8 @@ export default function GalleryPage() {
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   {category.key === 'all' 
-                    ? mockGalleryItems.length 
-                    : mockGalleryItems.filter(item => item.category === category.key).length
+                    ? galleryItems.length 
+                    : galleryItems.filter((item: GalleryItem) => item.category === category.key).length
                   } элементов
                 </Typography>
               </CardContent>
