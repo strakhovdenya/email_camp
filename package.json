@@ -8,11 +8,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:strict": "next lint --max-warnings 0",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
-    "check": "npm run lint && npm run format:check",
-    "fix": "npm run lint:fix && npm run format"
+    "check": "npm run lint:strict && npm run format:check && npx tsc --noEmit",
+    "fix": "npm run lint:fix && npm run format",
+    "pre-commit": "npm run check"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

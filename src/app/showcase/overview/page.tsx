@@ -1,16 +1,7 @@
 'use client';
 
 import React from 'react';
-import {
-  Container,
-  Typography,
-  Box,
-  Card,
-  CardContent,
-  Chip,
-  Avatar,
-  Paper,
-} from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Chip, Avatar, Paper } from '@mui/material';
 import {
   ErrorOutline as ProblemIcon,
   Lightbulb as SolutionIcon,
@@ -21,17 +12,11 @@ import {
   Palette as DesignIcon,
   Code as TechIcon,
   Email as EmailIcon,
-  Search as SearchIcon,
   Notifications as NotificationsIcon,
-  MarkEmailRead as ConfirmIcon,
-  LocalPostOffice as DeliveryIcon,
-  ArrowDownward as ArrowIcon,
   Person as PersonIcon,
   Telegram as TelegramIcon,
   Inbox as InboxIcon,
-  AccountCircle as AccountIcon,
   PhoneIphone as PhoneIcon,
-  CheckCircleOutline as CheckCircleIcon,
   Handshake as HandshakeIcon,
   QrCode as QrCodeIcon,
   CameraAlt as CameraIcon,
@@ -39,12 +24,12 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 
-const OverviewCard = ({ 
-  icon, 
-  title, 
-  description, 
-  color, 
-  details 
+const OverviewCard = ({
+  icon,
+  title,
+  description,
+  color,
+  details,
 }: {
   icon: React.ReactNode;
   title: string;
@@ -63,18 +48,16 @@ const OverviewCard = ({
   >
     <CardContent sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <Avatar sx={{ bgcolor: color, mr: 2, width: 48, height: 48 }}>
-          {icon}
-        </Avatar>
+        <Avatar sx={{ bgcolor: color, mr: 2, width: 48, height: 48 }}>{icon}</Avatar>
         <Typography variant="h5" sx={{ fontWeight: 700 }}>
           {title}
         </Typography>
       </Box>
-      
+
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         {description}
       </Typography>
-      
+
       <Box>
         {details.map((detail, index) => (
           <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -158,11 +141,7 @@ export default function OverviewPage() {
         >
           Обзор проекта
         </Typography>
-        <Typography
-          variant="h6"
-          color="text.secondary"
-          sx={{ maxWidth: 800, mx: 'auto' }}
-        >
+        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
           Детальный анализ разработки системы управления почтой для лагерей
         </Typography>
       </Box>
@@ -178,13 +157,13 @@ export default function OverviewPage() {
           О проекте
         </Typography>
         <Typography variant="body1" sx={{ mb: 3, fontSize: '1.1rem', lineHeight: 1.7 }}>
-          <strong>Email Camp</strong> — это современная веб-система для управления почтой в детских лагерях. 
-          Проект решает реальную проблему организации доставки писем от родителей к детям, 
+          <strong>Email Camp</strong> — это современная веб-система для управления почтой в детских
+          лагерях. Проект решает реальную проблему организации доставки писем от родителей к детям,
           обеспечивая прозрачность процесса и мгновенные уведомления.
         </Typography>
         <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.7 }}>
-          Система построена на современном стеке технологий с акцентом на производительность, 
-          безопасность и удобство использования. Реализована полная интеграция с Telegram и Email 
+          Система построена на современном стеке технологий с акцентом на производительность,
+          безопасность и удобство использования. Реализована полная интеграция с Telegram и Email
           для уведомлений, а также административная панель для управления процессом.
         </Typography>
       </Paper>
@@ -194,12 +173,12 @@ export default function OverviewPage() {
         <Typography variant="h3" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
           Ключевые аспекты
         </Typography>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
             gap: 4,
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           {[
@@ -212,8 +191,8 @@ export default function OverviewPage() {
                 'Отсутствие уведомлений о получении писем',
                 'Сложность отслеживания статуса доставки',
                 'Ручной процесс сортировки по комнатам',
-                'Нет централизованного управления'
-              ]
+                'Нет централизованного управления',
+              ],
             },
             {
               icon: <SolutionIcon />,
@@ -224,8 +203,8 @@ export default function OverviewPage() {
                 'Автоматические уведомления в Telegram/Email',
                 'Real-time отслеживание статусов',
                 'Интуитивный интерфейс для сотрудников',
-                'Административная панель для контроля'
-              ]
+                'Административная панель для контроля',
+              ],
             },
             {
               icon: <ResultIcon />,
@@ -236,15 +215,15 @@ export default function OverviewPage() {
                 'Сокращение времени обработки на 80%',
                 'Полная прозрачность процесса',
                 'Удовлетворенность пользователей 95%+',
-                'Масштабируемое решение'
-              ]
-            }
+                'Масштабируемое решение',
+              ],
+            },
           ].map((aspect, index) => (
-            <Box 
+            <Box
               key={aspect.title}
-              sx={{ 
+              sx={{
                 flex: { xs: '1 1 100%', md: '1 1 calc(33.333% - 21px)' },
-                minWidth: 350
+                minWidth: 350,
               }}
             >
               <motion.div
@@ -271,18 +250,18 @@ export default function OverviewPage() {
         >
           Пошаговый процесс получения и доставки уведомлений о письмах
         </Typography>
-        
-                 <Box 
-           sx={{ 
-             display: 'flex', 
-             flexDirection: 'column',
-             gap: 4,
-             maxWidth: 900,
-             mx: 'auto',
-             position: 'relative',
-             overflow: 'visible',
-           }}
-         >
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+            maxWidth: 900,
+            mx: 'auto',
+            position: 'relative',
+            overflow: 'visible',
+          }}
+        >
           {/* Vertical connecting line */}
           <Box
             sx={{
@@ -297,83 +276,80 @@ export default function OverviewPage() {
               zIndex: 0,
             }}
           />
-          
-                     {[
-             {
-               id: 1,
-               icon: <QrCodeIcon />,
-               title: 'Подготовка и получение письма',
-               description: 'Почтальон приносит письмо',
-               details: [
-                 'На каждую папку для комнаты наклеены два QR-кода',
-                 'QR-код "получение" для регистрации',
-                 'QR-код "выдача" для отметки вручения',
-                 'Сотрудник размещает письмо в папке'
-               ],
-               color: '#2563eb',
-               side: 'left',
-               illustration: <InboxIcon sx={{ fontSize: 120 }} />
-             },
-             {
-               id: 2,
-               icon: <CameraIcon />,
-               title: 'Регистрация поступления',
-               description: 'Сотрудник сканирует QR-код и вводит данные письма',
-               details: [
-                 'Сканирование QR-кода "получение"',
-                 'Указание получателя письма',
-                 'Фотографирование письма',
-                 'Система создает записи в базе данных'
-               ],
-               color: '#7c3aed',
-               side: 'right',
-               illustration: <QrCodeIcon sx={{ fontSize: 120 }} />
-             },
-             {
-               id: 3,
-               icon: <NotificationsIcon />,
-               title: 'Автоматические уведомления',
-               description: 'Система отправляет уведомления пользователю',
-               details: [
-                 'Email уведомление на почту',
-                 'Сообщение в Telegram бот',
-               ],
-               color: '#059669',
-               side: 'left',
-               illustration: <PhoneIcon sx={{ fontSize: 120 }} />
-             },
-             {
-               id: 4,
-               icon: <WalkIcon />,
-               title: 'Пользователь приходит',
-               description: 'Получатель приходит забрать своё письмо',
-               details: [
-                 'Пользователь получил уведомление',
-                 'Приходит за письмом',
-                 'Подтверждает личность',
-                 'Готов получить письмо'
-               ],
-               color: '#dc2626',
-               side: 'right',
-               illustration: <PersonIcon sx={{ fontSize: 120 }} />
-             },
-             {
-               id: 5,
-               icon: <HandshakeIcon />,
-               title: 'Выдача и завершение',
-               description: 'Сотрудник выдаёт письмо и закрывает процесс',
-               details: [
-                 'Сканирование QR-кода "выдача"',
-                 'Нажатие кнопки "Выдать" в приложении',
-                 'Передача письма пользователю',
-                 'Обновление статуса в системе',
-                 'Завершение процесса доставки'
-               ],
-               color: '#ea580c',
-               side: 'left',
-               illustration: <HandshakeIcon sx={{ fontSize: 120 }} />
-             }
-           ].map((step, index) => (
+
+          {[
+            {
+              id: 1,
+              icon: <QrCodeIcon />,
+              title: 'Подготовка и получение письма',
+              description: 'Почтальон приносит письмо',
+              details: [
+                'На каждую папку для комнаты наклеены два QR-кода',
+                'QR-код "получение" для регистрации',
+                'QR-код "выдача" для отметки вручения',
+                'Сотрудник размещает письмо в папке',
+              ],
+              color: '#2563eb',
+              side: 'left',
+              illustration: <InboxIcon sx={{ fontSize: 120 }} />,
+            },
+            {
+              id: 2,
+              icon: <CameraIcon />,
+              title: 'Регистрация поступления',
+              description: 'Сотрудник сканирует QR-код и вводит данные письма',
+              details: [
+                'Сканирование QR-кода "получение"',
+                'Указание получателя письма',
+                'Фотографирование письма',
+                'Система создает записи в базе данных',
+              ],
+              color: '#7c3aed',
+              side: 'right',
+              illustration: <QrCodeIcon sx={{ fontSize: 120 }} />,
+            },
+            {
+              id: 3,
+              icon: <NotificationsIcon />,
+              title: 'Автоматические уведомления',
+              description: 'Система отправляет уведомления пользователю',
+              details: ['Email уведомление на почту', 'Сообщение в Telegram бот'],
+              color: '#059669',
+              side: 'left',
+              illustration: <PhoneIcon sx={{ fontSize: 120 }} />,
+            },
+            {
+              id: 4,
+              icon: <WalkIcon />,
+              title: 'Пользователь приходит',
+              description: 'Получатель приходит забрать своё письмо',
+              details: [
+                'Пользователь получил уведомление',
+                'Приходит за письмом',
+                'Подтверждает личность',
+                'Готов получить письмо',
+              ],
+              color: '#dc2626',
+              side: 'right',
+              illustration: <PersonIcon sx={{ fontSize: 120 }} />,
+            },
+            {
+              id: 5,
+              icon: <HandshakeIcon />,
+              title: 'Выдача и завершение',
+              description: 'Сотрудник выдаёт письмо и закрывает процесс',
+              details: [
+                'Сканирование QR-кода "выдача"',
+                'Нажатие кнопки "Выдать" в приложении',
+                'Передача письма пользователю',
+                'Обновление статуса в системе',
+                'Завершение процесса доставки',
+              ],
+              color: '#ea580c',
+              side: 'left',
+              illustration: <HandshakeIcon sx={{ fontSize: 120 }} />,
+            },
+          ].map((step, index) => (
             <motion.div
               key={step.id}
               initial={{ opacity: 0, x: step.side === 'left' ? -100 : 100 }}
@@ -419,84 +395,87 @@ export default function OverviewPage() {
 
               <Box sx={{ flex: '0 0 45%' }}>
                 <Card
-                 component={motion.div}
-                 whileHover={{ scale: 1.02, boxShadow: `0 12px 40px ${step.color}20` }}
-                 sx={{
-                   maxWidth: 400,
-                   background: `linear-gradient(135deg, ${step.color}10 0%, ${step.color}05 100%)`,
-                   border: `2px solid ${step.color}30`,
-                   position: 'relative',
-                   zIndex: 3,
-                   overflow: 'visible',
-                   mt: 3,
-                   mb: 3,
-                 }}
-               >
-                 {/* Step number circle */}
-                 <Box
-                   sx={{
-                     position: 'absolute',
-                     top: -20,
-                     [step.side === 'left' ? 'right' : 'left']: -20,
-                     width: 50,
-                     height: 50,
-                     borderRadius: '50%',
-                     bgcolor: '#ffffff',
-                     color: step.color,
-                     display: 'flex',
-                     alignItems: 'center',
-                     justifyContent: 'center',
-                     fontWeight: 900,
-                     fontSize: '1.5rem',
-                     boxShadow: `0 6px 20px rgba(0, 0, 0, 0.2), 0 0 0 4px ${step.color}`,
-                     zIndex: 999,
-                     border: `4px solid ${step.color}`,
-                   }}
-                 >
-                   {step.id}
-                 </Box>
-                
-                <CardContent sx={{ p: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Avatar 
-                      sx={{ 
-                        bgcolor: step.color, 
-                        mr: 2, 
-                        width: 48, 
-                        height: 48,
-                        boxShadow: `0 4px 12px ${step.color}30`
-                      }}
-                    >
-                      {step.icon}
-                    </Avatar>
-                    <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                      {step.title}
+                  component={motion.div}
+                  whileHover={{ scale: 1.02, boxShadow: `0 12px 40px ${step.color}20` }}
+                  sx={{
+                    maxWidth: 400,
+                    background: `linear-gradient(135deg, ${step.color}10 0%, ${step.color}05 100%)`,
+                    border: `2px solid ${step.color}30`,
+                    position: 'relative',
+                    zIndex: 3,
+                    overflow: 'visible',
+                    mt: 3,
+                    mb: 3,
+                  }}
+                >
+                  {/* Step number circle */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: -20,
+                      [step.side === 'left' ? 'right' : 'left']: -20,
+                      width: 50,
+                      height: 50,
+                      borderRadius: '50%',
+                      bgcolor: '#ffffff',
+                      color: step.color,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 900,
+                      fontSize: '1.5rem',
+                      boxShadow: `0 6px 20px rgba(0, 0, 0, 0.2), 0 0 0 4px ${step.color}`,
+                      zIndex: 999,
+                      border: `4px solid ${step.color}`,
+                    }}
+                  >
+                    {step.id}
+                  </Box>
+
+                  <CardContent sx={{ p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: step.color,
+                          mr: 2,
+                          width: 48,
+                          height: 48,
+                          boxShadow: `0 4px 12px ${step.color}30`,
+                        }}
+                      >
+                        {step.icon}
+                      </Avatar>
+                      <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                        {step.title}
+                      </Typography>
+                    </Box>
+
+                    <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                      {step.description}
                     </Typography>
-                  </Box>
-                  
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-                    {step.description}
-                  </Typography>
-                  
-                  <Box>
-                    {step.details.map((detail, detailIndex) => (
-                      <Box key={detailIndex} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+
+                    <Box>
+                      {step.details.map((detail, detailIndex) => (
                         <Box
-                          sx={{
-                            width: 6,
-                            height: 6,
-                            borderRadius: '50%',
-                            bgcolor: step.color,
-                            mr: 2,
-                          }}
-                        />
-                                                <Typography variant="body2" color="text.secondary">
-                          {detail}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </Box>
-                </CardContent>
+                          key={detailIndex}
+                          sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                        >
+                          <Box
+                            sx={{
+                              width: 6,
+                              height: 6,
+                              borderRadius: '50%',
+                              bgcolor: step.color,
+                              mr: 2,
+                            }}
+                          />
+                          <Typography variant="body2" color="text.secondary">
+                            {detail}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  </CardContent>
                 </Card>
               </Box>
 
@@ -530,27 +509,29 @@ export default function OverviewPage() {
             </motion.div>
           ))}
         </Box>
-        
+
         {/* Interactive notification examples */}
         <Paper
           component={motion.div}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.8 }}
-          sx={{ 
-            p: 4, 
-            mt: 6, 
+          sx={{
+            p: 4,
+            mt: 6,
             background: 'linear-gradient(135deg, #059669 10 0%, #2563eb10 100%)',
-            border: '1px solid #05966930'
+            border: '1px solid #05966930',
           }}
         >
           <Typography variant="h5" sx={{ mb: 3, fontWeight: 700, textAlign: 'center' }}>
             Примеры уведомлений
           </Typography>
-          
+
           <Box sx={{ display: 'flex', gap: 4, justifyContent: 'center', flexWrap: 'wrap' }}>
             {/* Telegram notification */}
-            <Card sx={{ p: 3, maxWidth: 350, background: '#0088cc10', border: '1px solid #0088cc30' }}>
+            <Card
+              sx={{ p: 3, maxWidth: 350, background: '#0088cc10', border: '1px solid #0088cc30' }}
+            >
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Avatar sx={{ bgcolor: '#0088cc', mr: 2 }}>
                   <TelegramIcon />
@@ -561,18 +542,24 @@ export default function OverviewPage() {
               </Box>
               <Paper sx={{ p: 2, bgcolor: '#f5f5f5', fontFamily: 'monospace' }}>
                 <Typography variant="body2">
-                  📬 <strong>Новое письмо!</strong><br/>
-                  Для: Иван Петров<br/>
-                  Комната: 101<br/>
-                  Время: 14:30<br/>
-                  <br/>
+                  📬 <strong>Новое письмо!</strong>
+                  <br />
+                  Для: Иван Петров
+                  <br />
+                  Комната: 101
+                  <br />
+                  Время: 14:30
+                  <br />
+                  <br />
                   Заберите письмо на почте лагеря 📮
                 </Typography>
               </Paper>
             </Card>
-            
+
             {/* Email notification */}
-            <Card sx={{ p: 3, maxWidth: 350, background: '#dc262610', border: '1px solid #dc262630' }}>
+            <Card
+              sx={{ p: 3, maxWidth: 350, background: '#dc262610', border: '1px solid #dc262630' }}
+            >
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Avatar sx={{ bgcolor: '#dc2626', mr: 2 }}>
                   <EmailIcon />
@@ -581,17 +568,25 @@ export default function OverviewPage() {
                   Email уведомление
                 </Typography>
               </Box>
-              <Paper sx={{ p: 2, bgcolor: '#f5f5f5', fontFamily: 'monospace', fontSize: '0.85rem' }}>
+              <Paper
+                sx={{ p: 2, bgcolor: '#f5f5f5', fontFamily: 'monospace', fontSize: '0.85rem' }}
+              >
                 <Typography variant="body2">
-                  <strong>От:</strong> noreply@emailcamp.ru<br/>
-                  <strong>Тема:</strong> Новое письмо в лагере<br/>
-                  <br/>
-                  Здравствуйте, Иван!<br/>
-                  <br/>
-                  Для вас поступило письмо.<br/>
-                  Заберите его на почте лагеря.<br/>
-                  <br/>
-                  С уважением,<br/>
+                  <strong>От:</strong> noreply@emailcamp.ru
+                  <br />
+                  <strong>Тема:</strong> Новое письмо в лагере
+                  <br />
+                  <br />
+                  Здравствуйте, Иван!
+                  <br />
+                  <br />
+                  Для вас поступило письмо.
+                  <br />
+                  Заберите его на почте лагеря.
+                  <br />
+                  <br />
+                  С уважением,
+                  <br />
                   Команда Email Camp
                 </Typography>
               </Paper>
@@ -605,13 +600,13 @@ export default function OverviewPage() {
         <Typography variant="h3" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
           Этапы разработки
         </Typography>
-        <Box 
-          sx={{ 
-            display: 'flex', 
+        <Box
+          sx={{
+            display: 'flex',
             flexDirection: 'column',
             gap: 3,
             maxWidth: 800,
-            mx: 'auto'
+            mx: 'auto',
           }}
         >
           {projectPhases.map((phase, index) => (
@@ -649,7 +644,7 @@ export default function OverviewPage() {
                     {phase.description}
                   </Typography>
                 </CardContent>
-                
+
                 {/* Connector line */}
                 {index < projectPhases.length - 1 && (
                   <Box
@@ -675,12 +670,12 @@ export default function OverviewPage() {
         <Typography variant="h3" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
           Ключевые метрики
         </Typography>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
             gap: 3,
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           {keyMetrics.map((metric, index) => (
@@ -723,41 +718,56 @@ export default function OverviewPage() {
         <Typography variant="h3" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
           Технические особенности
         </Typography>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
             gap: 4,
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           {[
             {
               icon: <SecurityIcon />,
               title: 'Безопасность',
-              items: ['Row Level Security', 'JWT аутентификация', 'Валидация данных', 'HTTPS/SSL']
+              items: ['Row Level Security', 'JWT аутентификация', 'Валидация данных', 'HTTPS/SSL'],
             },
             {
               icon: <PerformanceIcon />,
               title: 'Производительность',
-              items: ['Server-Side Rendering', 'React Query кэширование', 'Оптимизация изображений', 'Code splitting']
+              items: [
+                'Server-Side Rendering',
+                'React Query кэширование',
+                'Оптимизация изображений',
+                'Code splitting',
+              ],
             },
             {
               icon: <DesignIcon />,
               title: 'UX/UI',
-              items: ['Material Design 3', 'Адаптивная верстка', 'Темная/светлая тема', 'Анимации Framer Motion']
+              items: [
+                'Material Design 3',
+                'Адаптивная верстка',
+                'Темная/светлая тема',
+                'Анимации Framer Motion',
+              ],
             },
             {
               icon: <TechIcon />,
               title: 'Архитектура',
-              items: ['Микросервисная архитектура', 'API-first подход', 'Real-time обновления', 'Serverless функции']
-            }
+              items: [
+                'Микросервисная архитектура',
+                'API-first подход',
+                'Real-time обновления',
+                'Serverless функции',
+              ],
+            },
           ].map((highlight, index) => (
-            <Box 
+            <Box
               key={highlight.title}
-              sx={{ 
+              sx={{
                 flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 16px)' },
-                minWidth: 280
+                minWidth: 280,
               }}
             >
               <motion.div
@@ -767,9 +777,7 @@ export default function OverviewPage() {
               >
                 <Card sx={{ p: 3, height: '100%' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>
-                      {highlight.icon}
-                    </Avatar>
+                    <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>{highlight.icon}</Avatar>
                     <Typography variant="h6" sx={{ fontWeight: 700 }}>
                       {highlight.title}
                     </Typography>
@@ -791,4 +799,4 @@ export default function OverviewPage() {
       </Paper>
     </Container>
   );
-} 
+}

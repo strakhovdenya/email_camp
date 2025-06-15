@@ -10,8 +10,8 @@
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "@next/next/no-html-link-for-pages": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "error",
     "react/display-name": "off",
     "react/jsx-key": "error",
     "react/jsx-no-duplicate-props": "error",
@@ -57,8 +57,8 @@
       "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
       }
     }
   ]
