@@ -12,7 +12,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LettersPageClient() {
   const [filter, setFilter] = useState({
-    id: '',
     room: '',
     recipient: '',
     status: 'all' as LetterStatusFilter,
@@ -28,8 +27,6 @@ export default function LettersPageClient() {
   }, []);
 
   const filteredLetters = letters.filter((letter) => {
-    const idMatch =
-      filter.id === '' || String(letter.id).toLowerCase().includes(filter.id.toLowerCase());
     const roomMatch =
       filter.room === '' ||
       letter.rooms?.room_number?.toLowerCase().includes(filter.room.toLowerCase());
@@ -39,7 +36,14 @@ export default function LettersPageClient() {
         .toLowerCase()
         .includes(filter.recipient.toLowerCase());
     const statusMatch = filter.status === 'all' || letter.status === filter.status;
-    return idMatch && roomMatch && recipientMatch && statusMatch;
+    return roomMatch && recipientMatch && statusMatch;
+  }).sort((a, b) => {
+    // Сначала сортируем по статусу: pending письма идут первыми
+    if (a.status === 'pending' && b.status !== 'pending') return -1;
+    if (a.status !== 'pending' && b.status === 'pending') return 1;
+    
+    // Затем сортируем по дате создания (новые сначала - ближе к текущему времени)
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
   });
 
   const { mutate: markAsDelivered } = useMarkAsDelivered();

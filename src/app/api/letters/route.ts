@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 const roomId = Array.isArray(room) ? room[0]?.id : room?.id;
 
 if (roomError || !roomId) {
-      return NextResponse.json({ error: 'Комната не найдена', type: 'error' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Комната не найдена' }, { status: 400 });
     }
 
     // Добавляем письмо
@@ -35,7 +35,7 @@ if (roomError || !roomId) {
     if (insertError) {
       console.error(insertError);
       return NextResponse.json(
-        { error: 'Ошибка при добавлении письма', type: 'error' },
+        { success: false, error: 'Ошибка при добавлении письма' },
         { status: 500 }
       );
     }
@@ -61,14 +61,14 @@ if (roomError || !roomId) {
     }
 
     return NextResponse.json({
+      success: true,
       data,
-      type: 'success',
       message: 'Письмо успешно добавлено!',
     });
   } catch (e) {
     console.error(e);
     return NextResponse.json(
-      { error: 'Внутренняя ошибка сервера', type: 'error' },
+      { success: false, error: 'Внутренняя ошибка сервера' },
       { status: 500 }
     );
   }
@@ -79,7 +79,19 @@ export async function GET(request: Request) {
     const supabase = supabaseService.getRouteHandlerClient();
     const { searchParams } = new URL(request.url);
     const room_number = searchParams.get('room_number');
-    let query = supabase.from('letters').select('*');
+    let query = supabase.from('letters').select(`
+      *,
+      rooms (
+        id,
+        room_number
+      ),
+      users (
+        id,
+        first_name,
+        last_name,
+        email
+      )
+    `);
     if (room_number) {
       // Получаем room_id по номеру комнаты
       const { data: room } = await supabase
@@ -94,14 +106,14 @@ export async function GET(request: Request) {
     const { data, error } = await query;
     if (error) {
       return NextResponse.json(
-        { error: 'Ошибка при получении писем', type: 'error' },
+        { success: false, error: 'Ошибка при получении писем' },
         { status: 500 }
       );
     }
-    return NextResponse.json({ data, type: 'success' });
+    return NextResponse.json({ success: true, data });
   } catch (e) {
     return NextResponse.json(
-      { error: 'Внутренняя ошибка сервера', type: 'error' },
+      { success: false, error: 'Внутренняя ошибка сервера' },
       { status: 500 }
     );
   }

@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     );
     const { letterId } = await request.json();
     if (!letterId) {
-      return NextResponse.json({ error: 'Не указан ID письма', type: 'error' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Не указан ID письма' }, { status: 400 });
     }
     const { data, error } = await supabase
       .from('letters')
@@ -30,14 +30,14 @@ export async function POST(request: Request) {
 
     if (error) {
       return NextResponse.json(
-        { error: 'Ошибка при выдаче письма', type: 'error' },
+        { success: false, error: 'Ошибка при выдаче письма' },
         { status: 500 }
       );
     }
-    return NextResponse.json({ data, type: 'success', message: 'Письмо выдано!' });
+    return NextResponse.json({ success: true, data, message: 'Письмо выдано!' });
   } catch (e) {
     return NextResponse.json(
-      { error: 'Внутренняя ошибка сервера', type: 'error' },
+      { success: false, error: 'Внутренняя ошибка сервера' },
       { status: 500 }
     );
   }

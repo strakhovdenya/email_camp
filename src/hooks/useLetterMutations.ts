@@ -49,7 +49,7 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
       });
       const result = await response.json();
       setNotifying(false);
-      if (result.type === 'success') {
+      if (result.success) {
         showToast(result.message || 'Письмо успешно добавлено!', TOAST_TYPES.SUCCESS);
 
         // Отправляем уведомление
@@ -102,7 +102,7 @@ export function useMarkAsDelivered(roomNumber?: string) {
         body: JSON.stringify({ letterId }),
       });
       const result = await response.json();
-      if (result.type === 'success') {
+      if (result.success) {
         const letter = result.data;
         const recipientName = letter.users ? 
           `${letter.users.last_name} ${letter.users.first_name}` : 

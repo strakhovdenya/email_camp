@@ -11,7 +11,6 @@ import { CheckCircle2, Clock, List } from 'lucide-react';
 
 interface LettersFiltersProps {
   filter: {
-    id: string;
     room: string;
     recipient: string;
     status: LetterStatusFilter;
@@ -43,18 +42,6 @@ export const LettersFilters: React.FC<LettersFiltersProps> = ({ filter, onChange
 
   return (
     <div className="flex flex-wrap gap-3 mb-0.5 bg-white/60 backdrop-blur-md rounded-xl p-4 shadow-md">
-      <input
-        type="text"
-        placeholder="ID письма"
-        className="border border-blue-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-150 shadow-sm"
-        value={localFilter.id}
-        onChange={(e) => {
-          const newFilter = { ...localFilter, id: e.target.value };
-          setLocalFilter(newFilter);
-          onChange(newFilter);
-        }}
-        style={{ minWidth: 100 }}
-      />
       <input
         type="text"
         placeholder="Комната"
