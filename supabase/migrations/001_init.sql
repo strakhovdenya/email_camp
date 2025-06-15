@@ -37,13 +37,9 @@ CREATE TABLE letters (
   note TEXT,
   photo_url TEXT,
   user_id uuid REFERENCES users(id),
-  notification_statuses jsonb DEFAULT '{}',
-  recipient_notified boolean NOT NULL DEFAULT false
+  notification_statuses jsonb DEFAULT '{}'
 );
 
-ALTER TABLE letters 
-ADD COLUMN email_notified BOOLEAN NOT NULL DEFAULT FALSE,
-ADD COLUMN telegram_notified BOOLEAN NOT NULL DEFAULT FALSE;
 
 -- Индексы
 CREATE INDEX idx_letters_room_id ON letters(room_id);
