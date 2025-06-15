@@ -1,12 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseService } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = supabaseService.getAdminClient();
     const { letterId } = await request.json();
     if (!letterId) {
       return NextResponse.json({ success: false, error: 'Не указан ID письма' }, { status: 400 });
