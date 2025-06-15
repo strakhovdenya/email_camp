@@ -20,6 +20,7 @@ export async function notifyUser({
   letterNote?: string;
   photoUrl?: string;
 }) {
+   console.log('!!!!!!!notifyUser - function notifyUse');
   const supabase = supabaseService.getAdminClient();
   const message: NotificationMessage = { letterId, letterNote, photoUrl };
   const channels = user.channels_for_notification as ChannelType[];
@@ -31,7 +32,7 @@ export async function notifyUser({
 
   // Отправляем уведомления
   const results = await dispatcher.notify(user, message, channels);
-
+  console.log('!!!!!!!results', results);
   // Сохраняем статусы уведомлений
   const updates = {
     email_notified: results.email?.success || false,
@@ -44,6 +45,6 @@ export async function notifyUser({
     console.error('Error updating notification statuses:', updateError);
     throw new Error('Failed to update notification statuses');
   }
-
+  
   return results;
 }

@@ -3,14 +3,17 @@ import { supabaseService } from '@/lib/supabase/server';
 import { notifyUser } from '@/services/notifications/notifyUser';
 
 if (!process.env.RESEND_API_KEY) {
+  console.error('!!!!!!!RESEND_API_KEY is not set in environment variables');
   throw new Error('RESEND_API_KEY is not set in environment variables');
 }
 
 export async function POST(request: Request) {
+  console.log('!!!!!!!notify-user');
   try {
     const supabase = supabaseService.getAdminClient();
     const { userId, letterId, letterNote, photoUrl } = await request.json();
     if (!userId || !letterId) {
+      console.error('Missing required fields');
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
@@ -31,11 +34,13 @@ export async function POST(request: Request) {
       );
     }
     if (!user) {
+      console.error('User not found');
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
     // Проверяем наличие каналов уведомлений
     if (!user.channels_for_notification || user.channels_for_notification.length === 0) {
+      console.error('No notification channels configured for user');
       return NextResponse.json(
         { success: false, error: 'No notification channels configured for user' },
         { status: 400 }
@@ -52,6 +57,7 @@ export async function POST(request: Request) {
     // Проверяем результат отправки
     const hasSuccess = Object.values(result).some((r) => r?.success);
     if (!hasSuccess) {
+      console.error('Failed to send notifications');
       return NextResponse.json(
         { success: false, error: 'Failed to send notifications', details: result },
         { status: 500 }

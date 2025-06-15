@@ -2,5 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npx tsc --noEmit
-npx lint-staged --verbose
+npm run lint
  

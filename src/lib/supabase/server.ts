@@ -23,16 +23,16 @@ class SupabaseService {
             apikey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
           },
           fetch: (input: RequestInfo | URL, init?: RequestInit) => {
-            const newInit = {
+            const headers = new Headers(init?.headers || {});
+            headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+            headers.set('Pragma', 'no-cache');
+            headers.set('Expires', '0');
+            headers.set('apikey', process.env.SUPABASE_SERVICE_ROLE_KEY!);
+            return fetch(input, {
               ...init,
-              cache: 'no-store' as const, // полностью отключаем кэш
-              headers: {
-                ...(init?.headers ?? {}),
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                apikey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
-              },
-            };
-            return fetch(input, newInit);
+              cache: 'no-store',
+              headers,
+            });
           },
         },
         auth: {

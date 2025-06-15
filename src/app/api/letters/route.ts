@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabaseService } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
+  console.log('Headers:', request.headers.get('content-type'));
   try {
     const supabase = supabaseService.getAdminClient();
     const body = await request.json();
@@ -9,20 +10,22 @@ export async function POST(request: Request) {
 
     // Получаем room_id по номеру комнаты
     const { data: room, error: roomError } = await supabase
-      .from('rooms')
-      .select('id')
-      .eq('room_number', room_number)
-      .single();
-    if (roomError) {
+  .from('rooms')
+  .select('id')
+  .eq('room_number', room_number).maybeSingle();
+
+const roomId = Array.isArray(room) ? room[0]?.id : room?.id;
+
+if (roomError || !roomId) {
       return NextResponse.json({ error: 'Комната не найдена', type: 'error' }, { status: 400 });
     }
 
     // Добавляем письмо
-    const { data, error } = await supabase
+    const { data: insertData, error: insertError } = await supabase
       .from('letters')
       .insert([
         {
-          room_id: room.id,
+          room_id: roomId,
           status: 'pending',
           sync_status: 'pending',
           note: note ?? null,
@@ -30,14 +33,34 @@ export async function POST(request: Request) {
           user_id: user_id ?? null,
           recipient_notified: false,
         },
-      ])
-      .select()
-      .single();
-    if (error) {
+      ]).select('*');
+      console.error('insertData',insertData);
+    if (insertError) {
+      console.error(insertError);
       return NextResponse.json(
         { error: 'Ошибка при добавлении письма', type: 'error' },
         { status: 500 }
       );
+    }
+
+    // Получаем только что добавленное письмо по id
+    type InsertedLetter = { id: string };
+    let insertedId: string | undefined;
+    if (Array.isArray(insertData) && (insertData as InsertedLetter[]).length > 0) {
+      insertedId = (insertData as InsertedLetter[])[0].id;
+    }
+    let data = null;
+    if (insertedId) {
+      const { data: selected, error: selectError } = await supabase
+        .from('letters')
+        .select('*')
+        .eq('id', insertedId)
+        .single();
+      if (selectError) {
+        console.error(selectError);
+      } else {
+        data = selected;
+      }
     }
 
     return NextResponse.json({
@@ -46,6 +69,7 @@ export async function POST(request: Request) {
       message: 'Письмо успешно добавлено!',
     });
   } catch (e) {
+    console.error(e);
     return NextResponse.json(
       { error: 'Внутренняя ошибка сервера', type: 'error' },
       { status: 500 }

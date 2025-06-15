@@ -42,18 +42,21 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
   const mutation = useMutation<Letter, Error, AddLetterInput>({
     mutationFn: async (input: AddLetterInput) => {
       setNotifying(true);
+      console.log('!!!!!!!input', input);
       const response = await fetch('/api/letters', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
       });
       const result = await response.json();
+      console.log('!!!!!!!result', result);
       setNotifying(false);
       if (result.type === 'success') {
         showToast(result.message || 'Письмо успешно добавлено!', TOAST_TYPES.SUCCESS);
 
         // Отправляем уведомление
         if (input.user_id) {
+          console.log('!!!!!!!input.user_id', input.user_id);
           try {
             const notifyResponse = await fetch('/api/notify-user', {
               method: 'POST',
@@ -66,13 +69,15 @@ export function useAddLetter(roomNumber?: string): UseAddLetterResult {
               }),
             });
             const notifyResult = await notifyResponse.json();
+            console.log('!!!!!!!notifyResult', notifyResult);
             if (notifyResult.success) {
               showToast('Уведомление отправлено!', TOAST_TYPES.SUCCESS);
             } else {
               showToast('Ошибка при отправке уведомления', TOAST_TYPES.ERROR);
             }
           } catch (error) {
-            showToast('Ошибка при отправке уведомления', TOAST_TYPES.ERROR);
+            console.log('!!!!!!!error', error);
+            showToast('Ошибка при отправке уведомления неожиданная', TOAST_TYPES.ERROR);
           }
         }
 
