@@ -334,3 +334,120 @@ npm run test         # Запуск всех тестов
 Добавление фильтров по статусу и дате
 Создание ролей пользователей и прав доступа
 Хотите, чтобы я приступил к какому-то из этих следующих шагов?
+
+
+# описание проекта как отдельная часть сайта
+
+Предлагаемые роуты
+bash
+Copy
+Edit
+/docs
+/docs/overview
+/docs/features
+/docs/architecture
+/docs/tech-stack
+/docs/getting-started
+/docs/contributing
+/docs/roadmap
+1. /docs/overview — Общий обзор
+Цель проекта: объясните, зачем он нужен (MVP, кейс использования).
+
+Ключевые сущности: Комната, Письмо (слайдер-карточки или иконки + краткие описания).
+
+Пользовательские роли (если есть): администратор, сотрудник, получатель.
+
+2. /docs/features — Функциональность
+Разбейте на блоки:
+
+Комнаты
+
+Просмотр списка комнат, количество писем.
+
+Фильтрация / поиск по номеру.
+
+Письма
+
+Добавление письма (сканер или форма).
+
+Просмотр истории писем в комнате.
+
+Изменение статусов: pending → delivered.
+
+Уведомления
+
+Telegram-оповещения при добавлении.
+
+Email (если есть).
+
+Админка (если планируется): CRUD для сущностей.
+
+Каждый блок — заголовок, параграф + скриншот или код-сниппет.
+
+3. /docs/architecture — Архитектура системы
+Схема базы (ER-диаграмма для rooms и letters).
+
+Потоки данных: вставка письма → триггер supabase → отправка Telegram → Webhook/функция.
+
+RLS: политики безопасности, роли, service-role key.
+
+API: REST via PostgREST, Realtime каналы.
+
+4. /docs/tech-stack — Технологии
+Для каждой технологии — логотип + краткое описание:
+
+Frontend: Next.js 14 (App Router), React Query, Tailwind CSS.
+
+Backend/Data: Supabase (Postgres + Realtime + Storage), RLS.
+
+Интеграции: Telegram Bot API, почтовый сервис (Resend / SMTP).
+
+DevOps: Vercel (CI/CD), миграции supabase CLI.
+
+Тестирование: Jest (unit), Playwright или Cypress (e2e).
+
+5. /docs/getting-started — Как запустить локально
+Requirements: Node.js, npm, supabase CLI.
+
+Шаги: clone, npm install, supabase start, npm run dev.
+
+Настройка ENV: пример .env.local.
+
+Миграции и типы: supabase migration, supabase gen types.
+
+6. /docs/contributing — Как внести вклад
+Кодстайл: ESLint, Prettier, Tailwindlint.
+
+Workflow: ветки feature/, conventional commits, PR review.
+
+Тесты: запуск npm run test, npm run lint.
+
+CI: что проверяет GitHub Actions/Vercel.
+
+7. /docs/roadmap — Дальнейшие планы
+PWA & Offline
+
+Штрих-коды: интеграция сканера, API.
+
+Расширенный UI: фильтры, сортировки.
+
+Дополнительные каналы нотификаций: Email, SMS.
+
+Мультиязычность
+
+Интеграции с ERP/CRM
+
+Как отобразить
+Главная страница документации (/docs) с карточками-ссылками на каждую секцию.
+
+Внутри каждой страницы:
+
+Breadcrumbs: /docs › Features
+
+Оглавление (хуки, React-scrollspy) слева для длинных страниц.
+
+Код-сниппеты обёрнутые в <pre><code>…</code></pre> с подсветкой.
+
+Диаграммы: ER-диаграмма, sequence diagrams — через Mermaid или вставленное изображение.
+
+Таблицы: для endpoint-ов API (метод, URL, params, response).

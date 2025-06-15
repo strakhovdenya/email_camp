@@ -122,7 +122,7 @@ export function useMarkAsDelivered(roomNumber?: string) {
       // Добавляем небольшую задержку перед обновлением данных
       // чтобы анимация успела завершиться
       setTimeout(() => {
-        invalidateMailQueries(queryClient, roomNumber);
+      invalidateMailQueries(queryClient, roomNumber);
       }, 100);
     },
     onError: () => {

@@ -9,8 +9,8 @@ export async function POST(request: Request) {
 
     // Получаем room_id по номеру комнаты
     const { data: room, error: roomError } = await supabase
-  .from('rooms')
-  .select('id')
+      .from('rooms')
+      .select('id')
   .eq('room_number', room_number).maybeSingle();
 
 const roomId = Array.isArray(room) ? room[0]?.id : room?.id;
