@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { supabaseService } from '@/lib/supabase/server';
 
 export async function POST(request: Request) {
-  console.log('Headers:', request.headers.get('content-type'));
   try {
     const supabase = supabaseService.getAdminClient();
     const body = await request.json();

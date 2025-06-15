@@ -39,61 +39,61 @@ export const LetterStatusBadges: React.FC<{ letter: Letter }> = ({ letter }) => 
       {/* Всегда показываем статусы для email и telegram */}
       {Object.entries(CHANNEL_LABELS).map(([channel, { label, icon }]) => {
         const status = statuses[channel];
-        const chipIcon = React.isValidElement(icon) ? icon : undefined;
+            const chipIcon = React.isValidElement(icon) ? icon : undefined;
         
-        if (status === 'sent') {
-          return (
-            <Tooltip key={channel} title={`${label}: уведомление отправлено`} arrow>
-              <Chip
-                icon={chipIcon}
-                label={label}
-                size="small"
-                sx={{
-                  bgcolor: 'rgba(34,197,94,0.08)',
-                  color: 'rgb(22,163,74)',
-                  fontWeight: 500,
-                  fontSize: 13,
-                  mr: 0.5,
-                }}
-              />
-            </Tooltip>
-          );
-        } else if (status === 'failed') {
-          return (
-            <Tooltip key={channel} title={`${label}: ошибка отправки`} arrow>
-              <Chip
-                icon={<XCircle className="w-4 h-4 text-red-500" />}
-                label={label}
-                size="small"
-                sx={{
-                  bgcolor: 'rgba(239,68,68,0.08)',
-                  color: 'rgb(220,38,38)',
-                  fontWeight: 500,
-                  fontSize: 13,
-                  mr: 0.5,
-                }}
-              />
-            </Tooltip>
-          );
-        } else {
+            if (status === 'sent') {
+              return (
+                <Tooltip key={channel} title={`${label}: уведомление отправлено`} arrow>
+                  <Chip
+                    icon={chipIcon}
+                    label={label}
+                    size="small"
+                    sx={{
+                      bgcolor: 'rgba(34,197,94,0.08)',
+                      color: 'rgb(22,163,74)',
+                      fontWeight: 500,
+                      fontSize: 13,
+                      mr: 0.5,
+                    }}
+                  />
+                </Tooltip>
+              );
+            } else if (status === 'failed') {
+              return (
+                <Tooltip key={channel} title={`${label}: ошибка отправки`} arrow>
+                  <Chip
+                    icon={<XCircle className="w-4 h-4 text-red-500" />}
+                    label={label}
+                    size="small"
+                    sx={{
+                      bgcolor: 'rgba(239,68,68,0.08)',
+                      color: 'rgb(220,38,38)',
+                      fontWeight: 500,
+                      fontSize: 13,
+                      mr: 0.5,
+                    }}
+                  />
+                </Tooltip>
+              );
+            } else {
           // Статус не определен или null - показываем как "не отправлено"
-          return (
-            <Tooltip key={channel} title={`${label}: уведомление не отправлено`} arrow>
-              <Chip
+              return (
+                <Tooltip key={channel} title={`${label}: уведомление не отправлено`} arrow>
+                  <Chip
                 icon={<Clock className="w-4 h-4 text-gray-400" />}
-                label={label}
-                size="small"
-                sx={{
-                  bgcolor: 'rgba(203,213,225,0.18)',
-                  color: 'rgb(71,85,105)',
-                  fontWeight: 500,
-                  fontSize: 13,
-                  mr: 0.5,
-                }}
-              />
-            </Tooltip>
-          );
-        }
+                    label={label}
+                    size="small"
+                    sx={{
+                      bgcolor: 'rgba(203,213,225,0.18)',
+                      color: 'rgb(71,85,105)',
+                      fontWeight: 500,
+                      fontSize: 13,
+                      mr: 0.5,
+                    }}
+                  />
+                </Tooltip>
+              );
+            }
       })}
     </>
   );

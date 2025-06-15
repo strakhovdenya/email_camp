@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/auth';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -16,50 +16,15 @@ USER_ROLES.forEach((r) => {
 });
 
 export default function UserInfo() {
-  const [user, setUser] = useState<{ email: string; role: string } | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      const u = data?.user;
-      if (isMounted) {
-        if (u) {
-          let role = u.user_metadata?.role;
-          if (!role) {
-            const { data: userRow } = await supabase
-              .from('users')
-              .select('role')
-              .eq('id', u.id)
-              .single();
-            role = userRow?.role || '';
-          }
-          setUser({
-            email: u.email || '',
-            role: role,
-          });
-        } else {
-          setUser(null);
-        }
-      }
-    };
-    fetchUser();
-    const { data: listener } = supabase.auth.onAuthStateChange(() => {
-      fetchUser();
-    });
-    return () => {
-      isMounted = false;
-      listener?.subscription.unsubscribe();
-    };
-  }, []);
+  const { data: user, isLoading } = useCurrentUser();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push('/auth');
   };
 
-  if (!user) return null;
+  if (isLoading || !user) return null;
 
   return (
     <Box

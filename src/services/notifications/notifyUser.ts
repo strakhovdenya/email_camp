@@ -31,7 +31,7 @@ export async function notifyUser({
 
   // Отправляем уведомления
   const results = await dispatcher.notify(user, message, channels);
-  
+
   // Формируем статусы для notification_statuses
   const notificationStatuses: Record<string, 'sent' | 'failed'> = {};
   
@@ -39,7 +39,7 @@ export async function notifyUser({
   Object.entries(results).forEach(([channel, result]) => {
     if (result) {
       notificationStatuses[channel] = result.success ? 'sent' : 'failed';
-    }
+  }
   });
 
   // Сохраняем только новый формат статусов уведомлений

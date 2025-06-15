@@ -103,7 +103,15 @@ export function useMarkAsDelivered(roomNumber?: string) {
       });
       const result = await response.json();
       if (result.type === 'success') {
-        showToast(result.message || 'Письмо выдано!', TOAST_TYPES.SUCCESS);
+        const letter = result.data;
+        const recipientName = letter.users ? 
+          `${letter.users.last_name} ${letter.users.first_name}` : 
+          `комната ${letter.room_number}`;
+        
+        showToast(
+          `Письмо выдано получателю: ${recipientName}`, 
+          TOAST_TYPES.SUCCESS
+        );
         return result.data;
       } else {
         showToast(result.error || 'Ошибка при выдаче письма', TOAST_TYPES.ERROR);
@@ -111,7 +119,11 @@ export function useMarkAsDelivered(roomNumber?: string) {
       }
     },
     onSuccess: () => {
-      invalidateMailQueries(queryClient, roomNumber);
+      // Добавляем небольшую задержку перед обновлением данных
+      // чтобы анимация успела завершиться
+      setTimeout(() => {
+        invalidateMailQueries(queryClient, roomNumber);
+      }, 100);
     },
     onError: () => {
       // Ошибка уже обработана через showToast

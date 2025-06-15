@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Dialog from '@mui/material/Dialog';
@@ -13,7 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
-import { supabase } from '@/lib/auth';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { ROLE_ADMIN, ROLE_STAFF } from '@/constants/userRoles';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
@@ -23,32 +23,10 @@ export function InviteAdminButton() {
   const [role, setRole] = useState<string>(ROLE_STAFF);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const { showToast } = useToast();
+  const { data: currentUser } = useCurrentUser();
 
-  useEffect(() => {
-    let isMounted = true;
-    supabase.auth.getUser().then(async ({ data }) => {
-      const user = data?.user;
-      if (!user) {
-        if (isMounted) setIsAdmin(false);
-        return;
-      }
-      let role = user.user_metadata?.role;
-      if (!role) {
-        const { data: userRow } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-        role = userRow?.role;
-      }
-      if (isMounted) setIsAdmin(role === ROLE_ADMIN);
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const isAdmin = currentUser?.role === ROLE_ADMIN;
 
   const handleInvite = async () => {
     try {

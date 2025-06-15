@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { User } from '@/types/supabase';
 import { NOTIFICATION_CHANNELS } from '@/constants/notificationChannels';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { useRooms } from '@/hooks/useRooms';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -38,17 +37,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
   const [channels, setChannels] = useState<string[]>(user?.channels_for_notification || []);
   const [telegramChatId, setTelegramChatId] = useState(user?.telegram_chat_id || '');
 
-  const { data: rooms = [] } = useQuery({
-    queryKey: ['rooms'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('rooms')
-        .select('id, room_number')
-        .order('room_number', { ascending: true });
-      if (error) throw error;
-      return data || [];
-    },
-  });
+  const { data: rooms = [] } = useRooms();
 
   useEffect(() => {
     setFirstName(user?.first_name || '');

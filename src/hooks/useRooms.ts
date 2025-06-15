@@ -7,7 +7,7 @@ export function useRooms() {
     queryFn: async () => {
       const response = await fetch('/api/rooms');
       const result = await response.json();
-      if (!result.success) throw new Error(result.error || 'Ошибка получения списка комнат');
+      if (!result.success) throw new Error(result.error || 'Ошибка получения комнат');
       return result.data || [];
     },
   });

@@ -1,7 +1,7 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { USER_ROLES, ROLE_ADMIN } from '@/constants/userRoles';
-import { supabase } from '@/lib/auth';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -19,34 +19,15 @@ export default function InviteUserForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const { data: currentUser } = useCurrentUser();
 
-  useEffect(() => {
-    // Получаем роль текущего пользователя
-    supabase.auth.getUser().then(async ({ data }) => {
-      const user = data?.user;
-      if (!user) {
-        setIsAdmin(false);
-        return;
-      }
-      let role = user.user_metadata?.role;
-      if (!role) {
-        const { data: userRow } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-        role = userRow?.role;
-      }
-      setIsAdmin(role === ROLE_ADMIN);
-    });
-  }, []);
+  const isAdmin = currentUser?.role === ROLE_ADMIN;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess(false);
-    if (isAdmin === false) {
+    if (!isAdmin) {
       setError('Только администратор может приглашать пользователей');
       return;
     }
@@ -121,12 +102,12 @@ export default function InviteUserForm() {
           fullWidth
           variant="contained"
           size="large"
-          disabled={loading || isAdmin === false}
+          disabled={loading || !isAdmin}
         >
           Пригласить
         </Button>
       </form>
-      {isAdmin === false && (
+      {!isAdmin && (
         <Typography color="error" className="text-center mt-2">
           Только администратор может приглашать пользователей
         </Typography>

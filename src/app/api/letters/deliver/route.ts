@@ -18,7 +18,14 @@ export async function POST(request: Request) {
         delivered_at: new Date().toISOString(),
       })
       .eq('id', letterId)
-      .select()
+      .select(`
+        *,
+        users (
+          id,
+          first_name,
+          last_name
+        )
+      `)
       .single();
 
     if (error) {

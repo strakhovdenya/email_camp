@@ -4,19 +4,39 @@ import { supabaseService } from '@/lib/supabase/server';
 export async function GET() {
   try {
     const supabase = supabaseService.getRouteHandlerClient();
-    const { data, error } = await supabase
-      .from('users')
-      .select('*, room:rooms(room_number)')
-      .order('created_at', { ascending: false });
 
-    if (error) throw error;
-    return NextResponse.json({ success: true, data });
-  } catch (error) {
+    const { data: users, error } = await supabase
+      .from('users')
+      .select(`
+        id,
+        first_name,
+        last_name,
+        email,
+        phone,
+        role,
+        channels_for_notification,
+        telegram_chat_id,
+        room_id,
+        rooms (
+          room_number
+        )
+      `)
+      .order('last_name')
+      .order('first_name');
+
+    if (error) {
+      console.error('Error fetching users:', error);
+      return NextResponse.json(
+        { success: false, error: 'Failed to fetch users' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ success: true, data: users || [] });
+  } catch (e) {
+    console.error('Unexpected error in users API:', e);
     return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-      },
+      { success: false, error: 'Internal server error' },
       { status: 500 }
     );
   }

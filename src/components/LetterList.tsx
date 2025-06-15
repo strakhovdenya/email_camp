@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LetterCard } from './ui/LetterCard';
 import type { LetterWithRelations } from '@/types/supabase';
 import type { Letter } from './ui/LetterCard/types';
@@ -18,6 +18,25 @@ export const LetterList: React.FC<LetterListProps> = ({
 }): React.ReactElement => {
   const [showPending, setShowPending] = useState(true);
   const [showDelivered, setShowDelivered] = useState(false);
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
+
+  // Очищаем removingIds когда письма обновляются
+  useEffect(() => {
+    const currentIds = new Set(letters.map(l => l.id));
+    setRemovingIds(prev => new Set(Array.from(prev).filter(id => currentIds.has(id))));
+  }, [letters]);
+
+  const handleDeliver = (id: string) => {
+    if (onDeliver) {
+      // Добавляем ID в список удаляемых
+      setRemovingIds(prev => new Set([...Array.from(prev), id]));
+      
+      // Вызываем onDeliver с небольшой задержкой для анимации
+      setTimeout(() => {
+        onDeliver(id);
+      }, 300); // Задержка соответствует длительности анимации
+    }
+  };
 
   if (letters.length === 0) {
     return <div className="text-gray-400 text-center py-6">Нет писем для этой комнаты</div>;
@@ -62,26 +81,51 @@ export const LetterList: React.FC<LetterListProps> = ({
                 <div className="text-center text-gray-400">Нет писем, ожидающих доставки</div>
               ) : (
                 <div className="flex flex-col gap-3">
-                  {pending.map((letter) => (
-                    <LetterCard key={letter.id} letter={letter as Letter}>
-                      {onDeliver && (
-                        <Button
-                          onClick={() => onDeliver(letter.id)}
-                          disabled={deliverLoadingId !== null}
-                          variant="contained"
-                          size="small"
-                          sx={{
-                            borderRadius: 2,
-                            fontWeight: 600,
-                            textTransform: 'none',
-                            minWidth: 120,
-                          }}
-                        >
-                          {deliverLoadingId === letter.id ? 'Выдача...' : 'Выдать'}
-                        </Button>
-                      )}
-                    </LetterCard>
-                  ))}
+                  <AnimatePresence mode="popLayout">
+                    {pending.map((letter) => (
+                      <motion.div
+                        key={letter.id}
+                        layout
+                        initial={{ opacity: 1, scale: 1, x: 0 }}
+                        animate={{ 
+                          opacity: removingIds.has(letter.id) ? 0 : 1,
+                          scale: removingIds.has(letter.id) ? 0.95 : 1,
+                          x: removingIds.has(letter.id) ? 20 : 0
+                        }}
+                        exit={{ 
+                          opacity: 0, 
+                          scale: 0.95, 
+                          x: 20,
+                          transition: { duration: 0.3 }
+                        }}
+                        transition={{ 
+                          duration: 0.3,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        <LetterCard letter={letter as Letter}>
+                          {onDeliver && (
+                            <Button
+                              onClick={() => handleDeliver(letter.id)}
+                              disabled={deliverLoadingId !== null || removingIds.has(letter.id)}
+                              variant="contained"
+                              size="small"
+                              sx={{
+                                borderRadius: 2,
+                                fontWeight: 600,
+                                textTransform: 'none',
+                                minWidth: 120,
+                                opacity: removingIds.has(letter.id) ? 0.6 : 1,
+                              }}
+                            >
+                              {deliverLoadingId === letter.id ? 'Выдача...' : 
+                               removingIds.has(letter.id) ? 'Выдается...' : 'Выдать'}
+                            </Button>
+                          )}
+                        </LetterCard>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </div>
               )}
             </motion.div>
