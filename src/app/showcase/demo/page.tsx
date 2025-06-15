@@ -103,6 +103,8 @@ export default function DemoPage() {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     const user = mockUsers.find(u => u.name === selectedRecipient);
+    // Используем детерминированную логику вместо Math.random()
+    const letterCount = letters.length;
     const newLetter: DemoLetter = {
       id: Date.now().toString(),
       recipient: selectedRecipient,
@@ -110,8 +112,8 @@ export default function DemoPage() {
       status: 'pending',
       createdAt: new Date(),
       notifications: {
-        email: Math.random() > 0.1 ? 'sent' : 'failed',
-        telegram: Math.random() > 0.1 ? 'sent' : 'failed'
+        email: letterCount % 7 === 0 ? 'failed' : 'sent', // Каждое 7-е письмо с ошибкой email
+        telegram: letterCount % 11 === 0 ? 'failed' : 'sent' // Каждое 11-е письмо с ошибкой telegram
       }
     };
 

@@ -79,6 +79,15 @@ export default function FeaturesPage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [selectedRoom, setSelectedRoom] = useState('101');
   const [recipientName, setRecipientName] = useState('Иван Петров');
+  
+  // Статические значения для избежания ошибки гидратации
+  const [demoStats] = useState({
+    letterId: 847,
+    roomLetters: { '101': 3, '102': 2, '103': 4, '104': 1 } as Record<string, number>,
+    totalLetters: 87,
+    deliveredToday: 15,
+    pending: 8
+  });
 
   const handleDeliverLetter = () => {
     setLetterStatus('delivered');
@@ -153,7 +162,7 @@ export default function FeaturesPage() {
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box>
                   <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    Письмо #{Math.floor(Math.random() * 1000)}
+                    Письмо #{demoStats.letterId}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
                     Комната {selectedRoom} • {recipientName}
@@ -273,7 +282,7 @@ export default function FeaturesPage() {
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>
                       Комната {room}
                     </Typography>
-                    <Badge badgeContent={Math.floor(Math.random() * 5) + 1} color="error">
+                    <Badge badgeContent={demoStats.roomLetters[room] || 0} color="error">
                       <EmailIcon />
                     </Badge>
                   </Box>
@@ -304,21 +313,21 @@ export default function FeaturesPage() {
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Typography variant="body2">Всего писем</Typography>
                 <Typography variant="h6" color="primary">
-                  {Math.floor(Math.random() * 100) + 50}
+                  {demoStats.totalLetters}
                 </Typography>
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Typography variant="body2">Выдано сегодня</Typography>
                 <Typography variant="h6" color="success.main">
-                  {Math.floor(Math.random() * 20) + 10}
+                  {demoStats.deliveredToday}
                 </Typography>
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                 <Typography variant="body2">Ожидают выдачи</Typography>
                 <Typography variant="h6" color="warning.main">
-                  {Math.floor(Math.random() * 15) + 5}
+                  {demoStats.pending}
                 </Typography>
               </Box>
             </Box>
