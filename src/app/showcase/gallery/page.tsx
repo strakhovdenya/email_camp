@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import {
   Container,
   Typography,
@@ -414,9 +415,11 @@ export default function GalleryPage() {
             </DialogTitle>
             <DialogContent>
               <Box sx={{ textAlign: 'center', mb: 2 }}>
-                <img
+                <Image
                   src={`https://picsum.photos/800/600?random=${selectedImage.id}`}
                   alt={selectedImage.title}
+                  width={800}
+                  height={600}
                   style={{
                     maxWidth: '100%',
                     height: 'auto',
