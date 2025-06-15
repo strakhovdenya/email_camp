@@ -39,7 +39,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Если пользователь не авторизован и пытается получить доступ к защищенным маршрутам
-  if (!session && !req.nextUrl.pathname.startsWith('/auth')) {
+  if (!session && !req.nextUrl.pathname.startsWith('/auth') && !req.nextUrl.pathname.startsWith('/showcase')) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = '/auth';
     redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname);

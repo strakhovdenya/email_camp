@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Providers } from '@/providers/Providers';
 import './globals.css';
-import UserInfo from '@/components/UserInfo';
+import ConditionalUserInfo from '@/components/ConditionalUserInfo';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,9 +24,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
-          <header>
-            <UserInfo />
-          </header>
+          <ConditionalUserInfo />
           {children}
         </Providers>
       </body>
