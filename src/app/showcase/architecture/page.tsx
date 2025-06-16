@@ -40,7 +40,11 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`arch-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && (
+        <Box sx={{ p: { xs: '2px', md: 3 }, overflow: 'hidden', width: '100%', minWidth: 0 }}>
+          {children}
+        </Box>
+      )}
     </div>
   );
 }
@@ -55,20 +59,38 @@ const DatabaseTable = ({
   color: string;
 }) => (
   <Card
-    component={motion.div}
-    whileHover={{ scale: 1.02 }}
     sx={{
-      minWidth: 280,
+      minWidth: 0,
+      width: '100%',
+      maxWidth: '100%',
       background: `linear-gradient(135deg, ${color}10 0%, ${color}05 100%)`,
       border: `2px solid ${color}30`,
+      overflow: 'hidden',
     }}
   >
-    <CardContent sx={{ p: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color }}>
+    <CardContent sx={{ p: { xs: '4px', md: 2 } }}>
+      <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 700,
+          mb: { xs: '4px', md: 1 },
+          color,
+          fontSize: { xs: '0.85rem', md: '1.25rem' },
+          wordBreak: 'break-word',
+        }}
+      >
         {name}
       </Typography>
       {columns.map((column, index) => (
-        <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+        <Box
+          key={index}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            mb: { xs: '2px', md: 1 },
+            flexWrap: 'nowrap',
+          }}
+        >
           <Typography
             variant="body2"
             sx={{
@@ -78,11 +100,26 @@ const DatabaseTable = ({
                 : column.foreign
                   ? 'secondary.main'
                   : 'text.primary',
+              fontSize: { xs: '0.7rem', md: '0.875rem' },
+              minWidth: 0,
+              flex: 1,
+              mr: { xs: '2px', md: 1 },
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }}
           >
             {column.name}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{
+              fontSize: { xs: '0.65rem', md: '0.75rem' },
+              flexShrink: 0,
+              whiteSpace: 'nowrap',
+            }}
+          >
             {column.type}
           </Typography>
         </Box>
@@ -152,19 +189,53 @@ export default function ArchitecturePage() {
   ];
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Container
+      maxWidth="xl"
+      sx={{
+        py: { xs: 0.5, md: 4 },
+        px: { xs: 0, sm: 1, md: 3 },
+        width: '100%',
+        maxWidth: { xs: '100vw', md: 'xl' },
+      }}
+    >
       {/* Header */}
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
+      <Box
+        sx={{
+          textAlign: 'center',
+          mb: { xs: 1, md: 6 },
+          px: { xs: '4px', md: 0 },
+          overflow: 'hidden',
+          width: '100%',
+        }}
+      >
         <Typography
           variant="h2"
           component={motion.h1}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          sx={{ mb: 2, fontWeight: 800 }}
+          sx={{
+            mb: { xs: 0.5, md: 2 },
+            fontWeight: 800,
+            fontSize: { xs: '1.3rem', sm: '2.5rem', md: '3.5rem' },
+            wordBreak: 'break-word',
+            hyphens: 'auto',
+          }}
         >
           Архитектура системы
         </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
+        <Typography
+          variant="h6"
+          color="text.secondary"
+          sx={{
+            maxWidth: '100%',
+            mx: 'auto',
+            px: { xs: '4px', sm: 0 },
+            fontSize: { xs: '0.75rem', md: '1.25rem' },
+            wordBreak: 'break-word',
+            hyphens: 'auto',
+            lineHeight: { xs: 1.2, md: 1.5 },
+          }}
+        >
           Детальное описание структуры базы данных и архитектуры приложения
         </Typography>
       </Box>
@@ -174,14 +245,90 @@ export default function ArchitecturePage() {
         component={motion.div}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        sx={{ p: 4, mb: 6 }}
+        sx={{
+          p: { xs: '6px 8px', sm: 2, md: 4 },
+          mb: { xs: 1, md: 6 },
+          mx: { xs: 0, sm: 0 },
+        }}
       >
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 700, textAlign: 'center' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            mb: { xs: '6px', md: 3 },
+            fontWeight: 700,
+            textAlign: 'center',
+            fontSize: { xs: '0.9rem', md: '2.125rem' },
+            px: { xs: 0, md: 0 },
+            wordBreak: 'break-word',
+          }}
+        >
           Общая архитектура
         </Typography>
+
+        {/* Mobile version - Compact horizontal */}
         <Box
           sx={{
-            display: 'flex',
+            display: { xs: 'flex', md: 'none' },
+            alignItems: 'center',
+            justifyContent: 'center',
+            py: '4px',
+            px: 0,
+            gap: '4px',
+          }}
+        >
+          {[
+            { label: 'Next.js', color: '#000000', icon: <CodeIcon /> },
+            { label: 'API', color: '#2563eb', icon: <ApiIcon /> },
+            { label: 'Supabase', color: '#3ecf8e', icon: <CloudIcon /> },
+            { label: 'Postgres', color: '#336791', icon: <DatabaseIcon /> },
+          ].map((item, index) => (
+            <React.Fragment key={index}>
+              <Box
+                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 0 }}
+              >
+                <Avatar
+                  sx={{
+                    bgcolor: item.color,
+                    width: 22,
+                    height: 22,
+                    mb: '1px',
+                    '& .MuiSvgIcon-root': { fontSize: '0.8rem' },
+                  }}
+                >
+                  {item.icon}
+                </Avatar>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontSize: '0.55rem',
+                    fontWeight: 500,
+                    textAlign: 'center',
+                    lineHeight: 1,
+                    color: 'text.secondary',
+                  }}
+                >
+                  {item.label}
+                </Typography>
+              </Box>
+              {index < 3 && (
+                <Typography
+                  sx={{
+                    fontSize: '0.8rem',
+                    color: 'text.secondary',
+                  }}
+                >
+                  →
+                </Typography>
+              )}
+            </React.Fragment>
+          ))}
+        </Box>
+
+        {/* Desktop version */}
+        <Box
+          sx={{
+            display: { xs: 'none', md: 'flex' },
+            flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
             flexWrap: 'wrap',
@@ -208,13 +355,29 @@ export default function ArchitecturePage() {
                     border: `1px solid ${item.color}40`,
                   }}
                 >
-                  <Avatar sx={{ bgcolor: item.color, mx: 'auto', mb: 1 }}>{item.icon}</Avatar>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: item.color,
+                      mx: 'auto',
+                      mb: 1,
+                      width: 40,
+                      height: 40,
+                    }}
+                  >
+                    {item.icon}
+                  </Avatar>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: '0.875rem',
+                    }}
+                  >
                     {item.label}
                   </Typography>
                 </Card>
               ) : (
-                <Typography variant="h4" color="text.secondary">
+                <Typography variant="h4" color="text.secondary" sx={{ fontSize: '2.125rem' }}>
                   {item.label}
                 </Typography>
               )}
@@ -224,38 +387,96 @@ export default function ArchitecturePage() {
       </Paper>
 
       {/* Tabs */}
-      <Paper sx={{ mb: 4 }}>
+      <Paper sx={{ mb: { xs: 1, md: 4 }, mx: { xs: 0, sm: 0 }, overflow: 'hidden' }}>
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
-          centered
+          centered={false}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
           sx={{
             '& .MuiTab-root': {
               fontWeight: 600,
-              fontSize: '1rem',
+              fontSize: { xs: '0.7rem', md: '1rem' },
+              minWidth: { xs: 50, md: 160 },
+              px: { xs: '4px', md: 3 },
+              py: { xs: '4px', md: 1.5 },
+            },
+            '& .MuiTabs-indicator': {
+              height: 3,
+            },
+            '& .MuiTabs-scrollButtons': {
+              width: { xs: 24, md: 48 },
+            },
+            '& .MuiTabs-scroller': {
+              overflow: 'auto !important',
             },
           }}
         >
-          <Tab label="База данных" />
-          <Tab label="API Структура" />
-          <Tab label="Безопасность" />
-          <Tab label="Метрики" />
+          <Tab
+            label={
+              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>База данных</Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>БД</Box>
+              </Box>
+            }
+          />
+          <Tab
+            label={
+              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>API Структура</Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>API</Box>
+              </Box>
+            }
+          />
+          <Tab
+            label={
+              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>Безопасность</Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>Защита</Box>
+              </Box>
+            }
+          />
+          <Tab
+            label={
+              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>Метрики</Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>Метрики</Box>
+              </Box>
+            }
+          />
         </Tabs>
       </Paper>
 
       {/* Database Schema */}
       <TabPanel value={tabValue} index={0}>
-        <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            mb: { xs: 1, md: 4 },
+            fontWeight: 700,
+            textAlign: 'center',
+            fontSize: { xs: '1rem', md: '2.125rem' },
+            px: { xs: '2px', md: 0 },
+            wordBreak: 'break-word',
+          }}
+        >
           Схема базы данных
         </Typography>
 
         <Box
           sx={{
             display: 'flex',
-            flexWrap: 'wrap',
-            gap: 4,
+            flexDirection: { xs: 'column', md: 'row' },
+            flexWrap: { xs: 'nowrap', md: 'wrap' },
+            gap: { xs: '4px', md: 4 },
             justifyContent: 'center',
-            mb: 6,
+            mb: { xs: 1, md: 6 },
+            alignItems: { xs: 'stretch', md: 'flex-start' },
+            px: { xs: '2px', md: 0 },
+            overflow: 'hidden',
+            width: '100%',
           }}
         >
           {databaseTables.map((table, index) => (
@@ -270,33 +491,70 @@ export default function ArchitecturePage() {
           ))}
         </Box>
 
-        <Paper sx={{ p: 3, mb: 4 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
+        <Paper sx={{ p: { xs: '4px', md: 3 }, mb: { xs: 1, md: 4 } }}>
+          <Typography
+            variant="h5"
+            sx={{
+              mb: { xs: 1, md: 2 },
+              fontWeight: 700,
+              fontSize: { xs: '1rem', md: '1.5rem' },
+            }}
+          >
             Связи между таблицами
           </Typography>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="body1" sx={{ mb: 1 }}>
+          <Box sx={{ mb: { xs: 1, md: 3 } }}>
+            <Typography
+              variant="body1"
+              sx={{ mb: { xs: '2px', md: 1 }, fontSize: { xs: '0.8rem', md: '1rem' } }}
+            >
               <strong>users.room_number</strong> → <strong>rooms.room_number</strong>
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ ml: { xs: 1, md: 2 }, fontSize: { xs: '0.7rem', md: '0.875rem' } }}
+            >
               Каждый пользователь привязан к определенной комнате
             </Typography>
           </Box>
           <Box>
-            <Typography variant="body1" sx={{ mb: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{ mb: { xs: '2px', md: 1 }, fontSize: { xs: '0.8rem', md: '1rem' } }}
+            >
               <strong>letters.user_id</strong> → <strong>users.id</strong>
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ ml: { xs: 1, md: 2 }, fontSize: { xs: '0.7rem', md: '0.875rem' } }}
+            >
               Каждое письмо адресовано конкретному пользователю
             </Typography>
           </Box>
         </Paper>
 
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
+        <Paper sx={{ p: { xs: '4px', md: 3 } }}>
+          <Typography
+            variant="h5"
+            sx={{
+              mb: { xs: 1, md: 2 },
+              fontWeight: 700,
+              fontSize: { xs: '1rem', md: '1.5rem' },
+            }}
+          >
             Пример SQL запроса
           </Typography>
-          <SyntaxHighlighter language="sql" style={oneDark} customStyle={{ borderRadius: 8 }}>
+          <SyntaxHighlighter
+            language="sql"
+            style={oneDark}
+            customStyle={{
+              borderRadius: 8,
+              fontSize: '0.65rem',
+              overflow: 'auto',
+              padding: '8px',
+            }}
+          >
             {`-- Получить все письма с информацией о получателях и комнатах
 SELECT 
   l.id,
@@ -316,21 +574,32 @@ ORDER BY l.created_at DESC;`}
 
       {/* API Structure */}
       <TabPanel value={tabValue} index={1}>
-        <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            mb: { xs: 1, md: 4 },
+            fontWeight: 700,
+            textAlign: 'center',
+            fontSize: { xs: '1rem', md: '2.125rem' },
+            px: { xs: '2px', md: 0 },
+            wordBreak: 'break-word',
+          }}
+        >
           API Структура
         </Typography>
 
-        <Box sx={{ mb: 6 }}>
+        <Box sx={{ mb: { xs: 1, md: 6 } }}>
           {apiEndpoints.map((endpoint, index) => (
-            <Card
-              key={index}
-              component={motion.div}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              sx={{ mb: 2, p: 3 }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Card key={index} sx={{ mb: { xs: '4px', md: 2 }, p: { xs: '4px', md: 3 } }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: { xs: 'flex-start', md: 'center' },
+                  gap: { xs: '2px', md: 2 },
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  flexWrap: 'wrap',
+                }}
+              >
                 <Chip
                   label={endpoint.method}
                   color={
@@ -341,11 +610,29 @@ ORDER BY l.created_at DESC;`}
                         : 'default'
                   }
                   size="small"
+                  sx={{ mb: { xs: '2px', sm: 0 }, fontSize: { xs: '0.65rem', md: '0.8125rem' } }}
                 />
-                <Typography variant="body1" sx={{ fontFamily: 'monospace', fontWeight: 600 }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontFamily: 'monospace',
+                    fontWeight: 600,
+                    fontSize: { xs: '0.7rem', md: '1rem' },
+                    wordBreak: 'break-all',
+                    flex: { xs: 'none', sm: 1 },
+                    minWidth: 0,
+                  }}
+                >
                   {endpoint.path}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{
+                    fontSize: { xs: '0.65rem', md: '0.875rem' },
+                    flex: { xs: 'none', md: 2 },
+                  }}
+                >
                   {endpoint.description}
                 </Typography>
               </Box>
@@ -353,11 +640,27 @@ ORDER BY l.created_at DESC;`}
           ))}
         </Box>
 
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
+        <Paper sx={{ p: { xs: '4px', md: 3 } }}>
+          <Typography
+            variant="h5"
+            sx={{
+              mb: { xs: 1, md: 2 },
+              fontWeight: 700,
+              fontSize: { xs: '1rem', md: '1.5rem' },
+            }}
+          >
             Пример API ответа
           </Typography>
-          <SyntaxHighlighter language="json" style={oneDark} customStyle={{ borderRadius: 8 }}>
+          <SyntaxHighlighter
+            language="json"
+            style={oneDark}
+            customStyle={{
+              borderRadius: 8,
+              fontSize: '0.65rem',
+              overflow: 'auto',
+              padding: '8px',
+            }}
+          >
             {`{
   "success": true,
   "data": [
@@ -385,17 +688,30 @@ ORDER BY l.created_at DESC;`}
 
       {/* Security */}
       <TabPanel value={tabValue} index={2}>
-        <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            mb: { xs: 1, md: 4 },
+            fontWeight: 700,
+            textAlign: 'center',
+            fontSize: { xs: '1rem', md: '2.125rem' },
+            px: { xs: '2px', md: 0 },
+            wordBreak: 'break-word',
+          }}
+        >
           Система безопасности
         </Typography>
 
         <Box
           sx={{
             display: 'flex',
-            flexWrap: 'wrap',
-            gap: 4,
+            flexDirection: { xs: 'column', md: 'row' },
+            flexWrap: { xs: 'nowrap', md: 'wrap' },
+            gap: { xs: '4px', md: 4 },
             justifyContent: 'center',
-            mb: 6,
+            mb: { xs: 1, md: 6 },
+            alignItems: { xs: 'center', md: 'stretch' },
+            px: { xs: '2px', md: 0 },
           }}
         >
           {[
@@ -426,7 +742,9 @@ ORDER BY l.created_at DESC;`}
               key={security.title}
               sx={{
                 flex: { xs: '1 1 100%', md: '1 1 calc(33.333% - 21px)' },
-                minWidth: 300,
+                minWidth: { xs: 'auto', md: 280 },
+                width: { xs: '100%', md: 'auto' },
+                maxWidth: { xs: 400, md: 'none' },
               }}
             >
               <motion.div
@@ -436,19 +754,40 @@ ORDER BY l.created_at DESC;`}
               >
                 <Card
                   sx={{
-                    p: 3,
+                    p: { xs: 2, md: 3 },
                     height: '100%',
                     background: `linear-gradient(135deg, ${security.color}10 0%, ${security.color}05 100%)`,
                     border: `1px solid ${security.color}30`,
                   }}
                 >
-                  <Avatar sx={{ bgcolor: security.color, mb: 2 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: security.color,
+                      mb: 2,
+                      width: { xs: 36, md: 40 },
+                      height: { xs: 36, md: 40 },
+                    }}
+                  >
                     <SecurityIcon />
                   </Avatar>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 700,
+                      mb: 1,
+                      fontSize: { xs: '1.1rem', md: '1.25rem' },
+                    }}
+                  >
                     {security.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{
+                      mb: 2,
+                      fontSize: { xs: '0.8rem', md: '0.875rem' },
+                    }}
+                  >
                     {security.description}
                   </Typography>
                   {security.features.map((feature, featureIndex) => (
@@ -457,7 +796,11 @@ ORDER BY l.created_at DESC;`}
                       label={feature}
                       size="small"
                       variant="outlined"
-                      sx={{ mr: 1, mb: 1 }}
+                      sx={{
+                        mr: 1,
+                        mb: 1,
+                        fontSize: { xs: '0.7rem', md: '0.75rem' },
+                      }}
                     />
                   ))}
                 </Card>
@@ -466,11 +809,26 @@ ORDER BY l.created_at DESC;`}
           ))}
         </Box>
 
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
+        <Paper sx={{ p: { xs: 2, md: 3 } }}>
+          <Typography
+            variant="h5"
+            sx={{
+              mb: 2,
+              fontWeight: 700,
+              fontSize: { xs: '1.25rem', md: '1.5rem' },
+            }}
+          >
             Пример RLS политики
           </Typography>
-          <SyntaxHighlighter language="sql" style={oneDark} customStyle={{ borderRadius: 8 }}>
+          <SyntaxHighlighter
+            language="sql"
+            style={oneDark}
+            customStyle={{
+              borderRadius: 8,
+              fontSize: '0.75rem',
+              overflow: 'auto',
+            }}
+          >
             {`-- Политика для таблицы letters
 CREATE POLICY "Users can view own letters" ON letters
   FOR SELECT USING (
@@ -489,17 +847,29 @@ CREATE POLICY "Only admins can insert letters" ON letters
 
       {/* Metrics Tab */}
       <TabPanel value={tabValue} index={3}>
-        <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            mb: { xs: 1, md: 4 },
+            fontWeight: 700,
+            textAlign: 'center',
+            fontSize: { xs: '1rem', md: '2.125rem' },
+            px: { xs: '2px', md: 0 },
+            wordBreak: 'break-word',
+          }}
+        >
           Ключевые метрики
         </Typography>
 
         <Box
           sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 3,
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(3, 1fr)', md: 'repeat(6, 1fr)' },
+            gap: { xs: '4px', md: 2 },
             justifyContent: 'center',
-            mb: 8,
+            mb: { xs: 1, md: 8 },
+            px: { xs: '2px', md: 0 },
+            maxWidth: { md: '100%' },
           }}
         >
           {[
@@ -518,9 +888,11 @@ CREATE POLICY "Only admins can insert letters" ON letters
             >
               <Card
                 sx={{
-                  p: 3,
+                  p: { xs: '4px', md: 2 },
                   textAlign: 'center',
-                  minWidth: 180,
+                  minWidth: { xs: 0, md: 160 },
+                  minHeight: { xs: 'auto', md: 120 },
+                  height: { xs: 'auto', md: '100%' },
                   background: `linear-gradient(135deg, ${metric.color}10 0%, ${metric.color}05 100%)`,
                   border: `1px solid ${metric.color}30`,
                 }}
@@ -530,12 +902,21 @@ CREATE POLICY "Only admins can insert letters" ON letters
                   sx={{
                     fontWeight: 800,
                     color: metric.color,
-                    mb: 1,
+                    mb: { xs: '2px', md: 1 },
+                    fontSize: { xs: '0.9rem', sm: '1.75rem', md: '1.5rem' },
                   }}
                 >
                   {metric.value}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: { xs: '0.6rem', md: '0.875rem' },
+                    lineHeight: { xs: 1.1, md: 1.43 },
+                  }}
+                >
                   {metric.label}
                 </Typography>
               </Card>
@@ -543,16 +924,29 @@ CREATE POLICY "Only admins can insert letters" ON letters
           ))}
         </Box>
 
-        <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
+        <Typography
+          variant="h4"
+          sx={{
+            mb: { xs: 1, md: 4 },
+            fontWeight: 700,
+            textAlign: 'center',
+            fontSize: { xs: '1rem', md: '2.125rem' },
+            px: { xs: '2px', md: 0 },
+            wordBreak: 'break-word',
+          }}
+        >
           Технические особенности
         </Typography>
 
         <Box
           sx={{
             display: 'flex',
-            flexWrap: 'wrap',
-            gap: 4,
+            flexDirection: { xs: 'column', md: 'row' },
+            flexWrap: { xs: 'nowrap', md: 'wrap' },
+            gap: { xs: '4px', md: 4 },
             justifyContent: 'center',
+            alignItems: { xs: 'center', md: 'stretch' },
+            px: { xs: '2px', md: 0 },
           }}
         >
           {[
@@ -596,7 +990,9 @@ CREATE POLICY "Only admins can insert letters" ON letters
               key={highlight.title}
               sx={{
                 flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 16px)' },
-                minWidth: 280,
+                minWidth: { xs: 0, md: 280 },
+                width: { xs: '100%', md: 'auto' },
+                maxWidth: { xs: '100%', md: 'none' },
               }}
             >
               <motion.div
@@ -604,10 +1000,32 @@ CREATE POLICY "Only admins can insert letters" ON letters
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
               >
-                <Card sx={{ p: 3, height: '100%' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Avatar sx={{ bgcolor: 'primary.main', mr: 2 }}>{highlight.icon}</Avatar>
-                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                <Card sx={{ p: { xs: '4px', md: 3 }, height: '100%' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      mb: { xs: '4px', md: 2 },
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        bgcolor: 'primary.main',
+                        mr: { xs: '4px', md: 2 },
+                        width: { xs: 24, md: 40 },
+                        height: { xs: 24, md: 40 },
+                      }}
+                    >
+                      {highlight.icon}
+                    </Avatar>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: { xs: '0.85rem', md: '1.25rem' },
+                      }}
+                    >
                       {highlight.title}
                     </Typography>
                   </Box>
@@ -617,7 +1035,11 @@ CREATE POLICY "Only admins can insert letters" ON letters
                       label={item}
                       size="small"
                       variant="outlined"
-                      sx={{ mr: 1, mb: 1 }}
+                      sx={{
+                        mr: { xs: '2px', md: 1 },
+                        mb: { xs: '2px', md: 1 },
+                        fontSize: { xs: '0.6rem', md: '0.75rem' },
+                      }}
                     />
                   ))}
                 </Card>
