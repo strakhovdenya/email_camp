@@ -47,19 +47,23 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`tech-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && (
+        <Box sx={{ p: { xs: '4px', md: 3 }, overflow: 'hidden', width: '100%', minWidth: 0 }}>
+          {children}
+        </Box>
+      )}
     </div>
   );
 }
 
-const TechCard = ({ 
-  icon, 
-  title, 
-  description, 
-  version, 
-  color, 
+const TechCard = ({
+  icon,
+  title,
+  description,
+  version,
+  color,
   features,
-  codeExample 
+  codeExample,
 }: {
   icon: React.ReactNode;
   title: string;
@@ -70,47 +74,71 @@ const TechCard = ({
   codeExample?: string;
 }) => (
   <Card
-    component={motion.div}
-    whileHover={{ scale: 1.02 }}
     sx={{
       height: '100%',
       background: `linear-gradient(135deg, ${color}10 0%, ${color}05 100%)`,
       border: `1px solid ${color}30`,
+      overflow: 'hidden',
     }}
   >
-    <CardContent sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <Avatar sx={{ bgcolor: color, mr: 2 }}>
+    <CardContent sx={{ p: { xs: '4px', md: 3 } }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: '4px', md: 2 } }}>
+        <Avatar
+          sx={{
+            bgcolor: color,
+            mr: { xs: '4px', md: 2 },
+            width: { xs: 24, md: 40 },
+            height: { xs: 24, md: 40 },
+          }}
+        >
           {icon}
         </Avatar>
         <Box>
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 700, fontSize: { xs: '0.85rem', md: '1.25rem' } }}
+          >
             {title}
           </Typography>
-          <Chip label={version} size="small" sx={{ bgcolor: `${color}20` }} />
+          <Chip
+            label={version}
+            size="small"
+            sx={{ bgcolor: `${color}20`, fontSize: { xs: '0.6rem', md: '0.75rem' } }}
+          />
         </Box>
       </Box>
-      
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ mb: { xs: '4px', md: 2 }, fontSize: { xs: '0.7rem', md: '0.875rem' } }}
+      >
         {description}
       </Typography>
-      
-      <Box sx={{ mb: 2 }}>
+
+      <Box sx={{ mb: { xs: '4px', md: 2 } }}>
         {features.map((feature, index) => (
           <Chip
             key={index}
             label={feature}
             size="small"
             variant="outlined"
-            sx={{ mr: 1, mb: 1 }}
+            sx={{
+              mr: { xs: '2px', md: 1 },
+              mb: { xs: '2px', md: 1 },
+              fontSize: { xs: '0.6rem', md: '0.75rem' },
+            }}
           />
         ))}
       </Box>
-      
+
       {codeExample && (
-        <Accordion sx={{ mt: 2 }}>
+        <Accordion sx={{ mt: { xs: '4px', md: 2 } }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: 600, fontSize: { xs: '0.7rem', md: '0.875rem' } }}
+            >
               Пример кода
             </Typography>
           </AccordionSummary>
@@ -118,7 +146,7 @@ const TechCard = ({
             <SyntaxHighlighter
               language="typescript"
               style={oneDark}
-              customStyle={{ borderRadius: 8, fontSize: '0.8rem' }}
+              customStyle={{ borderRadius: 8, fontSize: '0.65rem', padding: '8px' }}
             >
               {codeExample}
             </SyntaxHighlighter>
@@ -155,7 +183,7 @@ export default function RootLayout({
       <body>{children}</body>
     </html>
   );
-}`
+}`,
     },
     {
       icon: <CodeIcon />,
@@ -175,7 +203,7 @@ export default function RootLayout({
     first_name: string;
     last_name: string;
   };
-}`
+}`,
     },
     {
       icon: <PaletteIcon />,
@@ -199,7 +227,7 @@ export default function RootLayout({
       },
     },
   },
-});`
+});`,
     },
     {
       icon: <AnimationIcon />,
@@ -215,7 +243,7 @@ export default function RootLayout({
   transition={{ duration: 0.3 }}
 >
   {children}
-</motion.div>`
+</motion.div>`,
     },
   ];
 
@@ -235,7 +263,7 @@ export default function RootLayout({
     users (first_name, last_name)
   \`)
   .eq('status', 'pending')
-  .order('created_at', { ascending: false });`
+  .order('created_at', { ascending: false });`,
     },
     {
       icon: <SecurityIcon />,
@@ -249,7 +277,7 @@ CREATE POLICY "Users can view own letters" ON letters
   FOR SELECT USING (
     auth.uid() = user_id OR 
     auth.jwt() ->> 'role' = 'admin'
-  );`
+  );`,
     },
     {
       icon: <SpeedIcon />,
@@ -267,7 +295,7 @@ CREATE POLICY "Users can view own letters" ON letters
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
-}`
+}`,
     },
   ];
 
@@ -287,7 +315,7 @@ CREATE POLICY "Users can view own letters" ON letters
     }
   },
   "regions": ["fra1"]
-}`
+}`,
     },
     {
       icon: <BuildIcon />,
@@ -306,27 +334,55 @@ CREATE POLICY "Users can view own letters" ON letters
     "prefer-const": "error",
     "@typescript-eslint/no-unused-vars": "error"
   }
-}`
+}`,
     },
   ];
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Container
+      maxWidth="xl"
+      sx={{
+        py: { xs: 0.5, md: 4 },
+        px: { xs: 0, sm: 1, md: 3 },
+        width: '100%',
+        maxWidth: { xs: '100vw', md: 'xl' },
+      }}
+    >
       {/* Header */}
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
+      <Box
+        sx={{
+          textAlign: 'center',
+          mb: { xs: 1, md: 6 },
+          px: { xs: '4px', md: 0 },
+          overflow: 'hidden',
+          width: '100%',
+        }}
+      >
         <Typography
           variant="h2"
           component={motion.h1}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          sx={{ mb: 2, fontWeight: 800 }}
+          sx={{
+            mb: { xs: 0.5, md: 2 },
+            fontWeight: 800,
+            fontSize: { xs: '1.3rem', sm: '2.5rem', md: '3.5rem' },
+            wordBreak: 'break-word',
+          }}
         >
           Технологический стек
         </Typography>
         <Typography
           variant="h6"
           color="text.secondary"
-          sx={{ maxWidth: 800, mx: 'auto' }}
+          sx={{
+            maxWidth: '100%',
+            mx: 'auto',
+            px: { xs: '4px', sm: 0 },
+            fontSize: { xs: '0.75rem', md: '1.25rem' },
+            wordBreak: 'break-word',
+            lineHeight: { xs: 1.2, md: 1.5 },
+          }}
         >
           Современные технологии для создания надежного и масштабируемого приложения
         </Typography>
@@ -337,9 +393,12 @@ CREATE POLICY "Users can view own letters" ON letters
         component={motion.div}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        sx={{ p: 4, mb: 6, textAlign: 'center' }}
+        sx={{ p: { xs: '4px', md: 4 }, mb: { xs: 1, md: 6 }, textAlign: 'center' }}
       >
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+        <Typography
+          variant="h4"
+          sx={{ mb: { xs: 1, md: 3 }, fontWeight: 700, fontSize: { xs: '1rem', md: '2.125rem' } }}
+        >
           Архитектура системы
         </Typography>
         <Box
@@ -348,7 +407,7 @@ CREATE POLICY "Users can view own letters" ON letters
             justifyContent: 'center',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: 3,
+            gap: { xs: '4px', md: 3 },
           }}
         >
           {[
@@ -367,9 +426,9 @@ CREATE POLICY "Users can view own letters" ON letters
                 bgcolor: item.color !== 'transparent' ? `${item.color}20` : 'transparent',
                 color: item.color !== 'transparent' ? item.color : 'text.secondary',
                 fontWeight: 600,
-                fontSize: '1rem',
-                py: 2,
-                px: item.label === '→' ? 0 : 2,
+                fontSize: { xs: '0.65rem', md: '1rem' },
+                py: { xs: '2px', md: 2 },
+                px: item.label === '→' ? 0 : { xs: '4px', md: 2 },
                 border: item.color !== 'transparent' ? `1px solid ${item.color}40` : 'none',
               }}
             />
@@ -378,15 +437,23 @@ CREATE POLICY "Users can view own letters" ON letters
       </Paper>
 
       {/* Tech Stack Tabs */}
-      <Paper sx={{ mb: 4 }}>
+      <Paper sx={{ mb: { xs: 1, md: 4 }, overflow: 'hidden' }}>
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
-          centered
+          centered={false}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile
           sx={{
             '& .MuiTab-root': {
               fontWeight: 600,
-              fontSize: '1rem',
+              fontSize: { xs: '0.7rem', md: '1rem' },
+              minWidth: { xs: 60, md: 'auto' },
+              px: { xs: '8px', md: 3 },
+            },
+            '& .MuiTabs-scroller': {
+              overflow: 'auto !important',
             },
           }}
         >
@@ -398,20 +465,20 @@ CREATE POLICY "Users can view own letters" ON letters
 
       {/* Frontend Technologies */}
       <TabPanel value={tabValue} index={0}>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: 4,
-            justifyContent: 'center'
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: { xs: '4px', md: 4 },
+            justifyContent: 'center',
           }}
         >
           {frontendTech.map((tech, index) => (
-            <Box 
+            <Box
               key={tech.title}
-              sx={{ 
+              sx={{
                 flex: { xs: '1 1 100%', md: '1 1 calc(50% - 16px)' },
-                minWidth: 400
+                minWidth: { xs: 0, md: 400 },
               }}
             >
               <motion.div
@@ -428,20 +495,20 @@ CREATE POLICY "Users can view own letters" ON letters
 
       {/* Backend Technologies */}
       <TabPanel value={tabValue} index={1}>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: 4,
-            justifyContent: 'center'
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: { xs: '4px', md: 4 },
+            justifyContent: 'center',
           }}
         >
           {backendTech.map((tech, index) => (
-            <Box 
+            <Box
               key={tech.title}
-              sx={{ 
+              sx={{
                 flex: { xs: '1 1 100%', md: '1 1 calc(50% - 16px)' },
-                minWidth: 400
+                minWidth: { xs: 0, md: 400 },
               }}
             >
               <motion.div
@@ -458,20 +525,20 @@ CREATE POLICY "Users can view own letters" ON letters
 
       {/* DevOps Technologies */}
       <TabPanel value={tabValue} index={2}>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: 4,
-            justifyContent: 'center'
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: { xs: '4px', md: 4 },
+            justifyContent: 'center',
           }}
         >
           {devOpsTech.map((tech, index) => (
-            <Box 
+            <Box
               key={tech.title}
-              sx={{ 
+              sx={{
                 flex: { xs: '1 1 100%', md: '1 1 calc(50% - 16px)' },
-                minWidth: 400
+                minWidth: { xs: 0, md: 400 },
               }}
             >
               <motion.div
@@ -487,16 +554,19 @@ CREATE POLICY "Users can view own letters" ON letters
       </TabPanel>
 
       {/* Key Benefits */}
-      <Box sx={{ mt: 8, textAlign: 'center' }}>
-        <Typography variant="h3" sx={{ mb: 4, fontWeight: 700 }}>
+      <Box sx={{ mt: { xs: 1, md: 8 }, textAlign: 'center', px: { xs: '4px', md: 0 } }}>
+        <Typography
+          variant="h3"
+          sx={{ mb: { xs: 1, md: 4 }, fontWeight: 700, fontSize: { xs: '1.2rem', md: '3rem' } }}
+        >
           Преимущества выбранного стека
         </Typography>
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: 4,
-            justifyContent: 'center'
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: { xs: '4px', md: 4 },
+            justifyContent: 'center',
           }}
         >
           {[
@@ -525,11 +595,11 @@ CREATE POLICY "Users can view own letters" ON letters
               color: '#7c3aed',
             },
           ].map((benefit, index) => (
-            <Box 
+            <Box
               key={benefit.title}
-              sx={{ 
+              sx={{
                 flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 16px)', md: '1 1 calc(25% - 24px)' },
-                minWidth: 250
+                minWidth: { xs: 0, md: 250 },
               }}
             >
               <motion.div
@@ -539,7 +609,7 @@ CREATE POLICY "Users can view own letters" ON letters
               >
                 <Card
                   sx={{
-                    p: 3,
+                    p: { xs: '4px', md: 3 },
                     textAlign: 'center',
                     height: '100%',
                     background: `linear-gradient(135deg, ${benefit.color}10 0%, ${benefit.color}05 100%)`,
@@ -549,18 +619,29 @@ CREATE POLICY "Users can view own letters" ON letters
                   <Avatar
                     sx={{
                       bgcolor: benefit.color,
-                      width: 56,
-                      height: 56,
+                      width: { xs: 32, md: 56 },
+                      height: { xs: 32, md: 56 },
                       mx: 'auto',
-                      mb: 2,
+                      mb: { xs: '4px', md: 2 },
                     }}
                   >
                     {benefit.icon}
                   </Avatar>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 700,
+                      mb: { xs: '2px', md: 1 },
+                      fontSize: { xs: '0.85rem', md: '1.25rem' },
+                    }}
+                  >
                     {benefit.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: { xs: '0.7rem', md: '0.875rem' } }}
+                  >
                     {benefit.description}
                   </Typography>
                 </Card>
@@ -571,4 +652,4 @@ CREATE POLICY "Users can view own letters" ON letters
       </Box>
     </Container>
   );
-} 
+}
