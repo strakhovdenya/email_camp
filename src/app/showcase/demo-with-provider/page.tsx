@@ -6,13 +6,13 @@ import { Box, Card, CardContent, Typography, Switch, FormControlLabel, Alert } f
 import type { DataSourceType } from '@/config/datasource';
 
 // Импортируем ОБЫЧНЫЕ хуки - те же, что и в основном приложении
-import { useUsers } from '@/hooks/useUsers';
+import { useUsersDataSource } from '@/hooks/useUsersDataSource';
 import { useLettersDataSource } from '@/hooks/useLettersDataSource';
 import { useRoomsDataSource } from '@/hooks/useRoomsDataSource';
 
 function DemoContentWithSameHooks() {
   // Используем обычные хуки - они автоматически подхватят контекстный DataSource
-  const { data: users, isLoading: usersLoading } = useUsers();
+  const { data: users, isLoading: usersLoading } = useUsersDataSource();
   const { data: letters, isLoading: lettersLoading } = useLettersDataSource();
   const { data: rooms, isLoading: roomsLoading } = useRoomsDataSource();
 
@@ -64,8 +64,8 @@ function DemoContentWithSameHooks() {
       </Box>
 
       <Alert severity="success">
-        ✅ Эти данные загружены через ТЕ ЖЕ хуки (useUsers, useLetters, useRooms), но из другого
-        источника данных благодаря DataSourceProvider!
+        ✅ Эти данные загружены через ТЕ ЖЕ хуки (useUsersDataSource, useLettersDataSource,
+        useRoomsDataSource), но из другого источника данных благодаря DataSourceProvider!
       </Alert>
     </Box>
   );
@@ -82,7 +82,8 @@ export default function DemoWithProviderPage() {
 
       <Alert severity="info" sx={{ mb: 3 }}>
         Этот пример показывает, как использовать <strong>те же самые хуки</strong>
-        (useUsers, useLetters, useRooms), но с разными источниками данных.
+        (useUsersDataSource, useLettersDataSource, useRoomsDataSource), но с разными источниками
+        данных.
       </Alert>
 
       <Card sx={{ mb: 3 }}>
