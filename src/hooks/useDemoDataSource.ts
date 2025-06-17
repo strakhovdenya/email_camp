@@ -1,10 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useDataSourceWithContext } from './useDataSourceWithContext';
-import type { CreateUserInput, UpdateUserInput, CreateLetterInput, UpdateLetterInput } from '@/datasources/interfaces/IDataSource';
+import { useDataSource } from './useDataSource';
+import type {
+  CreateUserInput,
+  UpdateUserInput,
+  CreateLetterInput,
+  UpdateLetterInput,
+} from '@/datasources/interfaces/IDataSource';
 
 // Хуки для пользователей с поддержкой контекста
 export function useDemoUsers() {
-  const dataSource = useDataSourceWithContext();
+  const dataSource = useDataSource();
 
   return useQuery({
     queryKey: ['demo-users'],
@@ -13,7 +18,7 @@ export function useDemoUsers() {
 }
 
 export function useDemoUsersByRoom(roomNumber: string) {
-  const dataSource = useDataSourceWithContext();
+  const dataSource = useDataSource();
 
   return useQuery({
     queryKey: ['demo-users', 'room', roomNumber],
@@ -23,7 +28,7 @@ export function useDemoUsersByRoom(roomNumber: string) {
 }
 
 export function useDemoUserMutations() {
-  const dataSource = useDataSourceWithContext();
+  const dataSource = useDataSource();
   const queryClient = useQueryClient();
 
   const createUser = useMutation({
@@ -34,7 +39,8 @@ export function useDemoUserMutations() {
   });
 
   const updateUser = useMutation({
-    mutationFn: (data: UpdateUserInput & { id: string }) => dataSource.users.updateUser(data.id, data),
+    mutationFn: (data: UpdateUserInput & { id: string }) =>
+      dataSource.users.updateUser(data.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demo-users'] });
     },
@@ -56,7 +62,7 @@ export function useDemoUserMutations() {
 
 // Хуки для писем с поддержкой контекста
 export function useDemoLetters() {
-  const dataSource = useDataSourceWithContext();
+  const dataSource = useDataSource();
 
   return useQuery({
     queryKey: ['demo-letters'],
@@ -65,7 +71,7 @@ export function useDemoLetters() {
 }
 
 export function useDemoLettersByRoom(roomNumber: string) {
-  const dataSource = useDataSourceWithContext();
+  const dataSource = useDataSource();
 
   return useQuery({
     queryKey: ['demo-letters', 'room', roomNumber],
@@ -75,7 +81,7 @@ export function useDemoLettersByRoom(roomNumber: string) {
 }
 
 export function useDemoLetterMutations() {
-  const dataSource = useDataSourceWithContext();
+  const dataSource = useDataSource();
   const queryClient = useQueryClient();
 
   const createLetter = useMutation({
@@ -86,7 +92,8 @@ export function useDemoLetterMutations() {
   });
 
   const updateLetter = useMutation({
-    mutationFn: (data: UpdateLetterInput & { id: string }) => dataSource.letters.updateLetter(data.id, data),
+    mutationFn: (data: UpdateLetterInput & { id: string }) =>
+      dataSource.letters.updateLetter(data.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demo-letters'] });
     },
@@ -108,13 +115,10 @@ export function useDemoLetterMutations() {
 
 // Хуки для комнат с поддержкой контекста
 export function useDemoRooms() {
-  const dataSource = useDataSourceWithContext();
+  const dataSource = useDataSource();
 
   return useQuery({
     queryKey: ['demo-rooms'],
     queryFn: () => dataSource.rooms.getRooms(),
   });
-} 
- 
- 
- 
+}

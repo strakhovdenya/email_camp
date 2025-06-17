@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { User } from '@/types/supabase';
 import { NOTIFICATION_CHANNELS } from '@/constants/notificationChannels';
-import { useRooms } from '@/hooks/useRooms';
+import { useRoomsDataSource } from '@/hooks/useRoomsDataSource';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -37,7 +37,7 @@ const UserModal: React.FC<UserModalProps> = ({ user, open, onClose, onSave, load
   const [channels, setChannels] = useState<string[]>(user?.channels_for_notification || []);
   const [telegramChatId, setTelegramChatId] = useState(user?.telegram_chat_id || '');
 
-  const { data: rooms = [] } = useRooms();
+  const { data: rooms = [] } = useRoomsDataSource();
 
   useEffect(() => {
     setFirstName(user?.first_name || '');

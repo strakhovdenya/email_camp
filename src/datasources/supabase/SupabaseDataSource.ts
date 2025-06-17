@@ -167,8 +167,8 @@ class SupabaseLetterDataSource implements ILetterDataSource {
   async getLetters(): Promise<LetterWithRelations[]> {
     const response = await fetch('/api/letters');
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'Failed to fetch letters');
-    return result.data || [];
+    if (!result.success) throw new Error(result.error || 'Failed to fetch letters');
+    return result.data;
   }
 
   async getLetterById(id: string): Promise<LetterWithRelations | null> {
@@ -295,8 +295,7 @@ class SupabaseLetterDataSource implements ILetterDataSource {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async getAllLetters(): Promise<any[]> {
+  async getAllLetters(): Promise<LetterWithRelations[]> {
     return this.getLetters();
   }
 

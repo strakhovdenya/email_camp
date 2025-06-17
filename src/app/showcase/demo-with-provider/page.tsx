@@ -7,14 +7,14 @@ import type { DataSourceType } from '@/config/datasource';
 
 // Импортируем ОБЫЧНЫЕ хуки - те же, что и в основном приложении
 import { useUsers } from '@/hooks/useUsers';
-import { useLetters } from '@/hooks/useLetters';
-import { useRooms } from '@/hooks/useRooms';
+import { useLettersDataSource } from '@/hooks/useLettersDataSource';
+import { useRoomsDataSource } from '@/hooks/useRoomsDataSource';
 
 function DemoContentWithSameHooks() {
   // Используем обычные хуки - они автоматически подхватят контекстный DataSource
   const { data: users, isLoading: usersLoading } = useUsers();
-  const { data: letters, isLoading: lettersLoading } = useLetters();
-  const { data: rooms, isLoading: roomsLoading } = useRooms();
+  const { data: letters, isLoading: lettersLoading } = useLettersDataSource();
+  const { data: rooms, isLoading: roomsLoading } = useRoomsDataSource();
 
   return (
     <Box sx={{ p: 3 }}>
@@ -31,9 +31,7 @@ function DemoContentWithSameHooks() {
             {usersLoading ? (
               <Typography>Загрузка...</Typography>
             ) : (
-              <Typography variant="body2">
-                Загружено: {users?.length || 0} пользователей
-              </Typography>
+              <Typography variant="body2">Загружено: {users?.length || 0} пользователей</Typography>
             )}
           </CardContent>
         </Card>
@@ -46,9 +44,7 @@ function DemoContentWithSameHooks() {
             {lettersLoading ? (
               <Typography>Загрузка...</Typography>
             ) : (
-              <Typography variant="body2">
-                Загружено: {letters?.length || 0} писем
-              </Typography>
+              <Typography variant="body2">Загружено: {letters?.length || 0} писем</Typography>
             )}
           </CardContent>
         </Card>
@@ -61,17 +57,15 @@ function DemoContentWithSameHooks() {
             {roomsLoading ? (
               <Typography>Загрузка...</Typography>
             ) : (
-              <Typography variant="body2">
-                Загружено: {rooms?.length || 0} комнат
-              </Typography>
+              <Typography variant="body2">Загружено: {rooms?.length || 0} комнат</Typography>
             )}
           </CardContent>
         </Card>
       </Box>
 
       <Alert severity="success">
-        ✅ Эти данные загружены через ТЕ ЖЕ хуки (useUsers, useLetters, useRooms), 
-        но из другого источника данных благодаря DataSourceProvider!
+        ✅ Эти данные загружены через ТЕ ЖЕ хуки (useUsers, useLetters, useRooms), но из другого
+        источника данных благодаря DataSourceProvider!
       </Alert>
     </Box>
   );
@@ -87,7 +81,7 @@ export default function DemoWithProviderPage() {
       </Typography>
 
       <Alert severity="info" sx={{ mb: 3 }}>
-        Этот пример показывает, как использовать <strong>те же самые хуки</strong> 
+        Этот пример показывает, как использовать <strong>те же самые хуки</strong>
         (useUsers, useLetters, useRooms), но с разными источниками данных.
       </Alert>
 
@@ -135,8 +129,4 @@ export default function DemoWithProviderPage() {
       </Card>
     </Box>
   );
-} 
- 
- 
- 
- 
+}
