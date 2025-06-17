@@ -1,9 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Card, CardContent, Typography, Button, Tabs, Tab, Alert, Switch, FormControlLabel } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Alert,
+  Switch,
+  FormControlLabel,
+} from '@mui/material';
 import { DataSourceProvider } from '@/providers/DataSourceProvider';
-import { useDemoUsers, useDemoLetters, useDemoUserMutations, useDemoLetterMutations } from '@/hooks/useDemoDataSource';
+import {
+  useDemoUsers,
+  useDemoLetters,
+  useDemoUserMutations,
+  useDemoLetterMutations,
+} from '@/hooks/useDemoDataSource';
 import type { DataSourceType } from '@/config/datasource';
 
 function DemoContent() {
@@ -28,7 +42,7 @@ function DemoContent() {
   const handleCreateTestLetter = async () => {
     try {
       await createLetter.mutateAsync({
-        room_number: '101',
+        room_id: 'mock-room-1',
         note: `Тестовое письмо создано ${new Date().toLocaleString()}`,
       });
     } catch (error) {
@@ -51,11 +65,9 @@ function DemoContent() {
             {usersLoading ? (
               <Typography>Загрузка...</Typography>
             ) : (
-              <Typography variant="body2">
-                Загружено: {users?.length || 0} пользователей
-              </Typography>
+              <Typography variant="body2">Загружено: {users?.length || 0} пользователей</Typography>
             )}
-            <Button 
+            <Button
               onClick={handleCreateTestUser}
               disabled={createUser.isPending}
               size="small"
@@ -74,11 +86,9 @@ function DemoContent() {
             {lettersLoading ? (
               <Typography>Загрузка...</Typography>
             ) : (
-              <Typography variant="body2">
-                Загружено: {letters?.length || 0} писем
-              </Typography>
+              <Typography variant="body2">Загружено: {letters?.length || 0} писем</Typography>
             )}
-            <Button 
+            <Button
               onClick={handleCreateTestLetter}
               disabled={createLetter.isPending}
               size="small"
@@ -91,8 +101,8 @@ function DemoContent() {
       </Box>
 
       <Alert severity="info">
-        Эти данные загружены через контекстный DataSource, 
-        независимо от глобальной настройки в config/datasource.ts
+        Эти данные загружены через контекстный DataSource, независимо от глобальной настройки в
+        config/datasource.ts
       </Alert>
     </Box>
   );
@@ -108,8 +118,8 @@ export default function DemoDataSourcePage() {
       </Typography>
 
       <Alert severity="info" sx={{ mb: 3 }}>
-        Эта страница демонстрирует, как можно локально переопределить источник данных 
-        в отдельной части приложения, не влияя на глобальные настройки.
+        Эта страница демонстрирует, как можно локально переопределить источник данных в отдельной
+        части приложения, не влияя на глобальные настройки.
       </Alert>
 
       <Card sx={{ mb: 3 }}>
@@ -145,9 +155,11 @@ export default function DemoDataSourcePage() {
           <Typography variant="body2" component="div">
             1. Компонент <code>DemoContent</code> обернут в <code>DataSourceProvider</code>
             <br />
-            2. <code>DataSourceProvider</code> создает локальный контекст с выбранным источником данных
+            2. <code>DataSourceProvider</code> создает локальный контекст с выбранным источником
+            данных
             <br />
-            3. Хуки <code>useDemoUsers</code>, <code>useDemoLetters</code> используют контекстный источник
+            3. Хуки <code>useDemoUsers</code>, <code>useDemoLetters</code> используют контекстный
+            источник
             <br />
             4. Если контекст недоступен, хуки автоматически используют глобальный источник
             <br />
@@ -157,7 +169,4 @@ export default function DemoDataSourcePage() {
       </Card>
     </Box>
   );
-} 
- 
- 
- 
+}

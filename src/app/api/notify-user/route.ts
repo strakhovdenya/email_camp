@@ -8,28 +8,30 @@ if (!process.env.RESEND_API_KEY) {
 }
 
 // Проверка аутентификации пользователя
-async function verifyAuthentication(request: Request): Promise<boolean> {
+async function verifyAuthentication(_request: Request): Promise<boolean> {
   try {
     const supabase = supabaseService.getRouteHandlerClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     if (!session) {
       console.log('No session found');
       return false;
     }
-    
+
     // Дополнительно проверяем, что пользователь существует в нашей базе
     const { data: user } = await supabase
       .from('users')
       .select('id, role')
       .eq('id', session.user.id)
       .single();
-    
+
     if (!user) {
       console.log('User not found in database');
       return false;
     }
-    
+
     return true;
   } catch (error) {
     console.error('Authentication error:', error);
@@ -41,15 +43,12 @@ export async function POST(request: Request) {
   try {
     // Проверяем аутентификацию пользователя вместо API ключа
     if (!(await verifyAuthentication(request))) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
     const dataSource = getDataSource();
     const { userId, letterId, letterNote, photoUrl } = await request.json();
-    
+
     if (!userId || !letterId) {
       console.error('Missing required fields');
       return NextResponse.json(

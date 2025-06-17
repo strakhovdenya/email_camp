@@ -32,7 +32,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  
+
   // Используем новую DataSource архитектуру
   const { createLetter } = useLetterMutationsDataSource();
   const { data: users = [], isLoading: usersLoading } = useUsersByRoomDataSource(roomNumber);
@@ -54,9 +54,9 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
             .getPublicUrl(fileName);
           photoUrl = publicUrlData?.publicUrl;
         }
-        
+
         await createLetter.mutateAsync({
-          room_number: roomNumber,
+          room_id: roomNumber,
           note: note.trim() || undefined,
           photo_url: photoUrl,
           user_id: selectedUserId,
@@ -164,11 +164,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
               },
             }}
           >
-            {isLoading ? (
-              <CircularProgress size={22} sx={{ color: 'white' }} />
-            ) : (
-              'Добавить письмо'
-            )}
+            {isLoading ? <CircularProgress size={22} sx={{ color: 'white' }} /> : 'Добавить письмо'}
           </Button>
         </CardActions>
         {createLetter.isError && (

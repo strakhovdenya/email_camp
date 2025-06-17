@@ -16,7 +16,7 @@ const MobileUsers: React.FC = () => {
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
   const [deleteCascadeUser, setDeleteCascadeUser] = useState<User | null>(null);
-  
+
   // Используем DataSource архитектуру
   const { data: users = [], isLoading } = useUsersDataSource();
   const { createUser, updateUser, deleteUser, cascadeDeleteUser } = useUserMutationsDataSource();
@@ -58,6 +58,7 @@ const MobileUsers: React.FC = () => {
   const handleDelete = async (user: User) => {
     try {
       await deleteUser.mutateAsync(user.id);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.message === 'CASCADE_REQUIRED') {
         setWarningMessage(

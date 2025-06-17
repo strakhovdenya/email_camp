@@ -6,9 +6,9 @@ import type { User } from '@/types/supabase';
 import type { CreateUserInput, UpdateUserInput } from '@/datasources/interfaces/IDataSource';
 
 // Расширенный интерфейс для UI, который может содержать room_number
-interface UserFormData extends Partial<User> {
-  room_number?: string;
-}
+// interface UserFormData extends Partial<User> {
+//   room_number?: string;
+// }
 
 export function useUsersDataSource() {
   const dataSource = useDataSource();
@@ -30,6 +30,7 @@ export function useUsersByRoomDataSource(roomNumber: string) {
 }
 
 // Хелпер для получения room_id по room_number
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getRoomIdByNumber(roomNumber: string): Promise<string | null> {
   try {
     const response = await fetch(`/api/rooms/by-number/${roomNumber}`);
@@ -135,7 +136,4 @@ export function useUserMutationsDataSource() {
     cascadeDeleteUser,
     searchUsers,
   };
-} 
- 
- 
- 
+}

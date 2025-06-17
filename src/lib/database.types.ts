@@ -25,7 +25,7 @@ export interface Database {
           created_at?: string;
           delivered_at?: string | null;
           sync_status?: 'pending' | 'synced' | 'failed';
-          barcode_id: string;
+          barcode_id?: string;
           recipient_notified?: boolean;
           user_id?: string | null;
           notification_statuses?: unknown;
@@ -78,6 +78,7 @@ export interface Database {
           role: 'admin' | 'staff' | 'camper';
           created_at: string;
           channels_for_notification: string[];
+          telegram_chat_id: string | null;
         };
         Insert: {
           id?: string;
@@ -89,6 +90,7 @@ export interface Database {
           role?: 'admin' | 'staff' | 'camper';
           created_at?: string;
           channels_for_notification?: string[];
+          telegram_chat_id?: string | null;
         };
         Update: {
           id?: string;
@@ -100,6 +102,7 @@ export interface Database {
           role?: 'admin' | 'staff' | 'camper';
           created_at?: string;
           channels_for_notification?: string[];
+          telegram_chat_id?: string | null;
         };
       };
     };

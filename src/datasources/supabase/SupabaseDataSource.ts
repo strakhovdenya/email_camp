@@ -6,12 +6,10 @@ import type {
   CreateRoomInput,
   UpdateRoomInput,
 } from '../interfaces/IDataSource';
-import type { User as IUser, CreateUserInput, UpdateUserInput } from '../interfaces/IUserDataSource';
-import type { Letter, CreateLetterInput, UpdateLetterInput } from '../interfaces/ILetterDataSource';
-import type { User as SupabaseUser, Room, LetterWithRelations, Database } from '@/types/supabase';
+import type { User, CreateUserInput, UpdateUserInput } from '../interfaces/IUserDataSource';
+import type { CreateLetterInput, UpdateLetterInput } from '../interfaces/ILetterDataSource';
+import type { Room, LetterWithRelations, Database } from '@/types/supabase';
 import { createClient } from '@supabase/supabase-js';
-
-type Letter = Database['public']['Tables']['letters']['Row'];
 
 // Создаём admin клиент для серверного контекста
 function getAdminClient() {
@@ -28,7 +26,7 @@ function getFullUrl(path: string): string {
     // В серверном контексте определяем базовый URL автоматически
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
     let host;
-    
+
     if (process.env.VERCEL_URL) {
       host = `https://${process.env.VERCEL_URL}`;
     } else if (process.env.NEXT_PUBLIC_BASE_URL) {
@@ -36,7 +34,7 @@ function getFullUrl(path: string): string {
     } else {
       host = `${protocol}://localhost:3000`;
     }
-    
+
     const fullUrl = `${host}${path}`;
     console.log(`[DataSource] Server-side URL: ${fullUrl}`);
     return fullUrl;
@@ -45,9 +43,15 @@ function getFullUrl(path: string): string {
 }
 
 class SupabaseUserDataSource implements IUserDataSource {
-  async getUsers(): Promise<User[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getAllUsers(): Promise<any[]> {
+    return this.getUsers();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getUsers(): Promise<any[]> {
     const isServerSide = typeof window === 'undefined';
-    
+
     if (isServerSide) {
       // В серверном контексте используем прямые вызовы к Supabase
       const supabase = getAdminClient();
@@ -55,7 +59,7 @@ class SupabaseUserDataSource implements IUserDataSource {
       if (error) throw new Error(error.message);
       return data || [];
     }
-    
+
     // В клиентском контексте используем API routes
     const response = await fetch('/api/users');
     const result = await response.json();
@@ -65,16 +69,12 @@ class SupabaseUserDataSource implements IUserDataSource {
 
   async getUserById(id: string): Promise<User | null> {
     const isServerSide = typeof window === 'undefined';
-    
+
     if (isServerSide) {
       // В серверном контексте используем прямые вызовы к Supabase
       const supabase = getAdminClient();
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
+      const { data, error } = await supabase.from('users').select('*').eq('id', id).single();
+
       if (error && error.code === 'PGRST116') return null; // Not found
       if (error) throw new Error(error.message);
       return data;
@@ -104,7 +104,7 @@ class SupabaseUserDataSource implements IUserDataSource {
       body: JSON.stringify(data),
     });
     const result = await response.json();
-    
+
     if (result.success) {
       return result.data;
     } else {
@@ -112,15 +112,16 @@ class SupabaseUserDataSource implements IUserDataSource {
     }
   }
 
-  async updateUser(data: UpdateUserInput): Promise<User> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async updateUser(id: string, data: UpdateUserInput): Promise<any> {
     // Используем тот же API что и в старом saveUser - POST с id
     const response = await fetch('/api/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data), // включает id для обновления
+      body: JSON.stringify({ ...data, id }), // включаем id для обновления
     });
     const result = await response.json();
-    
+
     if (result.success) {
       return result.data;
     } else {
@@ -172,20 +173,22 @@ class SupabaseLetterDataSource implements ILetterDataSource {
 
   async getLetterById(id: string): Promise<LetterWithRelations | null> {
     const isServerSide = typeof window === 'undefined';
-    
+
     if (isServerSide) {
       // В серверном контексте используем прямые вызовы к Supabase
       const supabase = getAdminClient();
       const { data, error } = await supabase
         .from('letters')
-        .select(`
+        .select(
+          `
           *,
           rooms:room_id(id, room_number),
           users:user_id(id, email, first_name, last_name)
-        `)
+        `
+        )
         .eq('id', id)
         .single();
-      
+
       if (error && error.code === 'PGRST116') return null; // Not found
       if (error) throw new Error(error.message);
       return data;
@@ -203,7 +206,7 @@ class SupabaseLetterDataSource implements ILetterDataSource {
     // Используем тот же API что и в старом useLettersByRoom
     const response = await fetch(`/api/letters/by-room?roomNumber=${roomNumber}`);
     const result = await response.json();
-    
+
     if (result.success) {
       return result.data || [];
     } else {
@@ -211,7 +214,8 @@ class SupabaseLetterDataSource implements ILetterDataSource {
     }
   }
 
-  async createLetter(data: CreateLetterInput): Promise<Letter> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async createLetter(data: CreateLetterInput): Promise<any> {
     const response = await fetch('/api/letters', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -222,7 +226,8 @@ class SupabaseLetterDataSource implements ILetterDataSource {
     return result.data;
   }
 
-  async updateLetter(data: UpdateLetterInput): Promise<Letter> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async updateLetter(id: string, data: UpdateLetterInput): Promise<any> {
     const response = await fetch(`/api/letters/${data.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -241,7 +246,8 @@ class SupabaseLetterDataSource implements ILetterDataSource {
     }
   }
 
-  async markAsDelivered(id: string): Promise<Letter> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async markAsDelivered(id: string): Promise<any> {
     const response = await fetch('/api/letters/deliver', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -252,9 +258,12 @@ class SupabaseLetterDataSource implements ILetterDataSource {
     return result.data;
   }
 
-  async updateLetterNotificationStatuses(letterId: string, statuses: Record<string, 'sent' | 'failed'>): Promise<void> {
+  async updateLetterNotificationStatuses(
+    letterId: string,
+    statuses: Record<string, 'sent' | 'failed'>
+  ): Promise<void> {
     const isServerSide = typeof window === 'undefined';
-    
+
     if (isServerSide) {
       // В серверном контексте используем прямые вызовы к Supabase
       const supabase = getAdminClient();
@@ -262,7 +271,7 @@ class SupabaseLetterDataSource implements ILetterDataSource {
         .from('letters')
         .update({ notification_statuses: statuses })
         .eq('id', letterId);
-      
+
       if (error) throw new Error(error.message);
       return;
     }
@@ -281,9 +290,32 @@ class SupabaseLetterDataSource implements ILetterDataSource {
     const letters = await this.getLetters();
     return {
       total: letters.length,
-      pending: letters.filter(l => l.status === 'pending').length,
-      delivered: letters.filter(l => l.status === 'delivered').length,
+      pending: letters.filter((l) => l.status === 'pending').length,
+      delivered: letters.filter((l) => l.status === 'delivered').length,
     };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getAllLetters(): Promise<any[]> {
+    return this.getLetters();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getLettersByUser(userId: string): Promise<any[]> {
+    const response = await fetch(`/api/letters/by-user?userId=${userId}`);
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Failed to fetch letters by user');
+    return result.data || [];
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async deliverLetter(id: string): Promise<any> {
+    return this.markAsDelivered(id);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async updateNotificationStatuses(id: string, statuses: any): Promise<void> {
+    return this.updateLetterNotificationStatuses(id, statuses);
   }
 }
 
@@ -319,7 +351,7 @@ class SupabaseRoomDataSource implements IRoomDataSource {
       body: JSON.stringify(data),
     });
     const result = await response.json();
-    
+
     if (result.success) {
       return result.data;
     } else {
@@ -335,7 +367,7 @@ class SupabaseRoomDataSource implements IRoomDataSource {
       body: JSON.stringify(data), // включает id для обновления
     });
     const result = await response.json();
-    
+
     if (result.success) {
       return result.data;
     } else {
@@ -395,6 +427,4 @@ export class SupabaseDataSource implements IDataSource {
       return false;
     }
   }
-} 
- 
- 
+}

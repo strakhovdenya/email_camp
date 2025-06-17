@@ -1,8 +1,17 @@
 import type { Database } from '@/lib/database.types';
 
-export type User = Database['public']['Tables']['users']['Row'] & {
+export type User = {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  email: string | null;
+  room_id: string | null;
+  role: 'admin' | 'staff' | 'camper';
+  created_at: string;
+  channels_for_notification: string[] | null;
+  telegram_chat_id: string | null;
   room_number?: string;
-  telegram_chat_id?: string | null;
 };
 
 export type CreateUserInput = Database['public']['Tables']['users']['Insert'] & {
@@ -14,19 +23,26 @@ export type UpdateUserInput = Database['public']['Tables']['users']['Update'] & 
 
 export interface IUserDataSource {
   // Получение пользователей
-  getAllUsers(): Promise<User[]>;
-  getUserById(id: string): Promise<User | null>;
-  getUsersByRoom(roomNumber: string): Promise<User[]>;
-  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getAllUsers(): Promise<any[]>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getUserById(id: string): Promise<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getUsersByRoom(roomNumber: string): Promise<any[]>;
+
   // Создание и обновление пользователей
-  createUser(input: CreateUserInput): Promise<User>;
-  updateUser(id: string, input: UpdateUserInput): Promise<User>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  createUser(input: CreateUserInput): Promise<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updateUser(id: string, input: UpdateUserInput): Promise<any>;
   deleteUser(id: string): Promise<void>;
-  
+
   // Дополнительные методы
   cascadeDeleteUser(id: string): Promise<void>;
-  searchUsers(query: string): Promise<User[]>;
-  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  searchUsers(query: string): Promise<any[]>;
+
   // Методы для совместимости
-  getUsers(): Promise<User[]>;
-} 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getUsers(): Promise<any[]>;
+}

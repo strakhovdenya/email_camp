@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+// import { useState } from 'react';
 import { Box, Card, CardContent, Typography, Button, CircularProgress, Alert } from '@mui/material';
 import { useUsersDataSource, useUserMutationsDataSource } from '@/hooks/useUsersDataSource';
 import { useLettersDataSource, useLetterMutationsDataSource } from '@/hooks/useLettersDataSource';
@@ -8,8 +8,6 @@ import { useRoomsDataSource } from '@/hooks/useRoomsDataSource';
 import { CURRENT_DATASOURCE } from '@/config/datasource';
 
 export default function DataSourceExample() {
-  const [selectedRoom, setSelectedRoom] = useState('101');
-
   // Используем новые хуки с DataSource абстракцией
   const { data: users, isLoading: usersLoading, error: usersError } = useUsersDataSource();
   const { data: letters, isLoading: lettersLoading, error: lettersError } = useLettersDataSource();
@@ -34,7 +32,7 @@ export default function DataSourceExample() {
   const handleCreateTestLetter = async () => {
     try {
       await createLetter.mutateAsync({
-        room_number: selectedRoom,
+        room_id: 'mock-room-1', // Используем ID вместо номера
         note: `Тестовое письмо создано ${new Date().toLocaleString()}`,
       });
     } catch (error) {
@@ -47,11 +45,11 @@ export default function DataSourceExample() {
       <Typography variant="h4" gutterBottom>
         Демонстрация DataSource архитектуры
       </Typography>
-      
+
       <Alert severity="info" sx={{ mb: 3 }}>
         Текущий источник данных: <strong>{CURRENT_DATASOURCE}</strong>
         <br />
-        Измените <code>CURRENT_DATASOURCE</code> в <code>src/config/datasource.ts</code> 
+        Измените <code>CURRENT_DATASOURCE</code> в <code>src/config/datasource.ts</code>
         для переключения между Supabase и Mock данными
       </Alert>
 
@@ -67,11 +65,9 @@ export default function DataSourceExample() {
             ) : usersError ? (
               <Typography color="error">Ошибка загрузки</Typography>
             ) : (
-              <Typography variant="body2">
-                Загружено: {users?.length || 0} пользователей
-              </Typography>
+              <Typography variant="body2">Загружено: {users?.length || 0} пользователей</Typography>
             )}
-            <Button 
+            <Button
               onClick={handleCreateTestUser}
               disabled={createUser.isPending}
               size="small"
@@ -93,11 +89,9 @@ export default function DataSourceExample() {
             ) : lettersError ? (
               <Typography color="error">Ошибка загрузки</Typography>
             ) : (
-              <Typography variant="body2">
-                Загружено: {letters?.length || 0} писем
-              </Typography>
+              <Typography variant="body2">Загружено: {letters?.length || 0} писем</Typography>
             )}
-            <Button 
+            <Button
               onClick={handleCreateTestLetter}
               disabled={createLetter.isPending}
               size="small"
@@ -119,9 +113,7 @@ export default function DataSourceExample() {
             ) : roomsError ? (
               <Typography color="error">Ошибка загрузки</Typography>
             ) : (
-              <Typography variant="body2">
-                Загружено: {rooms?.length || 0} комнат
-              </Typography>
+              <Typography variant="body2">Загружено: {rooms?.length || 0} комнат</Typography>
             )}
           </CardContent>
         </Card>
@@ -136,10 +128,8 @@ export default function DataSourceExample() {
             1. Откройте файл <code>src/config/datasource.ts</code>
             <br />
             2. Измените <code>CURRENT_DATASOURCE</code> на:
-            <br />
-            • <code>'supabase'</code> - для использования реальной БД
-            <br />
-            • <code>'mock'</code> - для использования mock данных
+            <br />• <code>&apos;supabase&apos;</code> - для использования реальной БД
+            <br />• <code>&apos;mock&apos;</code> - для использования mock данных
             <br />
             3. Перезагрузите страницу
           </Typography>
@@ -147,8 +137,4 @@ export default function DataSourceExample() {
       </Card>
     </Box>
   );
-} 
- 
- 
- 
- 
+}
