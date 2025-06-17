@@ -10,7 +10,7 @@ export function useLettersDataSource() {
 
   return useQuery({
     queryKey: ['letters'],
-    queryFn: () => dataSource.letters.getLetters(),
+    queryFn: () => dataSource.letters.getAllLetters(),
   });
 }
 
@@ -95,7 +95,7 @@ export function useLetterMutationsDataSource() {
   });
 
   const updateLetter = useMutation({
-    mutationFn: (data: UpdateLetterInput) => dataSource.letters.updateLetter(data),
+    mutationFn: (data: UpdateLetterInput & { id: string }) => dataSource.letters.updateLetter(data.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['letters'] });
       showToast('Письмо успешно обновлено', TOAST_TYPES.SUCCESS);
@@ -117,7 +117,7 @@ export function useLetterMutationsDataSource() {
   });
 
   const markAsDelivered = useMutation({
-    mutationFn: (id: string) => dataSource.letters.markAsDelivered(id),
+    mutationFn: (id: string) => dataSource.letters.deliverLetter(id),
     onSuccess: () => {
       // Добавляем небольшую задержку перед обновлением данных
       // чтобы анимация успела завершиться

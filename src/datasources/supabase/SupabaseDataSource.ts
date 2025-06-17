@@ -3,14 +3,12 @@ import type {
   IUserDataSource,
   ILetterDataSource,
   IRoomDataSource,
-  CreateUserInput,
-  UpdateUserInput,
-  CreateLetterInput,
-  UpdateLetterInput,
   CreateRoomInput,
   UpdateRoomInput,
 } from '../interfaces/IDataSource';
-import type { User, Room, LetterWithRelations, Database } from '@/types/supabase';
+import type { User as IUser, CreateUserInput, UpdateUserInput } from '../interfaces/IUserDataSource';
+import type { Letter, CreateLetterInput, UpdateLetterInput } from '../interfaces/ILetterDataSource';
+import type { User as SupabaseUser, Room, LetterWithRelations, Database } from '@/types/supabase';
 import { createClient } from '@supabase/supabase-js';
 
 type Letter = Database['public']['Tables']['letters']['Row'];

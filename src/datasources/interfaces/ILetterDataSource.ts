@@ -34,4 +34,9 @@ export interface ILetterDataSource {
   // Специальные операции
   deliverLetter(id: string): Promise<Letter>;
   updateNotificationStatuses(id: string, statuses: any): Promise<void>;
+  
+  // Дополнительные методы для совместимости
+  getLetters(): Promise<Letter[]>;
+  getLetterStats(): Promise<{ total: number; pending: number; delivered: number }>;
+  markAsDelivered(id: string): Promise<Letter>;
 } 

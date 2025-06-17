@@ -2,10 +2,15 @@ import type { Database } from '@/lib/database.types';
 
 export type User = Database['public']['Tables']['users']['Row'] & {
   room_number?: string;
+  telegram_chat_id?: string | null;
 };
 
-export type CreateUserInput = Database['public']['Tables']['users']['Insert'];
-export type UpdateUserInput = Database['public']['Tables']['users']['Update'];
+export type CreateUserInput = Database['public']['Tables']['users']['Insert'] & {
+  telegram_chat_id?: string | null;
+};
+export type UpdateUserInput = Database['public']['Tables']['users']['Update'] & {
+  telegram_chat_id?: string | null;
+};
 
 export interface IUserDataSource {
   // Получение пользователей
@@ -21,4 +26,7 @@ export interface IUserDataSource {
   // Дополнительные методы
   cascadeDeleteUser(id: string): Promise<void>;
   searchUsers(query: string): Promise<User[]>;
+  
+  // Методы для совместимости
+  getUsers(): Promise<User[]>;
 } 

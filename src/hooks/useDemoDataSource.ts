@@ -8,7 +8,7 @@ export function useDemoUsers() {
 
   return useQuery({
     queryKey: ['demo-users'],
-    queryFn: () => dataSource.users.getUsers(),
+    queryFn: () => dataSource.users.getAllUsers(),
   });
 }
 
@@ -34,7 +34,7 @@ export function useDemoUserMutations() {
   });
 
   const updateUser = useMutation({
-    mutationFn: (data: UpdateUserInput) => dataSource.users.updateUser(data),
+    mutationFn: (data: UpdateUserInput & { id: string }) => dataSource.users.updateUser(data.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demo-users'] });
     },
@@ -60,7 +60,7 @@ export function useDemoLetters() {
 
   return useQuery({
     queryKey: ['demo-letters'],
-    queryFn: () => dataSource.letters.getLetters(),
+    queryFn: () => dataSource.letters.getAllLetters(),
   });
 }
 
@@ -86,14 +86,14 @@ export function useDemoLetterMutations() {
   });
 
   const updateLetter = useMutation({
-    mutationFn: (data: UpdateLetterInput) => dataSource.letters.updateLetter(data),
+    mutationFn: (data: UpdateLetterInput & { id: string }) => dataSource.letters.updateLetter(data.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demo-letters'] });
     },
   });
 
   const markAsDelivered = useMutation({
-    mutationFn: (id: string) => dataSource.letters.markAsDelivered(id),
+    mutationFn: (id: string) => dataSource.letters.deliverLetter(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['demo-letters'] });
     },
