@@ -161,6 +161,21 @@ class SupabaseUserDataSource implements IUserDataSource {
     if (!response.ok) throw new Error(result.error || 'Failed to search users');
     return result.data || [];
   }
+
+  async getCurrentUser(): Promise<{ id: string; email: string; role: string } | null> {
+    const response = await fetch('/api/auth/me');
+    const result = await response.json();
+
+    if (response.status === 401) {
+      return null; // Пользователь не авторизован
+    }
+
+    if (!result.success) {
+      throw new Error(result.error || 'Ошибка получения пользователя');
+    }
+
+    return result.data;
+  }
 }
 
 class SupabaseLetterDataSource implements ILetterDataSource {
@@ -388,7 +403,9 @@ class SupabaseRoomDataSource implements IRoomDataSource {
     }
   }
 
-  async getRoomsWithLetters(): Promise<Array<Room & { letterCount: number }>> {
+  async getRoomsWithLetters(): Promise<
+    Array<Room & { total_letters: number; delivered_count: number; undelivered_count: number }>
+  > {
     const response = await fetch('/api/rooms-with-letters');
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || 'Failed to fetch rooms with letters');

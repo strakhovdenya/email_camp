@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { USER_ROLES, ROLE_ADMIN } from '@/constants/userRoles';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useCurrentUserDataSource } from '@/hooks/useUsersDataSource';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -19,7 +19,7 @@ export default function InviteUserForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const { data: currentUser } = useCurrentUser();
+  const { data: currentUser } = useCurrentUserDataSource();
 
   const isAdmin = currentUser?.role === ROLE_ADMIN;
 

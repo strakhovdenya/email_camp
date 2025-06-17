@@ -21,5 +21,7 @@ export interface IRoomDataSource {
   deleteRoom(id: string): Promise<void>;
 
   // Специальные запросы
-  getRoomsWithLetters(): Promise<Array<Room & { letterCount: number }>>;
+  getRoomsWithLetters(): Promise<
+    Array<Room & { total_letters: number; delivered_count: number; undelivered_count: number }>
+  >;
 }

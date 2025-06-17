@@ -13,7 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useCurrentUserDataSource } from '@/hooks/useUsersDataSource';
 import { ROLE_ADMIN, ROLE_STAFF } from '@/constants/userRoles';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
@@ -24,7 +24,7 @@ export function InviteAdminButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
-  const { data: currentUser } = useCurrentUser();
+  const { data: currentUser } = useCurrentUserDataSource();
 
   const isAdmin = currentUser?.role === ROLE_ADMIN;
 

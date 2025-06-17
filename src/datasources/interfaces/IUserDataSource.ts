@@ -29,6 +29,8 @@ export interface IUserDataSource {
   getUserById(id: string): Promise<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getUsersByRoom(roomNumber: string): Promise<any[]>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getCurrentUser(): Promise<any>;
 
   // Создание и обновление пользователей
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

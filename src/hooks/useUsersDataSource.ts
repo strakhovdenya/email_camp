@@ -29,6 +29,16 @@ export function useUsersByRoomDataSource(roomNumber: string) {
   });
 }
 
+export function useCurrentUserDataSource() {
+  const dataSource = useDataSource();
+
+  return useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => dataSource.users.getCurrentUser(),
+    retry: false, // Не повторяем запрос при 401 ошибке
+  });
+}
+
 // Хелпер для получения room_id по room_number
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getRoomIdByNumber(roomNumber: string): Promise<string | null> {

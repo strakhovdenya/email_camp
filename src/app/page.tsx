@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRoomsWithLetters } from '@/hooks/useRoomsWithLetters';
+import { useRoomsWithLettersDataSource } from '@/hooks/useRoomsDataSource';
 import { Plus, Inbox } from 'lucide-react';
 import { LinkButton } from '@/components/ui/LinkButton';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -11,7 +11,7 @@ import CardContent from '@mui/material/CardContent';
 import { motion } from 'framer-motion';
 
 export default function Home(): React.ReactElement {
-  const { data: rooms = [], isLoading } = useRoomsWithLetters();
+  const { data: rooms = [], isLoading } = useRoomsWithLettersDataSource();
 
   return (
     <main className="max-w-2xl mx-auto px-0 sm:px-4 py-4 sm:py-8">

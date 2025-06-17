@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/auth';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useCurrentUserDataSource } from '@/hooks/useUsersDataSource';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
@@ -17,7 +17,7 @@ USER_ROLES.forEach((r) => {
 
 export default function UserInfo() {
   const router = useRouter();
-  const { data: user, isLoading } = useCurrentUser();
+  const { data: user, isLoading } = useCurrentUserDataSource();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();

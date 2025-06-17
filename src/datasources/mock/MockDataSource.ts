@@ -214,6 +214,19 @@ class MockUserDataSource implements IUserDataSource {
       }))
     );
   }
+
+  async getCurrentUser(): Promise<{ id: string; email: string; role: string } | null> {
+    // В mock версии возвращаем первого пользователя как текущего
+    const mockCurrentUser = this.users.find((user) => user.role === 'admin') || this.users[0];
+
+    if (!mockCurrentUser) return null;
+
+    return Promise.resolve({
+      id: mockCurrentUser.id,
+      email: mockCurrentUser.email || '',
+      role: mockCurrentUser.role,
+    });
+  }
 }
 
 class MockLetterDataSource implements ILetterDataSource {
@@ -495,10 +508,20 @@ class MockRoomDataSource implements IRoomDataSource {
     return Promise.resolve();
   }
 
-  async getRoomsWithLetters(): Promise<Array<Room & { letterCount: number }>> {
+  async getRoomsWithLetters(): Promise<
+    Array<Room & { total_letters: number; delivered_count: number; undelivered_count: number }>
+  > {
     const roomsWithCounts = this.rooms.map((room) => {
-      const letterCount = mockLetters.filter((l) => l.room_id === room.id).length;
-      return { ...room, letterCount };
+      const roomLetters = mockLetters.filter((l) => l.room_id === room.id);
+      const deliveredCount = roomLetters.filter((l) => l.status === 'delivered').length;
+      const undeliveredCount = roomLetters.filter((l) => l.status === 'pending').length;
+
+      return {
+        ...room,
+        total_letters: roomLetters.length,
+        delivered_count: deliveredCount,
+        undelivered_count: undeliveredCount,
+      };
     });
     return Promise.resolve(roomsWithCounts);
   }
