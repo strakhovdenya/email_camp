@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useLetters } from '@/hooks/useLetters';
-import { useMarkAsDelivered } from '@/hooks/useLetterMutations';
+import { useLettersDataSource, useLetterMutationsDataSource } from '@/hooks/useLettersDataSource';
 import { MOBILE_BREAKPOINT } from '@/constants/breakpoints';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { MobileLettersTable } from './MobileLettersTable';
@@ -9,6 +8,7 @@ import { DesktopLettersTable } from './DesktopLettersTable';
 import { LettersFilters } from './LettersFilters';
 import { LetterStatusFilter } from '@/constants/letterStatus';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { Letter } from '@/datasources/interfaces/ILetterDataSource';
 
 export default function LettersPageClient() {
   const [filter, setFilter] = useState({
@@ -16,7 +16,11 @@ export default function LettersPageClient() {
     recipient: '',
     status: 'all' as LetterStatusFilter,
   });
-  const { data: letters = [], isLoading, refetch } = useLetters();
+  
+  // Используем DataSource архитектуру
+  const { data: letters = [], isLoading } = useLettersDataSource();
+  const { markAsDelivered } = useLetterMutationsDataSource();
+  
   const { width } = useWindowSize();
   const isMobile = width <= MOBILE_BREAKPOINT;
 
@@ -26,7 +30,7 @@ export default function LettersPageClient() {
     setMounted(true);
   }, []);
 
-  const filteredLetters = letters.filter((letter) => {
+  const filteredLetters = letters.filter((letter: Letter) => {
     const roomMatch =
       filter.room === '' ||
       letter.rooms?.room_number?.toLowerCase().includes(filter.room.toLowerCase());
@@ -37,7 +41,7 @@ export default function LettersPageClient() {
         .includes(filter.recipient.toLowerCase());
     const statusMatch = filter.status === 'all' || letter.status === filter.status;
     return roomMatch && recipientMatch && statusMatch;
-  }).sort((a, b) => {
+  }).sort((a: Letter, b: Letter) => {
     // Сначала сортируем по статусу: pending письма идут первыми
     if (a.status === 'pending' && b.status !== 'pending') return -1;
     if (a.status !== 'pending' && b.status === 'pending') return 1;
@@ -46,17 +50,17 @@ export default function LettersPageClient() {
     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
   });
 
-  const { mutate: markAsDelivered } = useMarkAsDelivered();
   const [deliverLoadingId, setDeliverLoadingId] = useState<string | null>(null);
 
-  const handleDeliver = (id: string) => {
+  const handleDeliver = async (id: string) => {
     setDeliverLoadingId(id);
-    markAsDelivered(id, {
-      onSettled: () => {
-        setDeliverLoadingId(null);
-        refetch(); // Явный refetch после мутации
-      },
-    });
+    try {
+      await markAsDelivered.mutateAsync(id);
+    } catch (error) {
+      console.error('Error delivering letter:', error);
+    } finally {
+      setDeliverLoadingId(null);
+    }
   };
 
   if (!mounted) {
@@ -123,3 +127,4 @@ export default function LettersPageClient() {
     </div>
   );
 }
+

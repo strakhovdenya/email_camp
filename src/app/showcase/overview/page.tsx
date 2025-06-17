@@ -19,11 +19,11 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 
-const OverviewCard = ({
-  icon,
-  title,
-  description,
-  color,
+const OverviewCard = ({ 
+  icon, 
+  title, 
+  description, 
+  color, 
   details,
 }: {
   icon: React.ReactNode;
@@ -48,11 +48,11 @@ const OverviewCard = ({
           {title}
         </Typography>
       </Box>
-
+      
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         {description}
       </Typography>
-
+      
       <Box>
         {details.map((detail, index) => (
           <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -123,8 +123,8 @@ export default function OverviewPage() {
           обеспечивая прозрачность процесса и мгновенные уведомления.
         </Typography>
         <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.7 }}>
-          Система построена на современном стеке технологий с акцентом на производительность,
-          безопасность и удобство использования. Реализована полная интеграция с Telegram и Email
+          Система построена на современном стеке технологий с акцентом на производительность, 
+          безопасность и удобство использования. Реализована полная интеграция с Telegram и Email 
           для уведомлений, а также административная панель для управления процессом.
         </Typography>
       </Paper>
@@ -134,10 +134,10 @@ export default function OverviewPage() {
         <Typography variant="h3" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
           Ключевые аспекты
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
             gap: { xs: 2, md: 4 },
             justifyContent: 'center',
             px: { xs: 1, sm: 0 },
@@ -181,9 +181,9 @@ export default function OverviewPage() {
               ],
             },
           ].map((aspect, index) => (
-            <Box
+            <Box 
               key={aspect.title}
-              sx={{
+              sx={{ 
                 flex: { xs: '1 1 100%', md: '1 1 calc(33.333% - 16px)' },
                 minWidth: { xs: 'auto', md: 300 },
                 maxWidth: { xs: '100%', md: 400 },
@@ -214,9 +214,9 @@ export default function OverviewPage() {
           Пошаговый процесс получения и доставки уведомлений о письмах
         </Typography>
 
-        <Box
-          sx={{
-            display: 'flex',
+        <Box 
+          sx={{ 
+            display: 'flex', 
             flexDirection: 'column',
             gap: { xs: 2, md: 4 },
             maxWidth: { xs: '100%', md: 900 },
@@ -380,7 +380,7 @@ export default function OverviewPage() {
                       {step.illustration}
                     </Box>
                   </motion.div>
-                </Box>
+                  </Box>
 
                 {/* Card */}
                 <Box
@@ -492,12 +492,12 @@ export default function OverviewPage() {
                         ))}
                       </Box>
                     </CardContent>
-                  </Card>
+              </Card>
                 </Box>
               </Box>
             </motion.div>
           ))}
-        </Box>
+      </Box>
 
         {/* Interactive notification examples */}
         <Paper
@@ -514,20 +514,20 @@ export default function OverviewPage() {
         >
           <Typography variant="h5" sx={{ mb: 3, fontWeight: 700, textAlign: 'center' }}>
             Примеры уведомлений
-          </Typography>
+        </Typography>
 
-          <Box
-            sx={{
-              display: 'flex',
+        <Box 
+          sx={{ 
+            display: 'flex', 
               gap: { xs: 2, md: 4 },
               justifyContent: 'center',
-              flexWrap: 'wrap',
+            flexWrap: 'wrap', 
               px: { xs: 1, sm: 0 },
             }}
           >
             {/* Telegram notification */}
-            <Card
-              sx={{
+              <Card
+                sx={{
                 p: { xs: 2, md: 3 },
                 maxWidth: { xs: '100%', sm: 350 },
                 background: '#0088cc10',
@@ -574,11 +574,11 @@ export default function OverviewPage() {
                   Заберите письмо на почте лагеря 📮
                 </Typography>
               </Paper>
-            </Card>
+              </Card>
 
             {/* Email notification */}
             <Card
-              sx={{
+          sx={{ 
                 p: { xs: 2, md: 3 },
                 maxWidth: { xs: '100%', sm: 350 },
                 background: '#dc262610',
@@ -596,14 +596,14 @@ export default function OverviewPage() {
                   }}
                 >
                   <EmailIcon />
-                </Avatar>
+                    </Avatar>
                 <Typography
                   variant="h6"
                   sx={{ fontWeight: 700, fontSize: { xs: '1rem', md: '1.25rem' } }}
                 >
                   Email уведомление
-                </Typography>
-              </Box>
+                    </Typography>
+                  </Box>
               <Paper
                 sx={{
                   p: { xs: 1.5, md: 2 },
@@ -631,10 +631,10 @@ export default function OverviewPage() {
                   Команда Email Camp
                 </Typography>
               </Paper>
-            </Card>
-          </Box>
-        </Paper>
+                </Card>
+        </Box>
+      </Paper>
       </Box>
     </Container>
   );
-}
+} 

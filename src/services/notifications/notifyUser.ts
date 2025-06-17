@@ -1,7 +1,7 @@
-import { supabaseService } from '@/lib/supabase/server';
 import { NotificationDispatcher } from './NotificationDispatcher';
 import { EmailNotifier } from './EmailNotifier';
 import { TelegramNotifier } from './TelegramNotifier';
+import { getDataSource } from '@/datasources/factory';
 import type { ChannelType, NotificationMessage } from './types';
 
 export async function notifyUser({
@@ -20,7 +20,6 @@ export async function notifyUser({
   letterNote?: string;
   photoUrl?: string;
 }) {
-  const supabase = supabaseService.getAdminClient();
   const message: NotificationMessage = { letterId, letterNote, photoUrl };
   const channels = user.channels_for_notification as ChannelType[];
 
@@ -39,20 +38,12 @@ export async function notifyUser({
   Object.entries(results).forEach(([channel, result]) => {
     if (result) {
       notificationStatuses[channel] = result.success ? 'sent' : 'failed';
-  }
+    }
   });
 
-  // Сохраняем только новый формат статусов уведомлений
-  const updates = {
-    notification_statuses: notificationStatuses,
-  };
-
-  const { error: updateError } = await supabase.from('letters').update(updates).eq('id', letterId);
-
-  if (updateError) {
-    console.error('Error updating notification statuses:', updateError);
-    throw new Error('Failed to update notification statuses');
-  }
+  // Используем DataSource для обновления статусов уведомлений
+  const dataSource = getDataSource();
+  await dataSource.letters.updateNotificationStatuses(letterId, notificationStatuses);
   
   return results;
 }

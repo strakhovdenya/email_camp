@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useRooms } from '@/hooks/useRooms';
+import { useRoomsDataSource, useRoomMutationsDataSource } from '@/hooks/useRoomsDataSource';
 import SearchInput from '@/components/admin/SearchInput';
-import { useRoomActions } from '@/hooks/useRoomActions';
 import type { Room } from '@/types/supabase';
 import RoomModal from './RoomModal';
 import Table from '@mui/material/Table';
@@ -35,9 +34,10 @@ const DesktopRooms: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [modalRoom, setModalRoom] = useState<Room | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const { data: rooms = [], isLoading, refetch } = useRooms();
-  const { saveRoom, deleteRoom } = useRoomActions(refetch);
+  
+  // Используем новую DataSource архитектуру
+  const { data: rooms = [], isLoading } = useRoomsDataSource();
+  const { createRoom, updateRoom, deleteRoom } = useRoomMutationsDataSource();
 
   const filteredRooms = rooms.filter((room: Room) =>
     room.room_number.toLowerCase().includes(searchQuery.toLowerCase())
@@ -54,21 +54,37 @@ const DesktopRooms: React.FC = () => {
   };
 
   const handleSave = async (data: Partial<Room>) => {
-    setIsSaving(true);
     try {
-      const ok = await saveRoom(data);
-      if (ok) {
-        setModalOpen(false);
-        setModalRoom(null);
+      if (data.id) {
+        // Обновление существующей комнаты
+        await updateRoom.mutateAsync({
+          id: data.id,
+          room_number: data.room_number!,
+        });
+      } else {
+        // Создание новой комнаты
+        await createRoom.mutateAsync({
+          room_number: data.room_number!,
+        });
       }
-    } finally {
-      setIsSaving(false);
+      setModalOpen(false);
+      setModalRoom(null);
+    } catch (error) {
+      // Ошибка уже обработана в мутации
+      console.error('Error saving room:', error);
     }
   };
 
   const handleDelete = async (room: Room) => {
-    await deleteRoom(room);
+    try {
+      await deleteRoom.mutateAsync(room.id);
+    } catch (error) {
+      // Ошибка уже обработана в мутации
+      console.error('Error deleting room:', error);
+    }
   };
+
+  const isSaving = createRoom.isPending || updateRoom.isPending;
 
   return (
     <div className="w-full min-w-0">

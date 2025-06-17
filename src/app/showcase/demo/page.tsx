@@ -24,6 +24,8 @@ import {
   Dashboard as DashboardIcon,
 } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
+import { DataSourceProvider } from '@/providers/DataSourceProvider';
+import DataSourceExample from '@/components/DataSourceExample';
 
 // Mock данные
 interface MockLetter {
@@ -51,22 +53,22 @@ interface MockUser {
 }
 
 const mockUsers: MockUser[] = [
-  {
-    id: '1',
+      {
+        id: '1',
     first_name: 'Иван',
     last_name: 'Петров',
     email: 'ivan@example.com',
     room_number: '101',
-  },
-  {
-    id: '2',
+      },
+      {
+        id: '2',
     first_name: 'Мария',
     last_name: 'Сидорова',
     email: 'maria@example.com',
     room_number: '102',
-  },
-  {
-    id: '3',
+      },
+      {
+        id: '3',
     first_name: 'Алексей',
     last_name: 'Козлов',
     email: 'alexey@example.com',
@@ -155,20 +157,20 @@ const DemoLetterForm: React.FC<{
       <form onSubmit={handleSubmit}>
         <CardContent sx={{ pb: 1 }}>
           <Box sx={{ mb: 2 }}>
-            <Typography
+        <Typography
               variant="body2"
-              color="text.secondary"
+          color="text.secondary"
               sx={{ mb: 1, fontSize: { xs: '0.75rem', md: '0.875rem' } }}
-            >
+        >
               Номер комнаты
-            </Typography>
+        </Typography>
             <Box
               component="input"
               type="text"
               value={roomNumber}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRoomNumber(e.target.value)}
               required
-              sx={{
+        sx={{ 
                 width: '100%',
                 p: { xs: 1, md: 1.5 },
                 border: '1px solid #d1d5db',
@@ -344,27 +346,27 @@ const DemoLetterList: React.FC<{
         </Button>
         <AnimatePresence initial={false}>
           {showPending && (
-            <motion.div
+              <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
+                transition={{ duration: 0.3 }}
+              >
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                 {pending.map((letter) => (
-                  <Card
+                <Card
                     key={letter.id}
                     sx={{ border: '1px solid #f59e0b30', backgroundColor: '#f59e0b05' }}
                   >
                     <CardContent sx={{ p: { xs: 1.5, md: 2 } }}>
                       <Box
-                        sx={{
+                  sx={{
                           display: 'flex',
                           justifyContent: 'space-between',
                           alignItems: 'start',
                         }}
                       >
-                        <Box sx={{ flex: 1 }}>
+                      <Box sx={{ flex: 1 }}>
                           <Typography
                             variant="h6"
                             sx={{ fontSize: { xs: '1rem', md: '1.25rem' }, fontWeight: 600 }}
@@ -384,7 +386,7 @@ const DemoLetterList: React.FC<{
                             sx={{ fontSize: { xs: '0.75rem', md: '0.875rem' } }}
                           >
                             {new Date(letter.created_at).toLocaleString('ru-RU')}
-                          </Typography>
+                            </Typography>
                           {letter.note && (
                             <Typography
                               variant="body2"
@@ -398,12 +400,12 @@ const DemoLetterList: React.FC<{
                             </Typography>
                           )}
                         </Box>
-                        <Button
+                          <Button
                           onClick={() => onDeliver(letter.id)}
                           disabled={deliverLoadingId !== null}
-                          variant="contained"
-                          color="success"
-                          size="small"
+                            variant="contained"
+                            color="success"
+                            size="small"
                           sx={{
                             borderRadius: 2,
                             fontWeight: 600,
@@ -413,12 +415,12 @@ const DemoLetterList: React.FC<{
                           }}
                         >
                           {deliverLoadingId === letter.id ? 'Выдача...' : 'Выдать'}
-                        </Button>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                ))}
-              </Box>
+                          </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+            ))}
+        </Box>
             </motion.div>
           )}
         </AnimatePresence>
@@ -429,7 +431,7 @@ const DemoLetterList: React.FC<{
         <Button
           fullWidth
           variant="text"
-          sx={{
+          sx={{ 
             justifyContent: 'space-between',
             fontWeight: 600,
             fontSize: { xs: '1rem', md: '1.125rem' },
@@ -501,7 +503,7 @@ const DemoLetterList: React.FC<{
                           {letter.note}
                         </Typography>
                       )}
-                      <Chip
+            <Chip
                         label="Выдано"
                         color="success"
                         size="small"
@@ -509,8 +511,8 @@ const DemoLetterList: React.FC<{
                       />
                     </CardContent>
                   </Card>
-                ))}
-              </Box>
+          ))}
+        </Box>
             </motion.div>
           )}
         </AnimatePresence>
@@ -571,9 +573,9 @@ export default function DemoPage() {
 
     setLetters((prev) =>
       prev.map((letter) =>
-        letter.id === letterId
+      letter.id === letterId 
           ? { ...letter, status: 'delivered' as const, delivered_at: new Date().toISOString() }
-          : letter
+        : letter
       )
     );
 
@@ -635,8 +637,8 @@ export default function DemoPage() {
       </Box>
 
       {/* Stats */}
-      <Box
-        sx={{
+      <Box 
+        sx={{ 
           display: 'grid',
           gridTemplateColumns: { xs: 'repeat(3, 1fr)', md: 'repeat(3, 1fr)' },
           gap: { xs: '4px', md: 3 },
@@ -714,7 +716,7 @@ export default function DemoPage() {
         >
           <Typography variant="h6" sx={{ fontSize: { xs: '0.9rem', md: '1.25rem' } }}>
             Просмотр интерфейса
-          </Typography>
+        </Typography>
           <FormControlLabel
             control={
               <Switch
@@ -733,7 +735,7 @@ export default function DemoPage() {
                 <Typography variant="body2" sx={{ fontSize: { xs: '0.7rem', md: '0.875rem' } }}>
                   {mobileView ? 'Мобильный' : 'Десктоп'}
                 </Typography>
-              </Box>
+                  </Box>
             }
           />
         </Box>
@@ -785,7 +787,7 @@ export default function DemoPage() {
             />
           </Box>
 
-          <Box>
+      <Box>
             <Typography
               variant="h5"
               sx={{ mb: 2, fontWeight: 700, fontSize: { xs: '1rem', md: '1.5rem' } }}
@@ -811,13 +813,13 @@ export default function DemoPage() {
           Информация о жильцах
         </Typography>
         <Box
-          sx={{
+                  sx={{
             display: 'grid',
             gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
             gap: { xs: 1, md: 2 },
           }}
-        >
-          {mockUsers.map((user) => (
+            >
+              {mockUsers.map((user) => (
             <Card key={user.id}>
               <CardContent sx={{ p: { xs: '8px', md: 2 } }}>
                 <Typography variant="h6" sx={{ fontSize: { xs: '0.9rem', md: '1.25rem' } }}>
@@ -829,16 +831,16 @@ export default function DemoPage() {
                   sx={{ fontSize: { xs: '0.7rem', md: '0.875rem' } }}
                 >
                   {user.email}
-                </Typography>
-                <Chip
+                            </Typography>
+                          <Chip
                   label={`Комната ${user.room_number}`}
-                  size="small"
+                            size="small"
                   sx={{ mt: 1, fontSize: { xs: '0.6rem', md: '0.75rem' } }}
                 />
-              </CardContent>
-            </Card>
-          ))}
-        </Box>
+                  </CardContent>
+                </Card>
+            ))}
+                  </Box>
       </TabPanel>
 
       <TabPanel value={tabValue} index={2}>
@@ -847,7 +849,7 @@ export default function DemoPage() {
           sx={{ mb: 2, fontWeight: 700, fontSize: { xs: '1rem', md: '1.5rem' } }}
         >
           Демо админ панели
-        </Typography>
+            </Typography>
         <Alert severity="info" sx={{ mb: 2, fontSize: { xs: '0.7rem', md: '0.875rem' } }}>
           В реальном приложении здесь находится полноценная админ панель для управления
           пользователями и системой
@@ -867,7 +869,7 @@ export default function DemoPage() {
               sx={{ fontSize: { xs: '0.6rem', md: '0.75rem' } }}
             />
           ))}
-        </Box>
+      </Box>
       </TabPanel>
 
       {/* Demo Features */}
@@ -884,10 +886,10 @@ export default function DemoPage() {
         >
           Возможности демо
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
             gap: { xs: '4px', md: 2 },
             justifyContent: 'center',
           }}
@@ -911,4 +913,4 @@ export default function DemoPage() {
       </Paper>
     </Container>
   );
-}
+} 

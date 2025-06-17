@@ -3,7 +3,7 @@ import React from 'react';
 import { AddLetterForm } from '@/components/AddLetterForm';
 import { LetterList } from '@/components/LetterList';
 import { useRouter } from 'next/navigation';
-import { useLettersByRoom } from '@/hooks/useLettersByRoom';
+import { useLettersByRoomDataSource } from '@/hooks/useLettersDataSource';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { ArrowLeft } from 'lucide-react';
@@ -17,7 +17,7 @@ interface RoomPageProps {
 export default function RoomPage({ params }: RoomPageProps): React.ReactElement {
   const { roomNumber } = params;
   const router = useRouter();
-  const { data: letters = [] } = useLettersByRoom(roomNumber);
+  const { data: letters = [] } = useLettersByRoomDataSource(roomNumber);
   const count = letters.length;
 
   return (

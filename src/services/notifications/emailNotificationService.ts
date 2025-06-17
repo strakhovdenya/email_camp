@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { supabaseService } from '@/lib/supabase/server';
+import { getDataSource } from '@/datasources/factory';
 import { letterHtmlTemplate } from '@/lib/emailTemplates';
 
 if (!process.env.RESEND_API_KEY) {
@@ -20,76 +20,64 @@ export async function sendEmailNotification({
   photoUrl?: string;
 }) {
   try {
-    const supabase = supabaseService.getAdminClient();
+    const dataSource = getDataSource();
 
-  // Получаем письмо
-  const { data: letter, error: letterError } = await supabase
-    .from('letters')
-    .select('*')
-    .eq('id', letterId)
-    .single();
-  if (letterError || !letter) {
-      console.error('Letter not found:', letterError);
-    return { success: false, error: 'Letter not found' };
-  }
-
-  // Получаем комнату
-  const { data: room, error: roomError } = await supabase
-    .from('rooms')
-    .select('room_number')
-    .eq('id', letter.room_id)
-    .single();
-  if (roomError || !room) {
-      console.error('Room not found:', roomError);
-    return { success: false, error: 'Room not found' };
-  }
-
-  // Получаем имя пользователя, если есть user_id
-  let recipientName = '';
-  if (letter.user_id) {
-    const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('first_name, last_name')
-      .eq('id', letter.user_id)
-      .single();
-    if (!userError && user) {
-      recipientName = `${user.first_name} ${user.last_name}`.trim();
+    // Получаем письмо
+    const letter = await dataSource.letters.getLetterById(letterId);
+    if (!letter) {
+      console.error('Letter not found:', letterId);
+      return { success: false, error: 'Letter not found' };
     }
-  }
 
-  // Формируем subject
-  let subject = `Room ${room.room_number}`;
-  if (recipientName && letterNote) {
-    subject = `Room ${room.room_number} for ${recipientName}: ${letterNote}`;
-  } else if (recipientName) {
-    subject = `Room ${room.room_number} for ${recipientName}`;
-  } else if (letterNote) {
-    subject = `Room ${room.room_number}: ${letterNote}`;
-  }
+    // Получаем номер комнаты из письма (уже есть в LetterWithRelations)
+    const roomNumber = letter.rooms?.room_number;
+    if (!roomNumber) {
+      console.error('Room not found in letter:', letter.room_id);
+      return { success: false, error: 'Room not found' };
+    }
 
-  // Формируем html
-  const html = letterHtmlTemplate({
-    roomNumber: room.room_number,
-    note: letterNote,
-    photoUrl,
-    createdAt: letter.created_at,
-    userName: recipientName,
-  });
+    // Получаем имя пользователя, если есть user_id
+    let recipientName = '';
+    if (letter.user_id) {
+      const user = await dataSource.users.getUserById(letter.user_id);
+      if (user) {
+        recipientName = `${user.first_name || ''} ${user.last_name || ''}`.trim();
+      }
+    }
 
-  // Отправляем email
-  const { data: emailData, error: emailError } = await resend.emails.send({
-    from: 'Mail <noreply@resend.dev>',
-    to: recipientEmail,
-    subject: subject,
-    html: html,
-  });
+    // Формируем subject
+    let subject = `Room ${roomNumber}`;
+    if (recipientName && letterNote) {
+      subject = `Room ${roomNumber} for ${recipientName}: ${letterNote}`;
+    } else if (recipientName) {
+      subject = `Room ${roomNumber} for ${recipientName}`;
+    } else if (letterNote) {
+      subject = `Room ${roomNumber}: ${letterNote}`;
+    }
 
-  if (emailError) {
+    // Формируем html
+    const html = letterHtmlTemplate({
+      roomNumber: roomNumber,
+      note: letterNote,
+      photoUrl,
+      createdAt: letter.created_at,
+      userName: recipientName,
+    });
+
+    // Отправляем email
+    const { data: emailData, error: emailError } = await resend.emails.send({
+      from: 'Mail <noreply@resend.dev>',
+      to: recipientEmail,
+      subject: subject,
+      html: html,
+    });
+
+    if (emailError) {
       console.error('Email sending error:', emailError);
-    return { success: false, error: emailError.message };
-  }
+      return { success: false, error: emailError.message };
+    }
 
-  return { success: true, data: emailData };
+    return { success: true, data: emailData };
   } catch (error) {
     console.error('Unexpected error in sendEmailNotification:', error);
     return { success: false, error: 'Unexpected error occurred' };

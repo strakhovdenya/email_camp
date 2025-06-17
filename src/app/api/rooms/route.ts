@@ -60,7 +60,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const supabase = supabaseService.getRouteHandlerClient();
+    const supabase = supabaseService.getAdminClient();
     const { searchParams } = new URL(request.url);
     const roomId = searchParams.get('id');
 

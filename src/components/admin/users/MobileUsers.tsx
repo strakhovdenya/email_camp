@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useUsers } from '@/hooks/useUsers';
+import { useUsersDataSource, useUserMutationsDataSource } from '@/hooks/useUsersDataSource';
 import { User } from '@/types/supabase';
 import UserModal from './UserModal';
 import WarningModal from './WarningModal';
-import { useUserActions } from '@/hooks/useUserActions';
 import MobileUserCard from './MobileUserCard';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,9 +16,10 @@ const MobileUsers: React.FC = () => {
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
   const [deleteCascadeUser, setDeleteCascadeUser] = useState<User | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const { data: users = [], isLoading, refetch } = useUsers();
-  const { saveUser, deleteUser, cascadeDeleteUser } = useUserActions(refetch);
+  
+  // Используем DataSource архитектуру
+  const { data: users = [], isLoading } = useUsersDataSource();
+  const { createUser, updateUser, deleteUser, cascadeDeleteUser } = useUserMutationsDataSource();
 
   const filteredUsers = users.filter(
     (user: User) =>
@@ -39,35 +39,49 @@ const MobileUsers: React.FC = () => {
   };
 
   const handleSave = async (data: Partial<User>) => {
-    setIsSaving(true);
     try {
-      const ok = await saveUser(data);
-      if (ok) {
-        setModalOpen(false);
-        setModalUser(null);
+      if (data.id) {
+        // Обновление существующего пользователя
+        await updateUser.mutateAsync(data);
+      } else {
+        // Создание нового пользователя
+        await createUser.mutateAsync(data);
       }
-    } finally {
-      setIsSaving(false);
+      setModalOpen(false);
+      setModalUser(null);
+    } catch (error) {
+      // Ошибка уже обработана в мутации
+      console.error('Error saving user:', error);
     }
   };
 
   const handleDelete = async (user: User) => {
-    const result = await deleteUser(user);
-    if (result === 'cascade_required') {
-      setWarningMessage(
-        'Сначала удалите все письма, связанные с этим пользователем. Вы можете сделать это автоматически.'
-      );
-      setDeleteCascadeUser(user);
-      setWarningOpen(true);
+    try {
+      await deleteUser.mutateAsync(user.id);
+    } catch (error: any) {
+      if (error.message === 'CASCADE_REQUIRED') {
+        setWarningMessage(
+          'Сначала удалите все письма, связанные с этим пользователем. Вы можете сделать это автоматически.'
+        );
+        setDeleteCascadeUser(user);
+        setWarningOpen(true);
+      }
     }
   };
 
   const handleCascadeDelete = async () => {
     if (!deleteCascadeUser) return;
-    await cascadeDeleteUser(deleteCascadeUser);
-    setDeleteCascadeUser(null);
-    setWarningOpen(false);
+    try {
+      await cascadeDeleteUser.mutateAsync(deleteCascadeUser.id);
+      setDeleteCascadeUser(null);
+      setWarningOpen(false);
+    } catch (error) {
+      // Ошибка уже обработана в мутации
+      console.error('Error cascade deleting user:', error);
+    }
   };
+
+  const isSaving = createUser.isPending || updateUser.isPending;
 
   return (
     <div className="p-2 pb-20 min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
@@ -88,7 +102,7 @@ const MobileUsers: React.FC = () => {
         <div className="text-center py-8 text-gray-400">Пользователи не найдены</div>
       ) : (
         <AnimatePresence>
-          {filteredUsers.map((user) => (
+          {filteredUsers.map((user: User) => (
             <MobileUserCard key={user.id} user={user} onEdit={handleEdit} onDelete={handleDelete} />
           ))}
         </AnimatePresence>

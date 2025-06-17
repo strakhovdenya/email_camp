@@ -3,14 +3,16 @@
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { LetterList } from '@/components/LetterList';
-import { useLettersByRoom } from '@/hooks/useLettersByRoom';
-import { useUsersByRoom } from '@/hooks/useUsersByRoom';
-import { useMarkAsDelivered } from '@/hooks/useLetterMutations';
+import { useLettersByRoomDataSource } from '@/hooks/useLettersDataSource';
+import { useUsersByRoomDataSource } from '@/hooks/useUsersDataSource';
+import { useLetterMutationsDataSource } from '@/hooks/useLettersDataSource';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import { ArrowLeft, Funnel } from 'lucide-react';
 import { motion } from 'framer-motion';
+import type { Letter } from '@/datasources/interfaces/ILetterDataSource';
+import type { User } from '@/datasources/interfaces/IUserDataSource';
 
 interface DeliverPageProps {
   params: { roomNumber: string };
@@ -19,17 +21,19 @@ interface DeliverPageProps {
 export default function DeliverPage({ params }: DeliverPageProps): React.ReactElement {
   const roomNumber = params.roomNumber;
   const router = useRouter();
-  const { data: letters = [] } = useLettersByRoom(roomNumber);
-  const { data: users = [] } = useUsersByRoom(roomNumber);
+  
+  // Используем новую DataSource архитектуру
+  const { data: letters = [] } = useLettersByRoomDataSource(roomNumber);
+  const { data: users = [] } = useUsersByRoomDataSource(roomNumber);
+  const { markAsDelivered } = useLetterMutationsDataSource();
+  
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const count = letters.length;
 
   // Фильтруем письма по выбранному пользователю
   const filteredLetters = selectedUserId
-    ? letters.filter((letter) => String(letter.users?.id) === selectedUserId)
+    ? letters.filter((letter: Letter) => String(letter.users?.id) === selectedUserId)
     : letters;
-
-  const mutation = useMarkAsDelivered(roomNumber);
 
   return (
     <main className="max-w-xl mx-auto px-0 sm:px-4 py-2 sm:py-6">
@@ -77,7 +81,7 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition shadow-sm"
             >
               <option value="">Все пользователи</option>
-              {users.map((user) => (
+              {users.map((user: User) => (
                 <option key={user.id} value={user.id}>
                   {user.last_name} {user.first_name}
                 </option>
@@ -94,8 +98,8 @@ export default function DeliverPage({ params }: DeliverPageProps): React.ReactEl
       >
         <LetterList
           letters={filteredLetters}
-          onDeliver={(id) => mutation.mutate(id)}
-          deliverLoadingId={mutation.isPending ? mutation.variables : null}
+          onDeliver={(id) => markAsDelivered.mutate(id)}
+          deliverLoadingId={markAsDelivered.isPending ? markAsDelivered.variables : null}
         />
       </motion.section>
     </main>

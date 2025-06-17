@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useUsers } from '@/hooks/useUsers';
+import { useUsersDataSource, useUserMutationsDataSource } from '@/hooks/useUsersDataSource';
 import { User } from '@/types/supabase';
-import { useUserActions } from '@/hooks/useUserActions';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -64,9 +63,10 @@ const DesktopUsers: React.FC = () => {
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
   const [deleteCascadeUser, setDeleteCascadeUser] = useState<User | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const { data: users = [], isLoading, refetch } = useUsers();
-  const { saveUser, deleteUser, cascadeDeleteUser } = useUserActions(refetch);
+  
+  // Используем DataSource архитектуру
+  const { data: users = [], isLoading } = useUsersDataSource();
+  const { createUser, updateUser, deleteUser, cascadeDeleteUser } = useUserMutationsDataSource();
 
   const filteredUsers = users.filter(
     (user: User) =>
@@ -86,35 +86,49 @@ const DesktopUsers: React.FC = () => {
   };
 
   const handleSave = async (data: Partial<User>) => {
-    setIsSaving(true);
     try {
-      const ok = await saveUser(data);
-      if (ok) {
-        setModalOpen(false);
-        setModalUser(null);
+      if (data.id) {
+        // Обновление существующего пользователя
+        await updateUser.mutateAsync(data);
+      } else {
+        // Создание нового пользователя
+        await createUser.mutateAsync(data);
       }
-    } finally {
-      setIsSaving(false);
+      setModalOpen(false);
+      setModalUser(null);
+    } catch (error) {
+      // Ошибка уже обработана в мутации
+      console.error('Error saving user:', error);
     }
   };
 
   const handleDelete = async (user: User) => {
-    const result = await deleteUser(user);
-    if (result === 'cascade_required') {
-      setWarningMessage(
-        'Сначала удалите все письма, связанные с этим пользователем. Вы можете сделать это автоматически.'
-      );
-      setDeleteCascadeUser(user);
-      setWarningOpen(true);
+    try {
+      await deleteUser.mutateAsync(user.id);
+    } catch (error: any) {
+      if (error.message === 'CASCADE_REQUIRED') {
+        setWarningMessage(
+          'Сначала удалите все письма, связанные с этим пользователем. Вы можете сделать это автоматически.'
+        );
+        setDeleteCascadeUser(user);
+        setWarningOpen(true);
+      }
     }
   };
 
   const handleCascadeDelete = async () => {
     if (!deleteCascadeUser) return;
-    await cascadeDeleteUser(deleteCascadeUser);
-    setDeleteCascadeUser(null);
-    setWarningOpen(false);
+    try {
+      await cascadeDeleteUser.mutateAsync(deleteCascadeUser.id);
+      setDeleteCascadeUser(null);
+      setWarningOpen(false);
+    } catch (error) {
+      // Ошибка уже обработана в мутации
+      console.error('Error cascade deleting user:', error);
+    }
   };
+
+  const isSaving = createUser.isPending || updateUser.isPending;
 
   return (
     <div className="w-full min-w-0">
@@ -167,7 +181,7 @@ const DesktopUsers: React.FC = () => {
                 </TableRow>
               ) : (
                 <AnimatePresence>
-                  {filteredUsers.map((user) => (
+                  {filteredUsers.map((user: User) => (
                     <motion.tr
                       key={user.id}
                       initial={{ opacity: 0, y: 24 }}
@@ -198,42 +212,24 @@ const DesktopUsers: React.FC = () => {
                           label={user.role}
                           size="small"
                           sx={{
-                            bgcolor: roleColors[user.role] || '#e5e7eb',
-                            color: '#fff',
+                            backgroundColor: roleColors[user.role] || '#6b7280',
+                            color: 'white',
                             fontWeight: 600,
-                            textTransform: 'capitalize',
+                            fontSize: 12,
                           }}
                         />
                       </TableCell>
                       <TableCell className={tableCellClass}>
-                        {user.channels_for_notification &&
-                        user.channels_for_notification.length > 0 ? (
-                          <div className="flex flex-wrap gap-1">
-                            {user.channels_for_notification.map((ch) => (
-                              <Chip
-                                key={ch}
-                                label={ch}
-                                size="small"
-                                icon={
-                                  <span style={{ fontSize: '1.1em' }}>
-                                    {channelIcons[ch] || '🔔'}
-                                  </span>
-                                }
-                                sx={{
-                                  bgcolor: '#f3f4f6',
-                                  color: '#2563eb',
-                                  fontWeight: 500,
-                                  mr: 0.5,
-                                }}
-                              />
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )}
+                        <div className="flex gap-1">
+                          {user.channels_for_notification?.map((channel: string) => (
+                            <span key={channel} title={channel}>
+                              {channelIcons[channel] || '❓'}
+                            </span>
+                          ))}
+                        </div>
                       </TableCell>
                       <TableCell className={tableCellClass}>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 justify-end">
                           <Tooltip title="Редактировать">
                             <Button
                               variant="outlined"
@@ -283,7 +279,7 @@ const DesktopUsers: React.FC = () => {
           setWarningOpen(false);
           setDeleteCascadeUser(null);
         }}
-        onConfirm={deleteCascadeUser ? handleCascadeDelete : undefined}
+        onConfirm={handleCascadeDelete}
       />
     </div>
   );

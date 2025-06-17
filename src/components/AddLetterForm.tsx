@@ -1,13 +1,11 @@
 'use client';
 
 import React, { useState, FormEvent } from 'react';
-import { useAddLetter } from '@/hooks/useLetterMutations';
+import { useLetterMutationsDataSource } from '@/hooks/useLettersDataSource';
+import { useUsersByRoomDataSource } from '@/hooks/useUsersDataSource';
 import { supabase } from '@/lib/supabase';
 import imageCompression from 'browser-image-compression';
-import { useUsersByRoom } from '@/hooks/useUsersByRoom';
 import { PhotoDropzone } from './ui';
-import { useToast } from '@/providers/ToastProvider';
-import { TOAST_TYPES } from '@/constants/toastTypes';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -18,26 +16,26 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
+import type { User } from '@/datasources/interfaces/IUserDataSource';
 
 interface AddLetterFormProps {
   onRoomNumberChange: (roomNumber: string) => void;
   initialRoomNumber?: string;
 }
 
-type AddLetterWithNotifying = ReturnType<typeof useAddLetter> & { notifying: boolean };
-
 export const AddLetterForm: React.FC<AddLetterFormProps> = ({
   onRoomNumberChange,
   initialRoomNumber = '',
 }): React.ReactElement => {
   const [roomNumber, setRoomNumber] = useState(initialRoomNumber);
-  const addLetter = useAddLetter(roomNumber) as AddLetterWithNotifying;
   const [note, setNote] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const { data: users = [], isLoading: usersLoading } = useUsersByRoom(roomNumber);
-  const { showToast } = useToast();
+  
+  // Используем новую DataSource архитектуру
+  const { createLetter } = useLetterMutationsDataSource();
+  const { data: users = [], isLoading: usersLoading } = useUsersByRoomDataSource(roomNumber);
 
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();
@@ -56,19 +54,22 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
             .getPublicUrl(fileName);
           photoUrl = publicUrlData?.publicUrl;
         }
-        await addLetter.mutateAsync({
+        
+        await createLetter.mutateAsync({
           room_number: roomNumber,
           note: note.trim() || undefined,
           photo_url: photoUrl,
           user_id: selectedUserId,
         });
+
         onRoomNumberChange(roomNumber);
         setNote('');
         setPhoto(null);
         setPhotoPreview(null);
         setSelectedUserId(null);
       } catch (error) {
-        showToast('Ошибка при добавлении письма', TOAST_TYPES.ERROR);
+        // Ошибка уже обработана в мутации
+        console.error('Error adding letter:', error);
       }
     })();
   };
@@ -88,6 +89,8 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
     setPhoto(null);
     setPhotoPreview(null);
   };
+
+  const isLoading = createLetter.isPending;
 
   return (
     <Card elevation={3} sx={{ borderRadius: 3, mb: 2 }}>
@@ -137,7 +140,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
               <MenuItem value="" disabled>
                 {usersLoading ? 'Загрузка...' : 'Выберите получателя'}
               </MenuItem>
-              {users.map((user) => (
+              {users.map((user: User) => (
                 <MenuItem key={user.id} value={user.id}>
                   {user.last_name} {user.first_name} ({user.email})
                 </MenuItem>
@@ -149,7 +152,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
           <Button
             type="submit"
             variant="contained"
-            disabled={addLetter.isPending || addLetter.notifying || !roomNumber.trim()}
+            disabled={isLoading || !roomNumber.trim()}
             sx={{
               borderRadius: 2,
               textTransform: 'none',
@@ -161,14 +164,14 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
               },
             }}
           >
-            {addLetter.isPending || addLetter.notifying ? (
+            {isLoading ? (
               <CircularProgress size={22} sx={{ color: 'white' }} />
             ) : (
               'Добавить письмо'
             )}
           </Button>
         </CardActions>
-        {addLetter.isError && (
+        {createLetter.isError && (
           <p className="text-red-500 text-sm mt-2 text-center">
             Ошибка при добавлении письма. Попробуйте ещё раз.
           </p>
