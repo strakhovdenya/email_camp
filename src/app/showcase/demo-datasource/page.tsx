@@ -12,19 +12,15 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import { DataSourceProvider } from '@/providers/DataSourceProvider';
-import {
-  useDemoUsers,
-  useDemoLetters,
-  useDemoUserMutations,
-  useDemoLetterMutations,
-} from '@/hooks/useDemoDataSource';
+import { useUsersDataSource, useUserMutationsDataSource } from '@/hooks/useUsersDataSource';
+import { useLettersDataSource, useLetterMutationsDataSource } from '@/hooks/useLettersDataSource';
 import type { DataSourceType } from '@/config/datasource';
 
 function DemoContent() {
-  const { data: users, isLoading: usersLoading } = useDemoUsers();
-  const { data: letters, isLoading: lettersLoading } = useDemoLetters();
-  const { createUser } = useDemoUserMutations();
-  const { createLetter } = useDemoLetterMutations();
+  const { data: users, isLoading: usersLoading } = useUsersDataSource();
+  const { data: letters, isLoading: lettersLoading } = useLettersDataSource();
+  const { createUser } = useUserMutationsDataSource();
+  const { createLetter } = useLetterMutationsDataSource();
 
   const handleCreateTestUser = async () => {
     try {
@@ -42,7 +38,7 @@ function DemoContent() {
   const handleCreateTestLetter = async () => {
     try {
       await createLetter.mutateAsync({
-        room_id: 'mock-room-1',
+        room_number: '101', // Используем room_number вместо room_id
         note: `Тестовое письмо создано ${new Date().toLocaleString()}`,
       });
     } catch (error) {
@@ -158,8 +154,8 @@ export default function DemoDataSourcePage() {
             2. <code>DataSourceProvider</code> создает локальный контекст с выбранным источником
             данных
             <br />
-            3. Хуки <code>useDemoUsers</code>, <code>useDemoLetters</code> используют контекстный
-            источник
+            3. Хуки <code>useUsersDataSource</code>, <code>useLettersDataSource</code> используют
+            контекстный источник
             <br />
             4. Если контекст недоступен, хуки автоматически используют глобальный источник
             <br />
