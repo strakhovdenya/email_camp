@@ -56,7 +56,7 @@ export const AddLetterForm: React.FC<AddLetterFormProps> = ({
         }
 
         await createLetter.mutateAsync({
-          room_id: roomNumber,
+          room_number: roomNumber,
           note: note.trim() || undefined,
           photo_url: photoUrl,
           user_id: selectedUserId,

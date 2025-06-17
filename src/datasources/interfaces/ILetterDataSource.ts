@@ -31,6 +31,12 @@ export type Letter = {
 export type CreateLetterInput = Database['public']['Tables']['letters']['Insert'];
 export type UpdateLetterInput = Database['public']['Tables']['letters']['Update'];
 
+// Расширенный тип для создания письма через форму (принимает room_number вместо room_id)
+export type CreateLetterFormInput = Omit<CreateLetterInput, 'room_id'> & {
+  room_number?: string;
+  room_id?: string;
+};
+
 export interface ILetterDataSource {
   // Получение писем
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +50,7 @@ export interface ILetterDataSource {
 
   // Создание и обновление писем
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createLetter(input: CreateLetterInput): Promise<any>;
+  createLetter(input: CreateLetterFormInput): Promise<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   updateLetter(id: string, input: UpdateLetterInput): Promise<any>;
   deleteLetter(id: string): Promise<void>;

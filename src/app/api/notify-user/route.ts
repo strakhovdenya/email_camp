@@ -8,7 +8,7 @@ if (!process.env.RESEND_API_KEY) {
 }
 
 // Проверка аутентификации пользователя
-async function verifyAuthentication(_request: Request): Promise<boolean> {
+async function verifyAuthentication(): Promise<boolean> {
   try {
     const supabase = supabaseService.getRouteHandlerClient();
     const {
@@ -42,7 +42,7 @@ async function verifyAuthentication(_request: Request): Promise<boolean> {
 export async function POST(request: Request) {
   try {
     // Проверяем аутентификацию пользователя вместо API ключа
-    if (!(await verifyAuthentication(request))) {
+    if (!(await verifyAuthentication())) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 

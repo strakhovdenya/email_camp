@@ -3,7 +3,10 @@ import { useDataSource } from './useDataSource';
 import { useToast } from '@/providers/ToastProvider';
 import { TOAST_TYPES } from '@/constants/toastTypes';
 import { useState } from 'react';
-import type { CreateLetterInput, UpdateLetterInput } from '@/datasources/interfaces/IDataSource';
+import type {
+  CreateLetterFormInput,
+  UpdateLetterInput,
+} from '@/datasources/interfaces/ILetterDataSource';
 
 export function useLettersDataSource() {
   const dataSource = useDataSource();
@@ -40,12 +43,12 @@ export function useLetterMutationsDataSource() {
   const [notifying, setNotifying] = useState(false);
 
   const createLetter = useMutation({
-    mutationFn: async (data: CreateLetterInput) => {
+    mutationFn: async (data: CreateLetterFormInput) => {
       setNotifying(true);
-      
+
       try {
         const letter = await dataSource.letters.createLetter(data);
-        
+
         // Отправляем уведомление если указан user_id (как в оригинальном useAddLetter)
         if (data.user_id) {
           try {
@@ -64,7 +67,7 @@ export function useLetterMutationsDataSource() {
             const notifyResult = await notifyResponse.json();
             if (notifyResult.success) {
               showToast('Уведомление отправлено!', TOAST_TYPES.SUCCESS);
-              
+
               // Инвалидируем все связанные запросы после успешной отправки уведомления
               // Это обновит статусы уведомлений в интерфейсе
               setTimeout(() => {
@@ -79,7 +82,7 @@ export function useLetterMutationsDataSource() {
             showToast('Ошибка при отправке уведомления', TOAST_TYPES.ERROR);
           }
         }
-        
+
         return letter;
       } finally {
         setNotifying(false);
@@ -95,7 +98,8 @@ export function useLetterMutationsDataSource() {
   });
 
   const updateLetter = useMutation({
-    mutationFn: (data: UpdateLetterInput & { id: string }) => dataSource.letters.updateLetter(data.id, data),
+    mutationFn: (data: UpdateLetterInput & { id: string }) =>
+      dataSource.letters.updateLetter(data.id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['letters'] });
       showToast('Письмо успешно обновлено', TOAST_TYPES.SUCCESS);
@@ -124,7 +128,7 @@ export function useLetterMutationsDataSource() {
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['letters'] });
       }, 100);
-      
+
       // Показываем стандартное сообщение успеха
       showToast('Письмо успешно выдано получателю', TOAST_TYPES.SUCCESS);
     },
@@ -139,7 +143,4 @@ export function useLetterMutationsDataSource() {
     deleteLetter,
     markAsDelivered,
   };
-} 
- 
- 
- 
+}

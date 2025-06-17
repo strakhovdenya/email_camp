@@ -5,18 +5,31 @@ export async function POST(request: Request) {
   try {
     const supabase = supabaseService.getAdminClient();
     const body = await request.json();
-    const { room_number, note, photo_url, user_id } = body;
+    console.log('POST /api/letters - received body:', body);
+    const { room_id, room_number, note, photo_url, user_id } = body;
 
-    // Получаем room_id по номеру комнаты
-    const { data: room, error: roomError } = await supabase
-      .from('rooms')
-      .select('id')
-  .eq('room_number', room_number).maybeSingle();
+    let roomId = room_id;
 
-const roomId = Array.isArray(room) ? room[0]?.id : room?.id;
+    // Если передан room_number вместо room_id, получаем room_id по номеру комнаты
+    if (!roomId && room_number) {
+      const { data: room, error: roomError } = await supabase
+        .from('rooms')
+        .select('id')
+        .eq('room_number', room_number)
+        .maybeSingle();
 
-if (roomError || !roomId) {
-      return NextResponse.json({ success: false, error: 'Комната не найдена' }, { status: 400 });
+      roomId = Array.isArray(room) ? room[0]?.id : room?.id;
+
+      if (roomError || !roomId) {
+        return NextResponse.json({ success: false, error: 'Комната не найдена' }, { status: 400 });
+      }
+    }
+
+    if (!roomId) {
+      return NextResponse.json(
+        { success: false, error: 'Не указан room_id или room_number' },
+        { status: 400 }
+      );
     }
 
     // Добавляем письмо
@@ -31,7 +44,8 @@ if (roomError || !roomId) {
           photo_url: photo_url ?? null,
           user_id: user_id ?? null,
         },
-      ]).select('*');
+      ])
+      .select('*');
     if (insertError) {
       console.error(insertError);
       return NextResponse.json(

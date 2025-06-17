@@ -6,8 +6,8 @@ import type {
   CreateRoomInput,
   UpdateRoomInput,
 } from '../interfaces/IDataSource';
+import type { CreateLetterFormInput, UpdateLetterInput } from '../interfaces/ILetterDataSource';
 import type { User, CreateUserInput, UpdateUserInput } from '../interfaces/IUserDataSource';
-import type { CreateLetterInput, UpdateLetterInput } from '../interfaces/ILetterDataSource';
 import type { Room, LetterWithRelations, Database } from '@/types/supabase';
 import { createClient } from '@supabase/supabase-js';
 
@@ -215,7 +215,7 @@ class SupabaseLetterDataSource implements ILetterDataSource {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async createLetter(data: CreateLetterInput): Promise<any> {
+  async createLetter(data: CreateLetterFormInput): Promise<any> {
     const response = await fetch('/api/letters', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

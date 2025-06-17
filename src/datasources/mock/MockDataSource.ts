@@ -7,8 +7,8 @@ import type {
 } from '../interfaces/IUserDataSource';
 import type {
   ILetterDataSource,
-  CreateLetterInput,
   UpdateLetterInput,
+  CreateLetterFormInput,
   Letter,
 } from '../interfaces/ILetterDataSource';
 import type {
@@ -308,11 +308,22 @@ class MockLetterDataSource implements ILetterDataSource {
     );
   }
 
-  async createLetter(data: CreateLetterInput): Promise<Letter> {
-    const room = mockRooms.find((r) => r.id === data.room_id);
+  async createLetter(data: CreateLetterFormInput): Promise<Letter> {
+    // Получаем room_id либо напрямую, либо по room_number
+    let roomId = data.room_id;
+    if (!roomId && data.room_number) {
+      const room = mockRooms.find((r) => r.room_number === data.room_number);
+      roomId = room?.id;
+    }
+
+    if (!roomId) {
+      throw new Error('Room not found');
+    }
+
+    const room = mockRooms.find((r) => r.id === roomId);
     const newLetter: Letter = {
       id: `mock-letter-${Date.now()}`,
-      room_id: data.room_id,
+      room_id: roomId,
       user_id: data.user_id || null,
       note: data.note || null,
       photo_url: data.photo_url || null,
