@@ -47,4 +47,12 @@ export interface IUserDataSource {
   // Методы для совместимости
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getUsers(): Promise<any[]>;
+
+  // Уведомления
+  notifyUser(
+    userId: string,
+    letterId: string,
+    letterNote?: string,
+    photoUrl?: string
+  ): Promise<boolean>;
 }

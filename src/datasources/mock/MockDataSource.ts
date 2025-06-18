@@ -227,6 +227,17 @@ class MockUserDataSource implements IUserDataSource {
       role: mockCurrentUser.role,
     });
   }
+
+  async notifyUser(
+    userId: string,
+    letterId: string,
+    letterNote?: string,
+    photoUrl?: string
+  ): Promise<boolean> {
+    // В mock версии просто симулируем успешную отправку уведомления
+    console.log('Mock notification sent:', { userId, letterId, letterNote, photoUrl });
+    return Promise.resolve(true);
+  }
 }
 
 class MockLetterDataSource implements ILetterDataSource {

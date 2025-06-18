@@ -49,23 +49,17 @@ export function useLetterMutationsDataSource() {
       try {
         const letter = await dataSource.letters.createLetter(data);
 
-        // Отправляем уведомление если указан user_id (как в оригинальном useAddLetter)
+        // Отправляем уведомление если указан user_id
         if (data.user_id) {
           try {
-            const notifyResponse = await fetch('/api/notify-user', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                userId: data.user_id,
-                letterId: letter.id,
-                letterNote: data.note,
-                photoUrl: data.photo_url,
-              }),
-            });
-            const notifyResult = await notifyResponse.json();
-            if (notifyResult.success) {
+            const notificationSent = await dataSource.users.notifyUser(
+              data.user_id,
+              letter.id,
+              data.note || undefined,
+              data.photo_url || undefined
+            );
+
+            if (notificationSent) {
               showToast('Уведомление отправлено!', TOAST_TYPES.SUCCESS);
 
               // Инвалидируем все связанные запросы после успешной отправки уведомления

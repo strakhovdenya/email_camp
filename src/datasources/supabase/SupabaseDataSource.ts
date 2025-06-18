@@ -176,6 +176,33 @@ class SupabaseUserDataSource implements IUserDataSource {
 
     return result.data;
   }
+
+  async notifyUser(
+    userId: string,
+    letterId: string,
+    letterNote?: string,
+    photoUrl?: string
+  ): Promise<boolean> {
+    try {
+      const response = await fetch('/api/notify-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          letterId,
+          letterNote,
+          photoUrl,
+        }),
+      });
+      const result = await response.json();
+      return result.success;
+    } catch (error) {
+      console.error('Error notifying user:', error);
+      return false;
+    }
+  }
 }
 
 class SupabaseLetterDataSource implements ILetterDataSource {
