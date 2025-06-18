@@ -16,10 +16,16 @@ const DataSourceContext = createContext<DataSourceContextType | null>(null);
 interface DataSourceProviderProps {
   children: ReactNode;
   type: DataSourceType;
+  instance?: IDataSource; // Опциональный готовый экземпляр
 }
 
-export function DataSourceProvider({ children, type }: DataSourceProviderProps) {
+export function DataSourceProvider({ children, type, instance }: DataSourceProviderProps) {
   const dataSource = useMemo(() => {
+    // Если передан готовый экземпляр, используем его
+    if (instance) {
+      return instance;
+    }
+
     switch (type) {
       case 'supabase':
         return new SupabaseDataSource();
@@ -32,18 +38,17 @@ export function DataSourceProvider({ children, type }: DataSourceProviderProps) 
       default:
         throw new Error(`Unknown datasource type: ${type}`);
     }
-  }, [type]);
+  }, [type, instance]);
 
-  const value = useMemo(() => ({
-    dataSource,
-    currentType: type,
-  }), [dataSource, type]);
-
-  return (
-    <DataSourceContext.Provider value={value}>
-      {children}
-    </DataSourceContext.Provider>
+  const value = useMemo(
+    () => ({
+      dataSource,
+      currentType: type,
+    }),
+    [dataSource, type]
   );
+
+  return <DataSourceContext.Provider value={value}>{children}</DataSourceContext.Provider>;
 }
 
 export function useDataSourceContext(): DataSourceContextType {
@@ -52,7 +57,4 @@ export function useDataSourceContext(): DataSourceContextType {
     throw new Error('useDataSourceContext must be used within DataSourceProvider');
   }
   return context;
-} 
- 
- 
- 
+}

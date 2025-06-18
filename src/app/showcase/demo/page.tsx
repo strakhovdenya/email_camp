@@ -7,7 +7,10 @@ import { useState } from 'react';
 
 // Импортируем реальные компоненты приложения
 import { useRoomsWithLettersDataSource } from '@/hooks/useRoomsDataSource';
-import { useLettersByRoomDataSource } from '@/hooks/useLettersDataSource';
+import {
+  useLettersByRoomDataSource,
+  useLetterMutationsDataSource,
+} from '@/hooks/useLettersDataSource';
 import { useUsersByRoomDataSource } from '@/hooks/useUsersDataSource';
 import { Plus, Inbox } from 'lucide-react';
 import { LinkButton } from '@/components/ui/LinkButton';
@@ -17,6 +20,7 @@ import { AddLetterForm } from '@/components/AddLetterForm';
 import { LetterList } from '@/components/LetterList';
 import Chip from '@mui/material/Chip';
 import { motion } from 'framer-motion';
+import { MockDataSource } from '@/datasources/mock/MockDataSource';
 
 // Создаем дефолтную тему MUI (как в основном приложении)
 const defaultTheme = createTheme({
@@ -25,7 +29,10 @@ const defaultTheme = createTheme({
   },
 });
 
-// Компонент главной страницы с mock данными
+// Создаем глобальный экземпляр MockDataSource для демо
+const demoMockDataSource = new MockDataSource();
+
+// Компонент главной страницы с mock данными (точная копия основного приложения)
 function MockHomePage({
   onAddLetterClick,
   onDeliverClick,
@@ -38,12 +45,11 @@ function MockHomePage({
   return (
     <main className="max-w-2xl mx-auto px-0 sm:px-4 py-4 sm:py-8">
       <h1 className="text-3xl sm:text-4xl font-extrabold mb-4 sm:mb-8 text-center text-blue-700 tracking-tight">
-        Email Camp (Demo)
+        Email Camp
       </h1>
       <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-700 text-center">
         Комнаты и письма, ожидающие выдачи
       </h2>
-
       {isLoading ? (
         <div className="grid grid-cols-1 gap-6">
           {[...Array(3)].map((_, i) => (
@@ -109,104 +115,136 @@ function MockHomePage({
   );
 }
 
-// Компонент для добавления письма
+// Компонент для добавления письма (точная копия основного приложения)
 function MockAddLetterPage({ roomNumber }: { roomNumber: string }) {
-  const { data: users = [] } = useUsersByRoomDataSource(roomNumber);
+  const { data: letters = [] } = useLettersByRoomDataSource(roomNumber);
+  const count = letters.length;
 
   return (
-    <main className="max-w-2xl mx-auto px-0 sm:px-4 py-4 sm:py-8">
-      <div className="flex items-center gap-2 mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-blue-700 flex items-center gap-2">
-          📝 Добавить письмо в комнату {roomNumber}
+    <main className="max-w-xl mx-auto px-0 sm:px-4 py-2 sm:py-6">
+      {/* Room header */}
+      <div className="flex items-center justify-center gap-2 mt-2 mb-2 sm:mb-4">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-blue-700 text-center flex items-center gap-2">
+          <span role="img" aria-label="room">
+            🏠
+          </span>{' '}
+          Комната {roomNumber}
         </h1>
+        <Chip
+          label={`Писем: ${count}`}
+          color="primary"
+          size="small"
+          sx={{ fontWeight: 700, fontSize: 14, ml: 1, height: 28 }}
+        />
       </div>
-
-      {/* Информация о пользователях */}
-      <Card elevation={3} className="rounded-2xl mb-6">
-        <CardContent>
-          <h2 className="text-lg font-semibold mb-4 text-center">Пользователи в комнате</h2>
-          {users.length === 0 ? (
-            <p className="text-gray-500 text-center">Нет пользователей в комнате</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {users.map((user: { id: string; first_name: string; last_name: string }) => (
-                <Chip
-                  key={user.id}
-                  label={`${user.first_name} ${user.last_name}`}
-                  variant="outlined"
-                  size="small"
-                />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Форма добавления письма */}
-      <Card elevation={3} className="rounded-2xl">
-        <CardContent>
-          <h2 className="text-lg font-semibold mb-4 text-center">Форма добавления письма</h2>
-          <AddLetterForm onRoomNumberChange={() => {}} initialRoomNumber={roomNumber} />
-        </CardContent>
-      </Card>
+      {/* Add letter section */}
+      <motion.section
+        className="mb-4 sm:mb-8"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Card elevation={3} className="rounded-2xl">
+          <CardContent className="px-2 py-4 sm:px-4 sm:py-5">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-gray-800 text-center">
+              Добавить письмо
+            </h2>
+            <AddLetterForm onRoomNumberChange={() => {}} initialRoomNumber={roomNumber} />
+          </CardContent>
+        </Card>
+      </motion.section>
+      {/* List of letters section */}
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
+        <Card elevation={3} className="rounded-2xl">
+          <CardContent className="px-2 py-4 sm:px-4 sm:py-5">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 text-gray-800 text-center">
+              Список писем
+            </h2>
+            <LetterList letters={letters} deliverLoadingId={null} />
+          </CardContent>
+        </Card>
+      </motion.section>
     </main>
   );
 }
 
-// Компонент для выдачи писем
+// Компонент для выдачи писем (идентичен основному приложению)
 function MockDeliverPage({ roomNumber }: { roomNumber: string }) {
   const { data: letters = [] } = useLettersByRoomDataSource(roomNumber);
   const { data: users = [] } = useUsersByRoomDataSource(roomNumber);
-  const pendingLetters = letters.filter(
-    (letter: { status: string }) => letter.status === 'pending'
-  );
+  const { markAsDelivered } = useLetterMutationsDataSource();
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+  const count = letters.length;
+
+  // Фильтруем письма по выбранному пользователю
+  const filteredLetters = selectedUserId
+    ? letters.filter((letter) => String(letter.user_id) === selectedUserId)
+    : letters;
 
   return (
-    <main className="max-w-2xl mx-auto px-0 sm:px-4 py-4 sm:py-8">
-      <div className="flex items-center gap-2 mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-green-700 flex items-center gap-2">
-          📦 Выдать письма из комнаты {roomNumber}
+    <main className="max-w-xl mx-auto px-0 sm:px-4 py-2 sm:py-6">
+      {/* Header */}
+      <div className="flex items-center justify-center gap-2 mt-2 mb-2 sm:mb-4">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-blue-700 text-center flex items-center gap-2">
+          Выдача писем — комната {roomNumber}
         </h1>
         <Chip
-          label={`К выдаче: ${pendingLetters.length}`}
-          color="warning"
+          label={`Писем: ${count}`}
+          color="primary"
           size="small"
-          sx={{ fontWeight: 700 }}
+          sx={{ fontWeight: 700, fontSize: 14, ml: 1, height: 28 }}
         />
       </div>
 
-      {/* Информация о пользователях */}
-      <Card elevation={3} className="rounded-2xl mb-6">
-        <CardContent>
-          <h2 className="text-lg font-semibold mb-4 text-center">Пользователи в комнате</h2>
-          {users.length === 0 ? (
-            <p className="text-gray-500 text-center">Нет пользователей в комнате</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
+      {/* User filter section */}
+      <motion.section
+        className="mb-4"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Card elevation={2} className="rounded-2xl">
+          <CardContent className="p-3 sm:p-4">
+            <label
+              htmlFor="userFilter"
+              className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2"
+            >
+              <span className="w-4 h-4 text-blue-400">🔽</span> Фильтр по пользователю
+            </label>
+            <select
+              id="userFilter"
+              value={selectedUserId ?? ''}
+              onChange={(e) => setSelectedUserId(e.target.value || null)}
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition shadow-sm"
+            >
+              <option value="">Все пользователи</option>
               {users.map((user: { id: string; first_name: string; last_name: string }) => (
-                <Chip
-                  key={user.id}
-                  label={`${user.first_name} ${user.last_name}`}
-                  variant="outlined"
-                  size="small"
-                />
+                <option key={user.id} value={user.id}>
+                  {user.last_name} {user.first_name}
+                </option>
               ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </select>
+          </CardContent>
+        </Card>
+      </motion.section>
 
-      {/* Список писем для выдачи */}
-      <Card elevation={3} className="rounded-2xl">
-        <CardContent>
-          <h2 className="text-lg font-semibold mb-4 text-center">Письма к выдаче</h2>
-          {pendingLetters.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">Нет писем для выдачи в этой комнате</p>
-          ) : (
-            <LetterList letters={pendingLetters} deliverLoadingId={null} />
-          )}
-        </CardContent>
-      </Card>
+      {/* Letters list */}
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
+        <LetterList
+          letters={filteredLetters}
+          onDeliver={(id) => markAsDelivered.mutate(id)}
+          deliverLoadingId={markAsDelivered.isPending ? markAsDelivered.variables : null}
+        />
+      </motion.section>
     </main>
   );
 }
@@ -251,18 +289,54 @@ export default function DemoPage() {
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
-          variant="scrollable"
-          scrollButtons="auto"
+          centered
+          variant="fullWidth"
+          sx={{
+            '& .MuiTab-root': {
+              minWidth: 'auto',
+              fontSize: { xs: '0.75rem', sm: '0.875rem' },
+              padding: { xs: '8px 4px', sm: '12px 16px' },
+            },
+          }}
         >
-          <Tab label="Главная страница" />
-          <Tab label={activeTab === 1 ? `Добавить (${selectedRoom})` : 'Добавить письмо'} />
-          <Tab label={activeTab === 2 ? `Выдать (${selectedRoom})` : 'Выдать письма'} />
+          <Tab
+            label={
+              <span>
+                <span className="hidden sm:inline">Главная страница</span>
+                <span className="sm:hidden">Главная</span>
+              </span>
+            }
+          />
+          <Tab
+            label={
+              <span>
+                <span className="hidden sm:inline">
+                  {activeTab === 1 ? `Добавить (${selectedRoom})` : 'Добавить письмо'}
+                </span>
+                <span className="sm:hidden">
+                  {activeTab === 1 ? `➕ ${selectedRoom}` : 'Добавить'}
+                </span>
+              </span>
+            }
+          />
+          <Tab
+            label={
+              <span>
+                <span className="hidden sm:inline">
+                  {activeTab === 2 ? `Выдать (${selectedRoom})` : 'Выдать письма'}
+                </span>
+                <span className="sm:hidden">
+                  {activeTab === 2 ? `📦 ${selectedRoom}` : 'Выдать'}
+                </span>
+              </span>
+            }
+          />
         </Tabs>
       </div>
 
       {/* Оборачиваем в DataSourceProvider с mock данными и дефолтной темой */}
       <ThemeProvider theme={defaultTheme}>
-        <DataSourceProvider type="mock">
+        <DataSourceProvider type="mock" instance={demoMockDataSource}>
           {activeTab === 0 && (
             <MockHomePage
               onAddLetterClick={handleAddLetterClick}

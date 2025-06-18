@@ -67,7 +67,7 @@ export function useLetterMutationsDataSource() {
               setTimeout(() => {
                 queryClient.invalidateQueries({ queryKey: ['letters'] });
                 queryClient.invalidateQueries({ queryKey: ['letters', 'room'] });
-                queryClient.invalidateQueries({ queryKey: ['rooms-with-letters'] });
+                queryClient.invalidateQueries({ queryKey: ['rooms', 'with-letters'] });
               }, 100);
             } else {
               showToast('Ошибка при отправке уведомления', TOAST_TYPES.ERROR);
@@ -84,6 +84,8 @@ export function useLetterMutationsDataSource() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['letters'] });
+      queryClient.invalidateQueries({ queryKey: ['letters', 'room'] });
+      queryClient.invalidateQueries({ queryKey: ['rooms', 'with-letters'] });
       showToast('Письмо успешно добавлено!', TOAST_TYPES.SUCCESS);
     },
     onError: (error: Error) => {
@@ -121,6 +123,8 @@ export function useLetterMutationsDataSource() {
       // чтобы анимация успела завершиться
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ['letters'] });
+        queryClient.invalidateQueries({ queryKey: ['letters', 'room'] });
+        queryClient.invalidateQueries({ queryKey: ['rooms', 'with-letters'] });
       }, 100);
 
       // Показываем стандартное сообщение успеха
