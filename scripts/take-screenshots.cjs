@@ -2,29 +2,46 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 
-// Конфигурация страниц для скриншотов
-const pages = [
+// Загружаем переменные окружения из .env.local
+require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
+
+// Конфигурация авторизации (можно переопределить через переменные окружения)
+const AUTH_CONFIG = {
+  email: process.env.SCREENSHOT_EMAIL || 'admin@example.com',
+  password: process.env.SCREENSHOT_PASSWORD || 'admin123',
+  baseUrl: process.env.SCREENSHOT_BASE_URL || 'http://localhost:3000'
+};
+
+// Страницы, которые нужно снимать ДО авторизации
+const pagesBeforeAuth = [
+  { url: `${AUTH_CONFIG.baseUrl}/auth`, name: 'auth-page', title: 'Авторизация' },
+  { url: `${AUTH_CONFIG.baseUrl}/auth/signup`, name: 'signup-page', title: 'Регистрация' },
+];
+
+// Страницы, которые нужно снимать ПОСЛЕ авторизации
+const pagesAfterAuth = [
   // Основные страницы приложения
-  { url: 'http://localhost:3000', name: 'homepage', title: 'Главная страница' },
-  { url: 'http://localhost:3000/room/101', name: 'room-page', title: 'Страница комнаты' },
-  { url: 'http://localhost:3000/deliver/101', name: 'deliver-page', title: 'Выдача писем' },
-  { url: 'http://localhost:3000/auth', name: 'auth-page', title: 'Авторизация' },
-  { url: 'http://localhost:3000/auth/signup', name: 'signup-page', title: 'Регистрация' },
+  { url: `${AUTH_CONFIG.baseUrl}`, name: 'homepage', title: 'Главная страница' },
+  { url: `${AUTH_CONFIG.baseUrl}/room/101`, name: 'room-page', title: 'Страница комнаты' },
+  { url: `${AUTH_CONFIG.baseUrl}/deliver/101`, name: 'deliver-page', title: 'Выдача писем' },
   
   // Админские страницы
-  { url: 'http://localhost:3000/admin', name: 'admin-dashboard', title: 'Админ панель' },
-  { url: 'http://localhost:3000/admin/letters', name: 'admin-letters', title: 'Управление письмами' },
-  { url: 'http://localhost:3000/admin/users', name: 'admin-users', title: 'Управление пользователями' },
-  { url: 'http://localhost:3000/admin/rooms', name: 'admin-rooms', title: 'Управление комнатами' },
+  { url: `${AUTH_CONFIG.baseUrl}/admin`, name: 'admin-dashboard', title: 'Админ панель' },
+  { url: `${AUTH_CONFIG.baseUrl}/admin/letters`, name: 'admin-letters', title: 'Управление письмами' },
+  { url: `${AUTH_CONFIG.baseUrl}/admin/users`, name: 'admin-users', title: 'Управление пользователями' },
+  { url: `${AUTH_CONFIG.baseUrl}/admin/rooms`, name: 'admin-rooms', title: 'Управление комнатами' },
   
   // Showcase страницы
-  { url: 'http://localhost:3000/showcase', name: 'showcase-overview', title: 'Обзор проекта' },
-  { url: 'http://localhost:3000/showcase/demo', name: 'showcase-demo', title: 'Демо приложения' },
-  { url: 'http://localhost:3000/showcase/features', name: 'showcase-features', title: 'Возможности' },
-  { url: 'http://localhost:3000/showcase/gallery', name: 'showcase-gallery', title: 'Галерея' },
-  { url: 'http://localhost:3000/showcase/tech-stack', name: 'showcase-tech', title: 'Технологии' },
-  { url: 'http://localhost:3000/showcase/architecture', name: 'showcase-architecture', title: 'Архитектура' },
+  { url: `${AUTH_CONFIG.baseUrl}/showcase`, name: 'showcase-overview', title: 'Обзор проекта' },
+  { url: `${AUTH_CONFIG.baseUrl}/showcase/demo`, name: 'showcase-demo', title: 'Демо приложения' },
+  { url: `${AUTH_CONFIG.baseUrl}/showcase/features`, name: 'showcase-features', title: 'Возможности' },
+  // { url: `${AUTH_CONFIG.baseUrl}/showcase/gallery`, name: 'showcase-gallery', title: 'Галерея' }, // Исключено - рекурсия
+  { url: `${AUTH_CONFIG.baseUrl}/showcase/tech-stack`, name: 'showcase-tech', title: 'Технологии' },
+  { url: `${AUTH_CONFIG.baseUrl}/showcase/architecture`, name: 'showcase-architecture', title: 'Архитектура' },
 ];
+
+// Все страницы для генерации конфигурации
+const allPages = [...pagesBeforeAuth, ...pagesAfterAuth];
 
 // Конфигурация устройств
 const devices = [
@@ -39,6 +56,91 @@ const devices = [
     folder: 'mobile'
   }
 ];
+
+// Функция авторизации администратора
+async function loginAsAdmin(page) {
+  console.log(`  🔐 Авторизуюсь как ${AUTH_CONFIG.email}...`);
+  
+  try {
+    // Переходим на страницу авторизации
+    await page.goto(`${AUTH_CONFIG.baseUrl}/auth`, { 
+      waitUntil: 'networkidle',
+      timeout: 30000 
+    });
+    
+    // Ждем загрузки формы
+    await page.waitForSelector('input[type="email"]', { timeout: 10000 });
+    
+    // Заполняем форму авторизации
+    await page.fill('input[type="email"]', AUTH_CONFIG.email);
+    await page.fill('input[type="password"]', AUTH_CONFIG.password);
+    
+    // Нажимаем кнопку входа
+    await page.click('button[type="submit"]');
+    
+    // Ждем редиректа после авторизации
+    await page.waitForURL(`${AUTH_CONFIG.baseUrl}/`, { timeout: 10000 });
+    
+    console.log('  ✅ Авторизация успешна');
+    return true;
+    
+  } catch (error) {
+    console.log(`  ⚠️ Ошибка авторизации: ${error.message}`);
+    console.log('  💡 Убедитесь что:');
+    console.log(`     - Сервер запущен на ${AUTH_CONFIG.baseUrl}`);
+    console.log(`     - Пользователь ${AUTH_CONFIG.email} существует`);
+    console.log('     - Пароль правильный');
+    return false;
+  }
+}
+
+// Функция для создания одного скриншота
+async function takeScreenshot(page, pageConfig, baseDir, device) {
+  try {
+    console.log(`  📸 ${pageConfig.title} (${pageConfig.name})`);
+    
+    // Переходим на страницу
+    await page.goto(pageConfig.url, { 
+      waitUntil: 'networkidle',
+      timeout: 30000 
+    });
+    
+    // Ждем загрузки контента
+    await page.waitForTimeout(3000);
+    
+    // Скрываем скроллбары для чистого скриншота
+    await page.addStyleTag({
+      content: `
+        ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; }
+        body { overflow-x: hidden; }
+      `
+    });
+    
+    // Ждем загрузки всех изображений и анимаций
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000);
+    
+    // Делаем полностраничный скриншот
+    const screenshotPath = path.join(
+      baseDir, 
+      device.folder, 
+      `${pageConfig.name}.png`
+    );
+    
+    await page.screenshot({
+      path: screenshotPath,
+      fullPage: true,
+      type: 'png',
+      animations: 'disabled' // Отключаем анимации для стабильных скриншотов
+    });
+    
+    console.log(`    ✅ Сохранен: ${screenshotPath}`);
+    
+  } catch (error) {
+    console.log(`    ❌ Ошибка для ${pageConfig.url}: ${error.message}`);
+  }
+}
 
 async function takeScreenshots() {
   const browser = await chromium.launch();
@@ -62,45 +164,23 @@ async function takeScreenshots() {
     
     const page = await context.newPage();
     
-    for (const pageConfig of pages) {
-      try {
-        console.log(`  📸 ${pageConfig.title} (${pageConfig.name})`);
-        
-        // Переходим на страницу
-        await page.goto(pageConfig.url, { 
-          waitUntil: 'networkidle',
-          timeout: 30000 
-        });
-        
-        // Ждем загрузки контента
-        await page.waitForTimeout(2000);
-        
-        // Скрываем скроллбары для чистого скриншота
-        await page.addStyleTag({
-          content: `
-            ::-webkit-scrollbar { display: none; }
-            * { scrollbar-width: none; }
-          `
-        });
-        
-        // Делаем полностраничный скриншот
-        const screenshotPath = path.join(
-          baseDir, 
-          device.folder, 
-          `${pageConfig.name}.png`
-        );
-        
-        await page.screenshot({
-          path: screenshotPath,
-          fullPage: true,
-          type: 'png'
-        });
-        
-        console.log(`    ✅ Сохранен: ${screenshotPath}`);
-        
-      } catch (error) {
-        console.log(`    ❌ Ошибка для ${pageConfig.url}: ${error.message}`);
+    // СНАЧАЛА делаем скриншоты страниц авторизации (до входа в систему)
+    console.log('  📸 Скриншоты страниц авторизации (до входа)...');
+    for (const pageConfig of pagesBeforeAuth) {
+      await takeScreenshot(page, pageConfig, baseDir, device);
+    }
+    
+    // ЗАТЕМ авторизуемся и делаем скриншоты остальных страниц
+    console.log('  🔐 Авторизуюсь для остальных страниц...');
+    const isLoggedIn = await loginAsAdmin(page);
+    
+    if (isLoggedIn) {
+      console.log('  📸 Скриншоты страниц после авторизации...');
+      for (const pageConfig of pagesAfterAuth) {
+        await takeScreenshot(page, pageConfig, baseDir, device);
       }
+    } else {
+      console.log('  ⚠️ Не удалось авторизоваться, пропускаю страницы после авторизации');
     }
     
     await context.close();
@@ -120,7 +200,7 @@ function generateGalleryConfig() {
   let id = 1;
   
   // Добавляем desktop версии
-  for (const pageConfig of pages) {
+  for (const pageConfig of allPages) {
     // Определяем категорию
     let category = 'features';
     if (pageConfig.name.includes('admin')) {
@@ -152,7 +232,7 @@ function generateGalleryConfig() {
   }
   
   // Добавляем mobile версии
-  for (const pageConfig of pages) {
+  for (const pageConfig of allPages) {
     // Определяем теги для мобильной версии
     const tags = ['Мобильный'];
     if (pageConfig.name.includes('admin')) tags.push('Админ');

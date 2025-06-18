@@ -5,7 +5,6 @@ export async function POST(request: Request) {
   try {
     const supabase = supabaseService.getAdminClient();
     const body = await request.json();
-    console.log('POST /api/letters - received body:', body);
     const { room_id, room_number, note, photo_url, user_id } = body;
 
     let roomId = room_id;

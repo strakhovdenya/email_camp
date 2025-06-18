@@ -7,7 +7,8 @@ export async function GET() {
 
     const { data: users, error } = await supabase
       .from('users')
-      .select(`
+      .select(
+        `
         id,
         first_name,
         last_name,
@@ -17,28 +18,23 @@ export async function GET() {
         channels_for_notification,
         telegram_chat_id,
         room_id,
-        rooms (
+        room:rooms (
           room_number
         )
-      `)
+      `
+      )
       .order('last_name')
       .order('first_name');
 
     if (error) {
       console.error('Error fetching users:', error);
-      return NextResponse.json(
-        { success: false, error: 'Failed to fetch users' },
-        { status: 500 }
-      );
+      return NextResponse.json({ success: false, error: 'Failed to fetch users' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, data: users || [] });
   } catch (e) {
     console.error('Unexpected error in users API:', e);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -138,4 +134,3 @@ export async function DELETE(request: Request) {
     );
   }
 }
- 

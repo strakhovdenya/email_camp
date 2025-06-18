@@ -155,14 +155,7 @@ const galleryItems: GalleryItem[] = [
     image: '/images/gallery/desktop/showcase-features.png',
     tags: ['Showcase'],
   },
-  {
-    id: '13',
-    title: 'Галерея',
-    description: 'Скриншот страницы: Галерея',
-    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.SHOWCASE],
-    image: '/images/gallery/desktop/showcase-gallery.png',
-    tags: ['Showcase'],
-  },
+
   {
     id: '14',
     title: 'Технологии',
@@ -276,14 +269,7 @@ const galleryItems: GalleryItem[] = [
     image: '/images/gallery/mobile/showcase-features.png',
     tags: ['Мобильный', 'Showcase'],
   },
-  {
-    id: '28',
-    title: 'Галерея (Мобильная)',
-    description: 'Мобильная версия: Галерея',
-    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.SHOWCASE],
-    image: '/images/gallery/mobile/showcase-gallery.png',
-    tags: ['Мобильный', 'Showcase'],
-  },
+
   {
     id: '29',
     title: 'Технологии (Мобильная)',

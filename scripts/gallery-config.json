@@ -1,242 +1,300 @@
 [
   {
     "id": "1",
-    "title": "Главная страница",
-    "description": "Скриншот страницы: Главная страница",
-    "categories": ["desktop", "core"],
-    "image": "/images/gallery/desktop/homepage.png",
-    "tags": ["UI/UX", "Главная"]
+    "title": "Авторизация",
+    "description": "Скриншот страницы: Авторизация",
+    "category": "features",
+    "image": "/images/gallery/desktop/auth-page.png",
+    "tags": [
+      "Авторизация"
+    ]
   },
   {
     "id": "2",
-    "title": "Страница комнаты",
-    "description": "Скриншот страницы: Страница комнаты",
-    "categories": ["desktop", "core"],
-    "image": "/images/gallery/desktop/room-page.png",
-    "tags": ["Комнаты", "Основные"]
+    "title": "Регистрация",
+    "description": "Скриншот страницы: Регистрация",
+    "category": "features",
+    "image": "/images/gallery/desktop/signup-page.png",
+    "tags": [
+      "UI/UX"
+    ]
   },
   {
     "id": "3",
-    "title": "Выдача писем",
-    "description": "Скриншот страницы: Выдача писем",
-    "categories": ["desktop", "core"],
-    "image": "/images/gallery/desktop/deliver-page.png",
-    "tags": ["Выдача", "Основные"]
+    "title": "Главная страница",
+    "description": "Скриншот страницы: Главная страница",
+    "category": "desktop",
+    "image": "/images/gallery/desktop/homepage.png",
+    "tags": [
+      "UI/UX"
+    ]
   },
   {
     "id": "4",
-    "title": "Авторизация",
-    "description": "Скриншот страницы: Авторизация",
-    "categories": ["desktop", "auth"],
-    "image": "/images/gallery/desktop/auth-page.png",
-    "tags": ["Авторизация", "Безопасность"]
+    "title": "Страница комнаты",
+    "description": "Скриншот страницы: Страница комнаты",
+    "category": "desktop",
+    "image": "/images/gallery/desktop/room-page.png",
+    "tags": [
+      "Комнаты"
+    ]
   },
   {
     "id": "5",
-    "title": "Регистрация",
-    "description": "Скриншот страницы: Регистрация",
-    "categories": ["desktop", "auth"],
-    "image": "/images/gallery/desktop/signup-page.png",
-    "tags": ["Регистрация", "Безопасность"]
+    "title": "Выдача писем",
+    "description": "Скриншот страницы: Выдача писем",
+    "category": "desktop",
+    "image": "/images/gallery/desktop/deliver-page.png",
+    "tags": [
+      "Выдача"
+    ]
   },
   {
     "id": "6",
     "title": "Админ панель",
     "description": "Скриншот страницы: Админ панель",
-    "categories": ["desktop", "admin"],
+    "category": "admin",
     "image": "/images/gallery/desktop/admin-dashboard.png",
-    "tags": ["Админ", "Панель управления"]
+    "tags": [
+      "Админ"
+    ]
   },
   {
     "id": "7",
     "title": "Управление письмами",
     "description": "Скриншот страницы: Управление письмами",
-    "categories": ["desktop", "admin"],
+    "category": "admin",
     "image": "/images/gallery/desktop/admin-letters.png",
-    "tags": ["Админ", "Письма", "Управление"]
+    "tags": [
+      "Админ",
+      "Письма"
+    ]
   },
   {
     "id": "8",
     "title": "Управление пользователями",
     "description": "Скриншот страницы: Управление пользователями",
-    "categories": ["desktop", "admin"],
+    "category": "admin",
     "image": "/images/gallery/desktop/admin-users.png",
-    "tags": ["Админ", "Пользователи", "Управление"]
+    "tags": [
+      "Админ",
+      "Пользователи"
+    ]
   },
   {
     "id": "9",
     "title": "Управление комнатами",
     "description": "Скриншот страницы: Управление комнатами",
-    "categories": ["desktop", "admin"],
+    "category": "admin",
     "image": "/images/gallery/desktop/admin-rooms.png",
-    "tags": ["Админ", "Комнаты", "Управление"]
+    "tags": [
+      "Админ",
+      "Комнаты"
+    ]
   },
   {
     "id": "10",
     "title": "Обзор проекта",
     "description": "Скриншот страницы: Обзор проекта",
-    "categories": ["desktop", "showcase"],
+    "category": "features",
     "image": "/images/gallery/desktop/showcase-overview.png",
-    "tags": ["Showcase", "Обзор"]
+    "tags": [
+      "Showcase"
+    ]
   },
   {
     "id": "11",
     "title": "Демо приложения",
     "description": "Скриншот страницы: Демо приложения",
-    "categories": ["desktop", "showcase"],
+    "category": "features",
     "image": "/images/gallery/desktop/showcase-demo.png",
-    "tags": ["Showcase", "Демо"]
+    "tags": [
+      "Showcase"
+    ]
   },
   {
     "id": "12",
     "title": "Возможности",
     "description": "Скриншот страницы: Возможности",
-    "categories": ["desktop", "showcase"],
+    "category": "features",
     "image": "/images/gallery/desktop/showcase-features.png",
-    "tags": ["Showcase", "Возможности"]
+    "tags": [
+      "Showcase"
+    ]
   },
   {
     "id": "13",
-    "title": "Галерея",
-    "description": "Скриншот страницы: Галерея",
-    "categories": ["desktop", "showcase"],
-    "image": "/images/gallery/desktop/showcase-gallery.png",
-    "tags": ["Showcase", "Галерея"]
+    "title": "Технологии",
+    "description": "Скриншот страницы: Технологии",
+    "category": "features",
+    "image": "/images/gallery/desktop/showcase-tech.png",
+    "tags": [
+      "Showcase"
+    ]
   },
   {
     "id": "14",
-    "title": "Технологии",
-    "description": "Скриншот страницы: Технологии",
-    "categories": ["desktop", "showcase"],
-    "image": "/images/gallery/desktop/showcase-tech.png",
-    "tags": ["Showcase", "Технологии"]
+    "title": "Архитектура",
+    "description": "Скриншот страницы: Архитектура",
+    "category": "features",
+    "image": "/images/gallery/desktop/showcase-architecture.png",
+    "tags": [
+      "Showcase"
+    ]
   },
   {
     "id": "15",
-    "title": "Архитектура",
-    "description": "Скриншот страницы: Архитектура",
-    "categories": ["desktop", "showcase"],
-    "image": "/images/gallery/desktop/showcase-architecture.png",
-    "tags": ["Showcase", "Архитектура"]
+    "title": "Авторизация (Мобильная)",
+    "description": "Мобильная версия: Авторизация",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/auth-page.png",
+    "tags": [
+      "Мобильный",
+      "Авторизация"
+    ]
   },
   {
     "id": "16",
-    "title": "Главная страница (Мобильная)",
-    "description": "Мобильная версия: Главная страница",
-    "categories": ["mobile", "core"],
-    "image": "/images/gallery/mobile/homepage.png",
-    "tags": ["Мобильный", "UI/UX", "Главная"]
+    "title": "Регистрация (Мобильная)",
+    "description": "Мобильная версия: Регистрация",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/signup-page.png",
+    "tags": [
+      "Мобильный"
+    ]
   },
   {
     "id": "17",
-    "title": "Страница комнаты (Мобильная)",
-    "description": "Мобильная версия: Страница комнаты",
-    "categories": ["mobile", "core"],
-    "image": "/images/gallery/mobile/room-page.png",
-    "tags": ["Мобильный", "Комнаты", "Основные"]
+    "title": "Главная страница (Мобильная)",
+    "description": "Мобильная версия: Главная страница",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/homepage.png",
+    "tags": [
+      "Мобильный"
+    ]
   },
   {
     "id": "18",
-    "title": "Выдача писем (Мобильная)",
-    "description": "Мобильная версия: Выдача писем",
-    "categories": ["mobile", "core"],
-    "image": "/images/gallery/mobile/deliver-page.png",
-    "tags": ["Мобильный", "Выдача", "Основные"]
+    "title": "Страница комнаты (Мобильная)",
+    "description": "Мобильная версия: Страница комнаты",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/room-page.png",
+    "tags": [
+      "Мобильный",
+      "Комнаты"
+    ]
   },
   {
     "id": "19",
-    "title": "Авторизация (Мобильная)",
-    "description": "Мобильная версия: Авторизация",
-    "categories": ["mobile", "auth"],
-    "image": "/images/gallery/mobile/auth-page.png",
-    "tags": ["Мобильный", "Авторизация", "Безопасность"]
+    "title": "Выдача писем (Мобильная)",
+    "description": "Мобильная версия: Выдача писем",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/deliver-page.png",
+    "tags": [
+      "Мобильный",
+      "Выдача"
+    ]
   },
   {
     "id": "20",
-    "title": "Регистрация (Мобильная)",
-    "description": "Мобильная версия: Регистрация",
-    "categories": ["mobile", "auth"],
-    "image": "/images/gallery/mobile/signup-page.png",
-    "tags": ["Мобильный", "Регистрация", "Безопасность"]
+    "title": "Админ панель (Мобильная)",
+    "description": "Мобильная версия: Админ панель",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/admin-dashboard.png",
+    "tags": [
+      "Мобильный",
+      "Админ"
+    ]
   },
   {
     "id": "21",
-    "title": "Админ панель (Мобильная)",
-    "description": "Мобильная версия: Админ панель",
-    "categories": ["mobile", "admin"],
-    "image": "/images/gallery/mobile/admin-dashboard.png",
-    "tags": ["Мобильный", "Админ", "Панель управления"]
+    "title": "Управление письмами (Мобильная)",
+    "description": "Мобильная версия: Управление письмами",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/admin-letters.png",
+    "tags": [
+      "Мобильный",
+      "Админ",
+      "Письма"
+    ]
   },
   {
     "id": "22",
-    "title": "Управление письмами (Мобильная)",
-    "description": "Мобильная версия: Управление письмами",
-    "categories": ["mobile", "admin"],
-    "image": "/images/gallery/mobile/admin-letters.png",
-    "tags": ["Мобильный", "Админ", "Письма", "Управление"]
+    "title": "Управление пользователями (Мобильная)",
+    "description": "Мобильная версия: Управление пользователями",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/admin-users.png",
+    "tags": [
+      "Мобильный",
+      "Админ",
+      "Пользователи"
+    ]
   },
   {
     "id": "23",
-    "title": "Управление пользователями (Мобильная)",
-    "description": "Мобильная версия: Управление пользователями",
-    "categories": ["mobile", "admin"],
-    "image": "/images/gallery/mobile/admin-users.png",
-    "tags": ["Мобильный", "Админ", "Пользователи", "Управление"]
+    "title": "Управление комнатами (Мобильная)",
+    "description": "Мобильная версия: Управление комнатами",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/admin-rooms.png",
+    "tags": [
+      "Мобильный",
+      "Админ",
+      "Комнаты"
+    ]
   },
   {
     "id": "24",
-    "title": "Управление комнатами (Мобильная)",
-    "description": "Мобильная версия: Управление комнатами",
-    "categories": ["mobile", "admin"],
-    "image": "/images/gallery/mobile/admin-rooms.png",
-    "tags": ["Мобильный", "Админ", "Комнаты", "Управление"]
+    "title": "Обзор проекта (Мобильная)",
+    "description": "Мобильная версия: Обзор проекта",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/showcase-overview.png",
+    "tags": [
+      "Мобильный",
+      "Showcase"
+    ]
   },
   {
     "id": "25",
-    "title": "Обзор проекта (Мобильная)",
-    "description": "Мобильная версия: Обзор проекта",
-    "categories": ["mobile", "showcase"],
-    "image": "/images/gallery/mobile/showcase-overview.png",
-    "tags": ["Мобильный", "Showcase", "Обзор"]
+    "title": "Демо приложения (Мобильная)",
+    "description": "Мобильная версия: Демо приложения",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/showcase-demo.png",
+    "tags": [
+      "Мобильный",
+      "Showcase"
+    ]
   },
   {
     "id": "26",
-    "title": "Демо приложения (Мобильная)",
-    "description": "Мобильная версия: Демо приложения",
-    "categories": ["mobile", "showcase"],
-    "image": "/images/gallery/mobile/showcase-demo.png",
-    "tags": ["Мобильный", "Showcase", "Демо"]
+    "title": "Возможности (Мобильная)",
+    "description": "Мобильная версия: Возможности",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/showcase-features.png",
+    "tags": [
+      "Мобильный",
+      "Showcase"
+    ]
   },
   {
     "id": "27",
-    "title": "Возможности (Мобильная)",
-    "description": "Мобильная версия: Возможности",
-    "categories": ["mobile", "showcase"],
-    "image": "/images/gallery/mobile/showcase-features.png",
-    "tags": ["Мобильный", "Showcase", "Возможности"]
+    "title": "Технологии (Мобильная)",
+    "description": "Мобильная версия: Технологии",
+    "category": "mobile",
+    "image": "/images/gallery/mobile/showcase-tech.png",
+    "tags": [
+      "Мобильный",
+      "Showcase"
+    ]
   },
   {
     "id": "28",
-    "title": "Галерея (Мобильная)",
-    "description": "Мобильная версия: Галерея",
-    "categories": ["mobile", "showcase"],
-    "image": "/images/gallery/mobile/showcase-gallery.png",
-    "tags": ["Мобильный", "Showcase", "Галерея"]
-  },
-  {
-    "id": "29",
-    "title": "Технологии (Мобильная)",
-    "description": "Мобильная версия: Технологии",
-    "categories": ["mobile", "showcase"],
-    "image": "/images/gallery/mobile/showcase-tech.png",
-    "tags": ["Мобильный", "Showcase", "Технологии"]
-  },
-  {
-    "id": "30",
     "title": "Архитектура (Мобильная)",
     "description": "Мобильная версия: Архитектура",
-    "categories": ["mobile", "showcase"],
+    "category": "mobile",
     "image": "/images/gallery/mobile/showcase-architecture.png",
-    "tags": ["Мобильный", "Showcase", "Архитектура"]
+    "tags": [
+      "Мобильный",
+      "Showcase"
+    ]
   }
 ]

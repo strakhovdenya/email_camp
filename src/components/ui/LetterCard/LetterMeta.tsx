@@ -12,10 +12,14 @@ export const LetterMeta: React.FC<{ letter: Letter }> = ({ letter }) => (
     >
       {letter.note || <span className="text-gray-400">—</span>}
     </Typography>
-    {(letter.last_name || letter.first_name) && (
+    {(letter.users?.last_name ||
+      letter.users?.first_name ||
+      letter.last_name ||
+      letter.first_name) && (
       <span className="text-xs text-gray-700 flex items-center gap-1 truncate">
         <User className="w-4 h-4 text-blue-400" />
-        {letter.last_name} {letter.first_name}
+        {letter.users?.last_name || letter.last_name}{' '}
+        {letter.users?.first_name || letter.first_name}
       </span>
     )}
   </div>

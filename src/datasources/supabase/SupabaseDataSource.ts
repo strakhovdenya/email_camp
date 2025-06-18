@@ -55,7 +55,26 @@ class SupabaseUserDataSource implements IUserDataSource {
     if (isServerSide) {
       // В серверном контексте используем прямые вызовы к Supabase
       const supabase = getAdminClient();
-      const { data, error } = await supabase.from('users').select('*');
+      const { data, error } = await supabase
+        .from('users')
+        .select(
+          `
+          id,
+          first_name,
+          last_name,
+          email,
+          phone,
+          role,
+          channels_for_notification,
+          telegram_chat_id,
+          room_id,
+          room:rooms (
+            room_number
+          )
+        `
+        )
+        .order('last_name')
+        .order('first_name');
       if (error) throw new Error(error.message);
       return data || [];
     }

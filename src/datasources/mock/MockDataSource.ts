@@ -96,8 +96,26 @@ const mockLetters: LetterWithRelations[] = [
 class MockUserDataSource implements IUserDataSource {
   private users = [...mockUsers];
 
+  // Хелпер для преобразования DBUser в User с информацией о комнате
+  private mapUserWithRoom(user: DBUser): User {
+    const room = user.room_id ? mockRooms.find((r) => r.id === user.room_id) : null;
+    return {
+      id: user.id,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      phone: user.phone,
+      room_id: user.room_id,
+      role: user.role,
+      created_at: user.created_at,
+      telegram_chat_id: user.telegram_chat_id,
+      channels_for_notification: user.channels_for_notification,
+      room: room ? { room_number: room.room_number } : null,
+    };
+  }
+
   async getAllUsers(): Promise<User[]> {
-    return Promise.resolve([...this.users]);
+    return Promise.resolve(this.users.map((user) => this.mapUserWithRoom(user)));
   }
 
   async getUsers(): Promise<DBUser[]> {
@@ -106,27 +124,14 @@ class MockUserDataSource implements IUserDataSource {
 
   async getUserById(id: string): Promise<User | null> {
     const user = this.users.find((u) => u.id === id);
-    return Promise.resolve(user || null);
+    return Promise.resolve(user ? this.mapUserWithRoom(user) : null);
   }
 
   async getUsersByRoom(roomNumber: string): Promise<User[]> {
     const room = mockRooms.find((r) => r.room_number === roomNumber);
     if (!room) return Promise.resolve([]);
     const users = this.users.filter((u) => u.room_id === room.id);
-    return Promise.resolve(
-      users.map((user) => ({
-        id: user.id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        phone: user.phone,
-        room_id: user.room_id,
-        role: user.role,
-        created_at: user.created_at,
-        telegram_chat_id: user.telegram_chat_id,
-        channels_for_notification: user.channels_for_notification,
-      }))
-    );
+    return Promise.resolve(users.map((user) => this.mapUserWithRoom(user)));
   }
 
   async createUser(data: CreateUserInput): Promise<User> {
@@ -143,18 +148,7 @@ class MockUserDataSource implements IUserDataSource {
       channels_for_notification: data.channels_for_notification || ['email'],
     };
     this.users.push(newUser);
-    return Promise.resolve({
-      id: newUser.id,
-      email: newUser.email,
-      first_name: newUser.first_name,
-      last_name: newUser.last_name,
-      phone: newUser.phone,
-      room_id: newUser.room_id,
-      role: newUser.role,
-      created_at: newUser.created_at,
-      telegram_chat_id: newUser.telegram_chat_id,
-      channels_for_notification: newUser.channels_for_notification,
-    });
+    return Promise.resolve(this.mapUserWithRoom(newUser));
   }
 
   async updateUser(id: string, data: UpdateUserInput): Promise<User> {
@@ -163,18 +157,7 @@ class MockUserDataSource implements IUserDataSource {
 
     this.users[index] = { ...this.users[index], ...data };
     const user = this.users[index];
-    return Promise.resolve({
-      id: user.id,
-      email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      phone: user.phone,
-      room_id: user.room_id,
-      role: user.role,
-      created_at: user.created_at,
-      telegram_chat_id: user.telegram_chat_id,
-      channels_for_notification: user.channels_for_notification,
-    });
+    return Promise.resolve(this.mapUserWithRoom(user));
   }
 
   async deleteUser(id: string): Promise<void> {
@@ -199,20 +182,7 @@ class MockUserDataSource implements IUserDataSource {
         user.email?.toLowerCase().includes(lowercaseQuery) ||
         false
     );
-    return Promise.resolve(
-      filtered.map((user) => ({
-        id: user.id,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        phone: user.phone,
-        room_id: user.room_id,
-        role: user.role,
-        created_at: user.created_at,
-        telegram_chat_id: user.telegram_chat_id,
-        channels_for_notification: user.channels_for_notification,
-      }))
-    );
+    return Promise.resolve(filtered.map((user) => this.mapUserWithRoom(user)));
   }
 
   async getCurrentUser(): Promise<{ id: string; email: string; role: string } | null> {

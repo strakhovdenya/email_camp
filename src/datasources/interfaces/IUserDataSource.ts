@@ -12,6 +12,7 @@ export type User = {
   channels_for_notification: string[] | null;
   telegram_chat_id: string | null;
   room_number?: string;
+  room?: { room_number: string } | null;
 };
 
 export type CreateUserInput = Database['public']['Tables']['users']['Insert'] & {
