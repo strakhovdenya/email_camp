@@ -8,6 +8,15 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabaseAdmin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceRoleKey!);
 
 export async function middleware(req: NextRequest) {
+  // Пропускаем все статические файлы и изображения
+  if (
+    req.nextUrl.pathname.startsWith('/images/') ||
+    req.nextUrl.pathname.startsWith('/_next/') ||
+    req.nextUrl.pathname === '/favicon.ico'
+  ) {
+    return NextResponse.next();
+  }
+
   const res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
 
@@ -17,7 +26,7 @@ export async function middleware(req: NextRequest) {
 
   // Список API endpoints, которые работают с API ключами вместо пользовательских сессий
   const publicApiRoutes: string[] = []; // Убираем /api/notify-user
-  const isPublicApiRoute = publicApiRoutes.some(route => req.nextUrl.pathname.startsWith(route));
+  const isPublicApiRoute = publicApiRoutes.some((route) => req.nextUrl.pathname.startsWith(route));
 
   // Усиленная защита: запрещаем любые POST-запросы на /auth/signup, если есть хотя бы один admin
   if (req.nextUrl.pathname === '/auth/signup' && (req.method === 'POST' || req.method === 'GET')) {
@@ -44,10 +53,12 @@ export async function middleware(req: NextRequest) {
 
   // Если пользователь не авторизован и пытается получить доступ к защищенным маршрутам
   // Исключаем публичные API routes, которые используют API ключи
-  if (!session && 
-      !req.nextUrl.pathname.startsWith('/auth') && 
-      !req.nextUrl.pathname.startsWith('/showcase') &&
-      !isPublicApiRoute) {
+  if (
+    !session &&
+    !req.nextUrl.pathname.startsWith('/auth') &&
+    !req.nextUrl.pathname.startsWith('/showcase') &&
+    !isPublicApiRoute
+  ) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = '/auth';
     redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname);
@@ -92,7 +103,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
+     * - images (static images)
      */
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
+    '/((?!_next/static|_next/image|favicon.ico|public|images).*)',
   ],
 };

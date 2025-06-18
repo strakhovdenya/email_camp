@@ -14,7 +14,12 @@
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,css,md,json}\"",
     "check": "npm run lint:strict && npm run format:check && npx tsc --noEmit",
     "fix": "npm run lint:fix && npm run format",
-    "pre-commit": "npm run check"
+    "pre-commit": "npm run check",
+    "screenshots": "node scripts/take-screenshots.cjs",
+    "screenshots:update": "node scripts/update-screenshots.cjs",
+    "screenshots:check": "node scripts/update-screenshots.cjs check",
+    "screenshots:all": "node scripts/update-screenshots.cjs all",
+    "gallery:update": "node scripts/update-screenshots.cjs gallery"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -51,6 +56,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.53.0",
     "@tailwindcss/forms": "^0.5.7",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",

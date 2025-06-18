@@ -34,11 +34,26 @@ import {
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 
+// Константы категорий
+const GALLERY_CATEGORIES = {
+  ALL: 'all',
+  DESKTOP: 'desktop',
+  MOBILE: 'mobile',
+  CORE: 'core',
+  AUTH: 'auth',
+  ADMIN: 'admin',
+  SHOWCASE: 'showcase',
+} as const;
+
+// Тип категории
+type GalleryCategory = (typeof GALLERY_CATEGORIES)[keyof typeof GALLERY_CATEGORIES];
+type GalleryCategoryFilter = Exclude<GalleryCategory, 'all'>;
+
 interface GalleryItem {
   id: string;
   title: string;
   description: string;
-  category: 'desktop' | 'mobile' | 'admin' | 'features';
+  categories: GalleryCategoryFilter[];
   image: string;
   tags: string[];
 }
@@ -47,84 +62,276 @@ const galleryItems: GalleryItem[] = [
   {
     id: '1',
     title: 'Главная страница',
-    description: 'Современный дизайн главной страницы с градиентами и анимациями',
-    category: 'desktop',
+    description: 'Скриншот страницы: Главная страница',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.CORE],
     image: '/images/gallery/desktop/homepage.png',
-    tags: ['UI/UX', 'Главная', 'Дизайн']
+    tags: ['UI/UX'],
   },
   {
     id: '2',
-    title: 'Список писем',
-    description: 'Интерфейс управления письмами с фильтрами и поиском',
-    category: 'desktop',
-    image: '/images/gallery/desktop/letters-list.png',
-    tags: ['Письма', 'Управление', 'Фильтры']
+    title: 'Страница комнаты',
+    description: 'Скриншот страницы: Страница комнаты',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.CORE],
+    image: '/images/gallery/desktop/room-page.png',
+    tags: ['Комнаты'],
   },
   {
     id: '3',
-    title: 'Добавление письма',
-    description: 'Форма добавления нового письма с валидацией',
-    category: 'features',
-    image: '/images/gallery/features/add-letter-form.png',
-    tags: ['Форма', 'Добавление', 'Валидация']
+    title: 'Выдача писем',
+    description: 'Скриншот страницы: Выдача писем',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.CORE],
+    image: '/images/gallery/desktop/deliver-page.png',
+    tags: ['Выдача'],
   },
   {
     id: '4',
-    title: 'Админ панель',
-    description: 'Панель администратора с аналитикой и управлением',
-    category: 'admin',
-    image: '/images/gallery/admin/admin-dashboard.png',
-    tags: ['Админ', 'Аналитика', 'Управление']
+    title: 'Авторизация',
+    description: 'Скриншот страницы: Авторизация',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.AUTH],
+    image: '/images/gallery/desktop/auth-page.png',
+    tags: ['Авторизация'],
   },
   {
     id: '5',
-    title: 'Мобильная версия',
-    description: 'Адаптивный дизайн для мобильных устройств',
-    category: 'mobile',
-    image: '/images/gallery/mobile/mobile-homepage.png',
-    tags: ['Мобильный', 'Адаптивность', 'Responsive']
+    title: 'Регистрация',
+    description: 'Скриншот страницы: Регистрация',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.AUTH],
+    image: '/images/gallery/desktop/signup-page.png',
+    tags: ['UI/UX'],
   },
   {
     id: '6',
-    title: 'Уведомления',
-    description: 'Система уведомлений Telegram и Email',
-    category: 'features',
-    image: '/images/gallery/features/notifications.png',
-    tags: ['Уведомления', 'Telegram', 'Email']
+    title: 'Админ панель',
+    description: 'Скриншот страницы: Админ панель',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.ADMIN],
+    image: '/images/gallery/desktop/admin-dashboard.png',
+    tags: ['Админ'],
   },
   {
     id: '7',
-    title: 'Статистика',
-    description: 'Дашборд с графиками и метриками',
-    category: 'admin',
-    image: '/images/gallery/admin/admin-stats.png',
-    tags: ['Статистика', 'Графики', 'Метрики']
+    title: 'Управление письмами',
+    description: 'Скриншот страницы: Управление письмами',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.ADMIN],
+    image: '/images/gallery/desktop/admin-letters.png',
+    tags: ['Админ', 'Письма'],
   },
   {
     id: '8',
-    title: 'Настройки безопасности',
-    description: 'Интерфейс управления правами доступа',
-    category: 'admin',
-    image: '/images/gallery/admin/admin-security.png',
-    tags: ['Безопасность', 'Права', 'Доступ']
-  }
+    title: 'Управление пользователями',
+    description: 'Скриншот страницы: Управление пользователями',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.ADMIN],
+    image: '/images/gallery/desktop/admin-users.png',
+    tags: ['Админ', 'Пользователи'],
+  },
+  {
+    id: '9',
+    title: 'Управление комнатами',
+    description: 'Скриншот страницы: Управление комнатами',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.ADMIN],
+    image: '/images/gallery/desktop/admin-rooms.png',
+    tags: ['Админ', 'Комнаты'],
+  },
+  {
+    id: '10',
+    title: 'Обзор проекта',
+    description: 'Скриншот страницы: Обзор проекта',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/desktop/showcase-overview.png',
+    tags: ['Showcase'],
+  },
+  {
+    id: '11',
+    title: 'Демо приложения',
+    description: 'Скриншот страницы: Демо приложения',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/desktop/showcase-demo.png',
+    tags: ['Showcase'],
+  },
+  {
+    id: '12',
+    title: 'Возможности',
+    description: 'Скриншот страницы: Возможности',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/desktop/showcase-features.png',
+    tags: ['Showcase'],
+  },
+  {
+    id: '13',
+    title: 'Галерея',
+    description: 'Скриншот страницы: Галерея',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/desktop/showcase-gallery.png',
+    tags: ['Showcase'],
+  },
+  {
+    id: '14',
+    title: 'Технологии',
+    description: 'Скриншот страницы: Технологии',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/desktop/showcase-tech.png',
+    tags: ['Showcase'],
+  },
+  {
+    id: '15',
+    title: 'Архитектура',
+    description: 'Скриншот страницы: Архитектура',
+    categories: [GALLERY_CATEGORIES.DESKTOP, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/desktop/showcase-architecture.png',
+    tags: ['Showcase'],
+  },
+  // Мобильные версии
+  {
+    id: '16',
+    title: 'Главная страница (Мобильная)',
+    description: 'Мобильная версия: Главная страница',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.CORE],
+    image: '/images/gallery/mobile/homepage.png',
+    tags: ['Мобильный', 'UI/UX'],
+  },
+  {
+    id: '17',
+    title: 'Страница комнаты (Мобильная)',
+    description: 'Мобильная версия: Страница комнаты',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.CORE],
+    image: '/images/gallery/mobile/room-page.png',
+    tags: ['Мобильный', 'Комнаты'],
+  },
+  {
+    id: '18',
+    title: 'Выдача писем (Мобильная)',
+    description: 'Мобильная версия: Выдача писем',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.CORE],
+    image: '/images/gallery/mobile/deliver-page.png',
+    tags: ['Мобильный', 'Выдача'],
+  },
+  {
+    id: '19',
+    title: 'Авторизация (Мобильная)',
+    description: 'Мобильная версия: Авторизация',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.AUTH],
+    image: '/images/gallery/mobile/auth-page.png',
+    tags: ['Мобильный', 'Авторизация'],
+  },
+  {
+    id: '20',
+    title: 'Регистрация (Мобильная)',
+    description: 'Мобильная версия: Регистрация',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.AUTH],
+    image: '/images/gallery/mobile/signup-page.png',
+    tags: ['Мобильный', 'UI/UX'],
+  },
+  {
+    id: '21',
+    title: 'Админ панель (Мобильная)',
+    description: 'Мобильная версия: Админ панель',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.ADMIN],
+    image: '/images/gallery/mobile/admin-dashboard.png',
+    tags: ['Мобильный', 'Админ'],
+  },
+  {
+    id: '22',
+    title: 'Управление письмами (Мобильная)',
+    description: 'Мобильная версия: Управление письмами',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.ADMIN],
+    image: '/images/gallery/mobile/admin-letters.png',
+    tags: ['Мобильный', 'Админ', 'Письма'],
+  },
+  {
+    id: '23',
+    title: 'Управление пользователями (Мобильная)',
+    description: 'Мобильная версия: Управление пользователями',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.ADMIN],
+    image: '/images/gallery/mobile/admin-users.png',
+    tags: ['Мобильный', 'Админ', 'Пользователи'],
+  },
+  {
+    id: '24',
+    title: 'Управление комнатами (Мобильная)',
+    description: 'Мобильная версия: Управление комнатами',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.ADMIN],
+    image: '/images/gallery/mobile/admin-rooms.png',
+    tags: ['Мобильный', 'Админ', 'Комнаты'],
+  },
+  {
+    id: '25',
+    title: 'Обзор проекта (Мобильная)',
+    description: 'Мобильная версия: Обзор проекта',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/mobile/showcase-overview.png',
+    tags: ['Мобильный', 'Showcase'],
+  },
+  {
+    id: '26',
+    title: 'Демо приложения (Мобильная)',
+    description: 'Мобильная версия: Демо приложения',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/mobile/showcase-demo.png',
+    tags: ['Мобильный', 'Showcase'],
+  },
+  {
+    id: '27',
+    title: 'Возможности (Мобильная)',
+    description: 'Мобильная версия: Возможности',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/mobile/showcase-features.png',
+    tags: ['Мобильный', 'Showcase'],
+  },
+  {
+    id: '28',
+    title: 'Галерея (Мобильная)',
+    description: 'Мобильная версия: Галерея',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/mobile/showcase-gallery.png',
+    tags: ['Мобильный', 'Showcase'],
+  },
+  {
+    id: '29',
+    title: 'Технологии (Мобильная)',
+    description: 'Мобильная версия: Технологии',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/mobile/showcase-tech.png',
+    tags: ['Мобильный', 'Showcase'],
+  },
+  {
+    id: '30',
+    title: 'Архитектура (Мобильная)',
+    description: 'Мобильная версия: Архитектура',
+    categories: [GALLERY_CATEGORIES.MOBILE, GALLERY_CATEGORIES.SHOWCASE],
+    image: '/images/gallery/mobile/showcase-architecture.png',
+    tags: ['Мобильный', 'Showcase'],
+  },
 ];
 
 const categories = [
-  { key: 'all', label: 'Все', icon: <GalleryIcon />, color: '#2563eb' },
-  { key: 'desktop', label: 'Десктоп', icon: <DesktopIcon />, color: '#059669' },
-  { key: 'mobile', label: 'Мобильный', icon: <MobileIcon />, color: '#7c3aed' },
-  { key: 'admin', label: 'Админ панель', icon: <DashboardIcon />, color: '#dc2626' },
-  { key: 'features', label: 'Функции', icon: <EmailIcon />, color: '#ea580c' },
+  { key: GALLERY_CATEGORIES.ALL, label: 'Все', icon: <GalleryIcon />, color: '#2563eb' },
+  { key: GALLERY_CATEGORIES.DESKTOP, label: 'Десктоп', icon: <DesktopIcon />, color: '#059669' },
+  { key: GALLERY_CATEGORIES.MOBILE, label: 'Мобильный', icon: <MobileIcon />, color: '#7c3aed' },
+  { key: GALLERY_CATEGORIES.CORE, label: 'Основные', icon: <EmailIcon />, color: '#16a34a' },
+  { key: GALLERY_CATEGORIES.AUTH, label: 'Авторизация', icon: <SecurityIcon />, color: '#dc2626' },
+  {
+    key: GALLERY_CATEGORIES.ADMIN,
+    label: 'Админ панель',
+    icon: <DashboardIcon />,
+    color: '#ea580c',
+  },
+  {
+    key: GALLERY_CATEGORIES.SHOWCASE,
+    label: 'Демонстрация',
+    icon: <NotificationIcon />,
+    color: '#7c3aed',
+  },
 ];
 
 export default function GalleryPage() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState<GalleryCategory>(GALLERY_CATEGORIES.ALL);
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
 
-  const filteredItems = selectedCategory === 'all' 
-    ? galleryItems 
-    : galleryItems.filter(item => item.category === selectedCategory);
+  const filteredItems =
+    selectedCategory === GALLERY_CATEGORIES.ALL
+      ? galleryItems
+      : galleryItems.filter((item) =>
+          item.categories.includes(selectedCategory as GalleryCategoryFilter)
+        );
 
   const handleImageClick = (item: GalleryItem) => {
     setSelectedImage(item);
@@ -147,11 +354,7 @@ export default function GalleryPage() {
         >
           Галерея
         </Typography>
-        <Typography
-          variant="h6"
-          color="text.secondary"
-          sx={{ maxWidth: 800, mx: 'auto' }}
-        >
+        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
           Скриншоты интерфейса и демонстрация возможностей системы
         </Typography>
       </Box>
@@ -161,12 +364,12 @@ export default function GalleryPage() {
         <Typography variant="h5" sx={{ mb: 3, fontWeight: 700, textAlign: 'center' }}>
           Категории
         </Typography>
-        <Box 
-          sx={{ 
-            display: 'flex', 
+        <Box
+          sx={{
+            display: 'flex',
             gap: 2,
             justifyContent: 'center',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
           }}
         >
           {categories.map((category) => (
@@ -179,23 +382,25 @@ export default function GalleryPage() {
               sx={{
                 cursor: 'pointer',
                 minWidth: 140,
-                background: selectedCategory === category.key 
-                  ? `linear-gradient(135deg, ${category.color}20 0%, ${category.color}10 100%)`
-                  : 'background.paper',
-                border: selectedCategory === category.key 
-                  ? `2px solid ${category.color}`
-                  : '1px solid rgba(0, 0, 0, 0.12)',
+                background:
+                  selectedCategory === category.key
+                    ? `linear-gradient(135deg, ${category.color}20 0%, ${category.color}10 100%)`
+                    : 'background.paper',
+                border:
+                  selectedCategory === category.key
+                    ? `2px solid ${category.color}`
+                    : '1px solid rgba(0, 0, 0, 0.12)',
                 transition: 'all 0.3s ease',
               }}
             >
               <CardContent sx={{ textAlign: 'center', p: 2 }}>
-                <Avatar 
-                  sx={{ 
-                    bgcolor: category.color, 
-                    mx: 'auto', 
+                <Avatar
+                  sx={{
+                    bgcolor: category.color,
+                    mx: 'auto',
                     mb: 1,
                     width: 40,
-                    height: 40
+                    height: 40,
                   }}
                 >
                   {category.icon}
@@ -204,10 +409,12 @@ export default function GalleryPage() {
                   {category.label}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  {category.key === 'all' 
-                    ? galleryItems.length 
-                    : galleryItems.filter((item: GalleryItem) => item.category === category.key).length
-                  } элементов
+                  {category.key === GALLERY_CATEGORIES.ALL
+                    ? galleryItems.length
+                    : galleryItems.filter((item: GalleryItem) =>
+                        item.categories.includes(category.key as GalleryCategoryFilter)
+                      ).length}{' '}
+                  элементов
                 </Typography>
               </CardContent>
             </Card>
@@ -218,14 +425,10 @@ export default function GalleryPage() {
       {/* Gallery Grid */}
       <Box sx={{ mb: 6 }}>
         <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
-          {categories.find(c => c.key === selectedCategory)?.label || 'Все'} 
-          <Chip 
-            label={filteredItems.length} 
-            size="small" 
-            sx={{ ml: 2 }} 
-          />
+          {categories.find((c) => c.key === selectedCategory)?.label || 'Все'}
+          <Chip label={filteredItems.length} size="small" sx={{ ml: 2 }} />
         </Typography>
-        
+
         <ImageList variant="masonry" cols={3} gap={16}>
           {filteredItems.map((item, index) => (
             <ImageListItem
@@ -250,7 +453,7 @@ export default function GalleryPage() {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={`https://picsum.photos/800/600?random=${item.id}`}
+                    image={item.image}
                     alt={item.title}
                     sx={{
                       transition: 'transform 0.3s ease',
@@ -282,7 +485,7 @@ export default function GalleryPage() {
                     </IconButton>
                   </Box>
                 </Box>
-                
+
                 <CardContent>
                   <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                     {item.title}
@@ -292,12 +495,7 @@ export default function GalleryPage() {
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     {item.tags.map((tag, tagIndex) => (
-                      <Chip
-                        key={tagIndex}
-                        label={tag}
-                        size="small"
-                        variant="outlined"
-                      />
+                      <Chip key={tagIndex} label={tag} size="small" variant="outlined" />
                     ))}
                   </Box>
                 </CardContent>
@@ -312,13 +510,13 @@ export default function GalleryPage() {
         <Typography variant="h4" sx={{ mb: 4, fontWeight: 700, textAlign: 'center' }}>
           Особенности интерфейса
         </Typography>
-        
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
             gap: 4,
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           {[
@@ -327,35 +525,35 @@ export default function GalleryPage() {
               title: 'Адаптивный дизайн',
               description: 'Оптимизация для всех устройств',
               color: '#2563eb',
-              features: ['Desktop First', 'Mobile Responsive', 'Tablet Support']
+              features: ['Desktop First', 'Mobile Responsive', 'Tablet Support'],
             },
             {
               icon: <GalleryIcon />,
               title: 'Material Design 3',
               description: 'Современные компоненты MUI',
               color: '#7c3aed',
-              features: ['Glassmorphism', 'Градиенты', 'Анимации']
+              features: ['Glassmorphism', 'Градиенты', 'Анимации'],
             },
             {
               icon: <NotificationIcon />,
               title: 'UX/UI Паттерны',
               description: 'Интуитивный пользовательский опыт',
               color: '#059669',
-              features: ['Loading States', 'Error Handling', 'Feedback']
+              features: ['Loading States', 'Error Handling', 'Feedback'],
             },
             {
               icon: <SecurityIcon />,
               title: 'Доступность',
               description: 'Соответствие стандартам A11Y',
               color: '#dc2626',
-              features: ['Keyboard Navigation', 'Screen Reader', 'High Contrast']
-            }
+              features: ['Keyboard Navigation', 'Screen Reader', 'High Contrast'],
+            },
           ].map((feature, index) => (
-            <Box 
+            <Box
               key={feature.title}
-              sx={{ 
+              sx={{
                 flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 16px)' },
-                minWidth: 280
+                minWidth: 280,
               }}
             >
               <motion.div
@@ -371,9 +569,7 @@ export default function GalleryPage() {
                     border: `1px solid ${feature.color}30`,
                   }}
                 >
-                  <Avatar sx={{ bgcolor: feature.color, mb: 2 }}>
-                    {feature.icon}
-                  </Avatar>
+                  <Avatar sx={{ bgcolor: feature.color, mb: 2 }}>{feature.icon}</Avatar>
                   <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                     {feature.title}
                   </Typography>
@@ -397,15 +593,12 @@ export default function GalleryPage() {
       </Paper>
 
       {/* Image Dialog */}
-      <Dialog
-        open={!!selectedImage}
-        onClose={handleCloseDialog}
-        maxWidth="lg"
-        fullWidth
-      >
+      <Dialog open={!!selectedImage} onClose={handleCloseDialog} maxWidth="lg" fullWidth>
         {selectedImage && (
           <>
-            <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <DialogTitle
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
               <Typography variant="h6" sx={{ fontWeight: 700 }}>
                 {selectedImage.title}
               </Typography>
@@ -416,7 +609,7 @@ export default function GalleryPage() {
             <DialogContent>
               <Box sx={{ textAlign: 'center', mb: 2 }}>
                 <Image
-                  src={`https://picsum.photos/800/600?random=${selectedImage.id}`}
+                  src={selectedImage.image}
                   alt={selectedImage.title}
                   width={800}
                   height={600}
@@ -433,24 +626,16 @@ export default function GalleryPage() {
               </Typography>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                 {selectedImage.tags.map((tag, index) => (
-                  <Chip
-                    key={index}
-                    label={tag}
-                    size="small"
-                    color="primary"
-                    variant="outlined"
-                  />
+                  <Chip key={index} label={tag} size="small" color="primary" variant="outlined" />
                 ))}
               </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseDialog}>
-                Закрыть
-              </Button>
+              <Button onClick={handleCloseDialog}>Закрыть</Button>
             </DialogActions>
           </>
         )}
       </Dialog>
     </Container>
   );
-} 
+}
