@@ -336,6 +336,27 @@ CREATE POLICY "Users can view own letters" ON letters
   }
 }`,
     },
+    {
+      icon: <AnimationIcon />,
+      title: 'Screenshot Automation',
+      version: 'Playwright',
+      description: 'Автоматическая генерация скриншотов для галереи',
+      color: '#45ba4b',
+      features: ['Auto Screenshots', 'Mobile + Desktop', 'Auth Flow', 'Gallery Sync'],
+      codeExample: `// scripts/take-screenshots.cjs
+// Сначала страницы авторизации (без входа)
+for (const pageConfig of pagesBeforeAuth) {
+  await takeScreenshot(page, pageConfig, baseDir, device);
+}
+
+// Затем авторизация и остальные страницы
+const isLoggedIn = await loginAsAdmin(page);
+if (isLoggedIn) {
+  for (const pageConfig of pagesAfterAuth) {
+    await takeScreenshot(page, pageConfig, baseDir, device);
+  }
+}`,
+    },
   ];
 
   return (
