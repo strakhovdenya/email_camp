@@ -1,132 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  Container,
-  Typography,
-  Box,
-  Card,
-  CardContent,
-  Paper,
-  Tab,
-  Tabs,
-  Chip,
-  Avatar,
-} from '@mui/material';
+import { Container, Typography, Box, Card, Paper, Tab, Tabs, Chip, Avatar } from '@mui/material';
 import {
   Storage as DatabaseIcon,
   Security as SecurityIcon,
   Api as ApiIcon,
-  Cloud as CloudIcon,
   Code as CodeIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`arch-tabpanel-${index}`}
-      aria-labelledby={`arch-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: { xs: '2px', md: 3 }, overflow: 'hidden', width: '100%', minWidth: 0 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-const DatabaseTable = ({
-  name,
-  columns,
-  color,
-}: {
-  name: string;
-  columns: Array<{ name: string; type: string; key?: boolean; foreign?: boolean }>;
-  color: string;
-}) => (
-  <Card
-    sx={{
-      minWidth: 0,
-      width: '100%',
-      maxWidth: '100%',
-      background: `linear-gradient(135deg, ${color}10 0%, ${color}05 100%)`,
-      border: `2px solid ${color}30`,
-      overflow: 'hidden',
-    }}
-  >
-    <CardContent sx={{ p: { xs: '4px', md: 2 } }}>
-      <Typography
-        variant="h6"
-        sx={{
-          fontWeight: 700,
-          mb: { xs: '4px', md: 1 },
-          color,
-          fontSize: { xs: '0.85rem', md: '1.25rem' },
-          wordBreak: 'break-word',
-        }}
-      >
-        {name}
-      </Typography>
-      {columns.map((column, index) => (
-        <Box
-          key={index}
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            mb: { xs: '2px', md: 1 },
-            flexWrap: 'nowrap',
-          }}
-        >
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: column.key ? 700 : 400,
-              color: column.key
-                ? 'primary.main'
-                : column.foreign
-                  ? 'secondary.main'
-                  : 'text.primary',
-              fontSize: { xs: '0.7rem', md: '0.875rem' },
-              minWidth: 0,
-              flex: 1,
-              mr: { xs: '2px', md: 1 },
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {column.name}
-          </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{
-              fontSize: { xs: '0.65rem', md: '0.75rem' },
-              flexShrink: 0,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {column.type}
-          </Typography>
-        </Box>
-      ))}
-    </CardContent>
-  </Card>
-);
+import {
+  TabPanel,
+  ArchitectureOverview,
+  DatabaseTab,
+  DataSourceTab,
+} from '@/components/showcase/architecture';
 
 export default function ArchitecturePage() {
   const [tabValue, setTabValue] = useState(0);
@@ -134,44 +24,6 @@ export default function ArchitecturePage() {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-
-  const databaseTables = [
-    {
-      name: 'users',
-      color: '#2563eb',
-      columns: [
-        { name: 'id', type: 'UUID', key: true },
-        { name: 'email', type: 'VARCHAR', key: true },
-        { name: 'first_name', type: 'VARCHAR' },
-        { name: 'last_name', type: 'VARCHAR' },
-        { name: 'role', type: 'ENUM' },
-        { name: 'telegram_id', type: 'BIGINT' },
-        { name: 'room_number', type: 'VARCHAR', foreign: true },
-        { name: 'created_at', type: 'TIMESTAMP' },
-      ],
-    },
-    {
-      name: 'rooms',
-      color: '#7c3aed',
-      columns: [
-        { name: 'id', type: 'UUID', key: true },
-        { name: 'room_number', type: 'VARCHAR', key: true },
-        { name: 'created_at', type: 'TIMESTAMP' },
-      ],
-    },
-    {
-      name: 'letters',
-      color: '#059669',
-      columns: [
-        { name: 'id', type: 'UUID', key: true },
-        { name: 'user_id', type: 'UUID', foreign: true },
-        { name: 'status', type: 'ENUM' },
-        { name: 'notification_statuses', type: 'JSONB' },
-        { name: 'created_at', type: 'TIMESTAMP' },
-        { name: 'delivered_at', type: 'TIMESTAMP' },
-      ],
-    },
-  ];
 
   const apiEndpoints = [
     { method: 'GET', path: '/api/letters', description: 'Получить список писем' },
@@ -241,150 +93,7 @@ export default function ArchitecturePage() {
       </Box>
 
       {/* Architecture Overview */}
-      <Paper
-        component={motion.div}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        sx={{
-          p: { xs: '6px 8px', sm: 2, md: 4 },
-          mb: { xs: 1, md: 6 },
-          mx: { xs: 0, sm: 0 },
-        }}
-      >
-        <Typography
-          variant="h4"
-          sx={{
-            mb: { xs: '6px', md: 3 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '0.9rem', md: '2.125rem' },
-            px: { xs: 0, md: 0 },
-            wordBreak: 'break-word',
-          }}
-        >
-          Общая архитектура
-        </Typography>
-
-        {/* Mobile version - Compact horizontal */}
-        <Box
-          sx={{
-            display: { xs: 'flex', md: 'none' },
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: '4px',
-            px: 0,
-            gap: '4px',
-          }}
-        >
-          {[
-            { label: 'Next.js', color: '#000000', icon: <CodeIcon /> },
-            { label: 'API', color: '#2563eb', icon: <ApiIcon /> },
-            { label: 'Supabase', color: '#3ecf8e', icon: <CloudIcon /> },
-            { label: 'Postgres', color: '#336791', icon: <DatabaseIcon /> },
-          ].map((item, index) => (
-            <React.Fragment key={index}>
-              <Box
-                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 0 }}
-              >
-                <Avatar
-                  sx={{
-                    bgcolor: item.color,
-                    width: 22,
-                    height: 22,
-                    mb: '1px',
-                    '& .MuiSvgIcon-root': { fontSize: '0.8rem' },
-                  }}
-                >
-                  {item.icon}
-                </Avatar>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    fontSize: '0.55rem',
-                    fontWeight: 500,
-                    textAlign: 'center',
-                    lineHeight: 1,
-                    color: 'text.secondary',
-                  }}
-                >
-                  {item.label}
-                </Typography>
-              </Box>
-              {index < 3 && (
-                <Typography
-                  sx={{
-                    fontSize: '0.8rem',
-                    color: 'text.secondary',
-                  }}
-                >
-                  →
-                </Typography>
-              )}
-            </React.Fragment>
-          ))}
-        </Box>
-
-        {/* Desktop version */}
-        <Box
-          sx={{
-            display: { xs: 'none', md: 'flex' },
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 3,
-            mb: 4,
-          }}
-        >
-          {[
-            { label: 'Next.js Frontend', color: '#000000', icon: <CodeIcon /> },
-            { label: '↓', color: 'transparent' },
-            { label: 'API Routes', color: '#2563eb', icon: <ApiIcon /> },
-            { label: '↓', color: 'transparent' },
-            { label: 'Supabase Client', color: '#3ecf8e', icon: <CloudIcon /> },
-            { label: '↓', color: 'transparent' },
-            { label: 'PostgreSQL', color: '#336791', icon: <DatabaseIcon /> },
-          ].map((item, index) => (
-            <Box key={index} sx={{ textAlign: 'center' }}>
-              {item.color !== 'transparent' ? (
-                <Card
-                  sx={{
-                    p: 2,
-                    minWidth: 120,
-                    background: `linear-gradient(135deg, ${item.color}10 0%, ${item.color}05 100%)`,
-                    border: `1px solid ${item.color}40`,
-                  }}
-                >
-                  <Avatar
-                    sx={{
-                      bgcolor: item.color,
-                      mx: 'auto',
-                      mb: 1,
-                      width: 40,
-                      height: 40,
-                    }}
-                  >
-                    {item.icon}
-                  </Avatar>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontWeight: 600,
-                      fontSize: '0.875rem',
-                    }}
-                  >
-                    {item.label}
-                  </Typography>
-                </Card>
-              ) : (
-                <Typography variant="h4" color="text.secondary" sx={{ fontSize: '2.125rem' }}>
-                  {item.label}
-                </Typography>
-              )}
-            </Box>
-          ))}
-        </Box>
-      </Paper>
+      <ArchitectureOverview />
 
       {/* Tabs */}
       <Paper sx={{ mb: { xs: 1, md: 4 }, mx: { xs: 0, sm: 0 }, overflow: 'hidden' }}>
@@ -459,125 +168,7 @@ export default function ArchitecturePage() {
 
       {/* Database Schema */}
       <TabPanel value={tabValue} index={0}>
-        <Typography
-          variant="h4"
-          sx={{
-            mb: { xs: 1, md: 4 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '1rem', md: '2.125rem' },
-            px: { xs: '2px', md: 0 },
-            wordBreak: 'break-word',
-          }}
-        >
-          Схема базы данных
-        </Typography>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            flexWrap: { xs: 'nowrap', md: 'wrap' },
-            gap: { xs: '4px', md: 4 },
-            justifyContent: 'center',
-            mb: { xs: 1, md: 6 },
-            alignItems: { xs: 'stretch', md: 'flex-start' },
-            px: { xs: '2px', md: 0 },
-            overflow: 'hidden',
-            width: '100%',
-          }}
-        >
-          {databaseTables.map((table, index) => (
-            <motion.div
-              key={table.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <DatabaseTable {...table} />
-            </motion.div>
-          ))}
-        </Box>
-
-        <Paper sx={{ p: { xs: '4px', md: 3 }, mb: { xs: 1, md: 4 } }}>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: { xs: 1, md: 2 },
-              fontWeight: 700,
-              fontSize: { xs: '1rem', md: '1.5rem' },
-            }}
-          >
-            Связи между таблицами
-          </Typography>
-          <Box sx={{ mb: { xs: 1, md: 3 } }}>
-            <Typography
-              variant="body1"
-              sx={{ mb: { xs: '2px', md: 1 }, fontSize: { xs: '0.8rem', md: '1rem' } }}
-            >
-              <strong>users.room_number</strong> → <strong>rooms.room_number</strong>
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ ml: { xs: 1, md: 2 }, fontSize: { xs: '0.7rem', md: '0.875rem' } }}
-            >
-              Каждый пользователь привязан к определенной комнате
-            </Typography>
-          </Box>
-          <Box>
-            <Typography
-              variant="body1"
-              sx={{ mb: { xs: '2px', md: 1 }, fontSize: { xs: '0.8rem', md: '1rem' } }}
-            >
-              <strong>letters.user_id</strong> → <strong>users.id</strong>
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ ml: { xs: 1, md: 2 }, fontSize: { xs: '0.7rem', md: '0.875rem' } }}
-            >
-              Каждое письмо адресовано конкретному пользователю
-            </Typography>
-          </Box>
-        </Paper>
-
-        <Paper sx={{ p: { xs: '4px', md: 3 } }}>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: { xs: 1, md: 2 },
-              fontWeight: 700,
-              fontSize: { xs: '1rem', md: '1.5rem' },
-            }}
-          >
-            Пример SQL запроса
-          </Typography>
-          <SyntaxHighlighter
-            language="sql"
-            style={oneDark}
-            customStyle={{
-              borderRadius: 8,
-              fontSize: '0.65rem',
-              overflow: 'auto',
-              padding: '8px',
-            }}
-          >
-            {`-- Получить все письма с информацией о получателях и комнатах
-SELECT 
-  l.id,
-  l.status,
-  l.created_at,
-  u.first_name,
-  u.last_name,
-  r.room_number
-FROM letters l
-JOIN users u ON l.user_id = u.id
-JOIN rooms r ON u.room_number = r.room_number
-WHERE l.status = 'pending'
-ORDER BY l.created_at DESC;`}
-          </SyntaxHighlighter>
-        </Paper>
+        <DatabaseTab />
       </TabPanel>
 
       {/* API Structure */}
@@ -610,25 +201,29 @@ ORDER BY l.created_at DESC;`}
               >
                 <Chip
                   label={endpoint.method}
-                  color={
-                    endpoint.method === 'GET'
-                      ? 'primary'
-                      : endpoint.method === 'POST'
-                        ? 'success'
-                        : 'default'
-                  }
                   size="small"
-                  sx={{ mb: { xs: '2px', sm: 0 }, fontSize: { xs: '0.65rem', md: '0.8125rem' } }}
+                  sx={{
+                    bgcolor:
+                      endpoint.method === 'GET'
+                        ? '#10b981'
+                        : endpoint.method === 'POST'
+                          ? '#3b82f6'
+                          : '#f59e0b',
+                    color: 'white',
+                    fontWeight: 600,
+                    fontSize: { xs: '0.6rem', md: '0.75rem' },
+                    minWidth: { xs: 'auto', md: 60 },
+                  }}
                 />
                 <Typography
-                  variant="body1"
+                  variant="body2"
                   sx={{
                     fontFamily: 'monospace',
                     fontWeight: 600,
-                    fontSize: { xs: '0.7rem', md: '1rem' },
-                    wordBreak: 'break-all',
-                    flex: { xs: 'none', sm: 1 },
+                    fontSize: { xs: '0.7rem', md: '0.875rem' },
+                    flex: 1,
                     minWidth: 0,
+                    wordBreak: 'break-all',
                   }}
                 >
                   {endpoint.path}
@@ -637,8 +232,9 @@ ORDER BY l.created_at DESC;`}
                   variant="body2"
                   color="text.secondary"
                   sx={{
-                    fontSize: { xs: '0.65rem', md: '0.875rem' },
-                    flex: { xs: 'none', md: 2 },
+                    fontSize: { xs: '0.7rem', md: '0.875rem' },
+                    flex: { xs: 1, sm: 'auto' },
+                    minWidth: 0,
                   }}
                 >
                   {endpoint.description}
@@ -648,390 +244,56 @@ ORDER BY l.created_at DESC;`}
           ))}
         </Box>
 
-        <Paper sx={{ p: { xs: '4px', md: 3 } }}>
+        <Paper sx={{ p: { xs: 2, md: 3 } }}>
           <Typography
             variant="h5"
             sx={{
-              mb: { xs: 1, md: 2 },
+              mb: 2,
               fontWeight: 700,
-              fontSize: { xs: '1rem', md: '1.5rem' },
+              fontSize: { xs: '1.25rem', md: '1.5rem' },
             }}
           >
-            Пример API ответа
+            Пример использования API
           </Typography>
           <SyntaxHighlighter
-            language="json"
+            language="typescript"
             style={oneDark}
             customStyle={{
               borderRadius: 8,
-              fontSize: '0.65rem',
+              fontSize: '0.75rem',
               overflow: 'auto',
-              padding: '8px',
             }}
           >
-            {`{
-  "success": true,
-  "data": [
-    {
-      "id": "123e4567-e89b-12d3-a456-426614174000",
-      "status": "pending",
-      "created_at": "2024-01-15T10:30:00Z",
-      "users": {
-        "first_name": "Иван",
-        "last_name": "Петров"
-      },
-      "rooms": {
-        "room_number": "101"
-      },
-      "notification_statuses": {
-        "email": "sent",
-        "telegram": "sent"
-      }
-    }
-  ]
-}`}
+            {`// Получение списка писем
+const response = await fetch('/api/letters', {
+  method: 'GET',
+  headers: {
+    'Authorization': \`Bearer \${token}\`,
+    'Content-Type': 'application/json'
+  }
+});
+
+const letters = await response.json();
+
+// Добавление нового письма
+const newLetter = await fetch('/api/letters', {
+  method: 'POST',
+  headers: {
+    'Authorization': \`Bearer \${token}\`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    user_id: 'user-uuid',
+    status: 'pending'
+  })
+});`}
           </SyntaxHighlighter>
         </Paper>
       </TabPanel>
 
       {/* DataSource Architecture */}
       <TabPanel value={tabValue} index={2}>
-        <Typography
-          variant="h4"
-          sx={{
-            mb: { xs: 1, md: 4 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '1rem', md: '2.125rem' },
-            px: { xs: '2px', md: 0 },
-            wordBreak: 'break-word',
-          }}
-        >
-          DataSource Архитектура
-        </Typography>
-
-        <Paper sx={{ p: { xs: '4px', md: 3 }, mb: { xs: 1, md: 4 } }}>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: { xs: 1, md: 2 },
-              fontWeight: 700,
-              fontSize: { xs: '1rem', md: '1.5rem' },
-            }}
-          >
-            Паттерн абстракции данных
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{ mb: { xs: 1, md: 2 }, fontSize: { xs: '0.8rem', md: '1rem' } }}
-          >
-            DataSource архитектура позволяет легко переключаться между различными источниками данных
-            (Supabase, Mock, PostgreSQL, MySQL) изменением одной настройки в конфигурации.
-            MockDataSource используется для тестирования и демонстрации функциональности без
-            реальной базы данных.
-          </Typography>
-
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-            {[
-              'Единый интерфейс',
-              'Легкое переключение',
-              'Тестируемость',
-              'Демо режим',
-              'Типобезопасность',
-            ].map((benefit) => (
-              <Chip key={benefit} label={benefit} variant="outlined" size="small" />
-            ))}
-          </Box>
-        </Paper>
-
-        {/* DataSource Structure */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            gap: { xs: '4px', md: 4 },
-            mb: { xs: 1, md: 4 },
-            justifyContent: 'center',
-            alignItems: { xs: 'stretch', md: 'flex-start' },
-          }}
-        >
-          {/* Interfaces */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <Card
-              sx={{
-                p: { xs: '4px', md: 3 },
-                minWidth: { xs: 0, md: 300 },
-                background: 'linear-gradient(135deg, #2563eb10 0%, #2563eb05 100%)',
-                border: '2px solid #2563eb30',
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 700,
-                  mb: { xs: 1, md: 2 },
-                  color: '#2563eb',
-                  fontSize: { xs: '0.9rem', md: '1.25rem' },
-                }}
-              >
-                📋 Интерфейсы
-              </Typography>
-              {[
-                'IDataSource - главный интерфейс',
-                'IUserDataSource - операции с пользователями',
-                'ILetterDataSource - операции с письмами',
-                'IRoomDataSource - операции с комнатами',
-              ].map((item, index) => (
-                <Typography
-                  key={index}
-                  variant="body2"
-                  sx={{
-                    mb: { xs: '2px', md: 1 },
-                    fontSize: { xs: '0.7rem', md: '0.875rem' },
-                    color: 'text.secondary',
-                  }}
-                >
-                  • {item}
-                </Typography>
-              ))}
-            </Card>
-          </motion.div>
-
-          {/* Factory */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card
-              sx={{
-                p: { xs: '4px', md: 3 },
-                minWidth: { xs: 0, md: 300 },
-                background: 'linear-gradient(135deg, #7c3aed10 0%, #7c3aed05 100%)',
-                border: '2px solid #7c3aed30',
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 700,
-                  mb: { xs: 1, md: 2 },
-                  color: '#7c3aed',
-                  fontSize: { xs: '0.9rem', md: '1.25rem' },
-                }}
-              >
-                🏭 Фабрика
-              </Typography>
-              {[
-                'Singleton паттерн',
-                'Переключение по конфигурации',
-                'Автоматическая инициализация',
-                'Управление жизненным циклом',
-              ].map((item, index) => (
-                <Typography
-                  key={index}
-                  variant="body2"
-                  sx={{
-                    mb: { xs: '2px', md: 1 },
-                    fontSize: { xs: '0.7rem', md: '0.875rem' },
-                    color: 'text.secondary',
-                  }}
-                >
-                  • {item}
-                </Typography>
-              ))}
-            </Card>
-          </motion.div>
-
-          {/* Implementations */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card
-              sx={{
-                p: { xs: '4px', md: 3 },
-                minWidth: { xs: 0, md: 300 },
-                background: 'linear-gradient(135deg, #05966910 0%, #05966905 100%)',
-                border: '2px solid #05966930',
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 700,
-                  mb: { xs: 1, md: 2 },
-                  color: '#059669',
-                  fontSize: { xs: '0.9rem', md: '1.25rem' },
-                }}
-              >
-                🔌 Реализации
-              </Typography>
-              {[
-                'SupabaseDataSource - продакшн',
-                'MockDataSource - тестирование и демо',
-                'PostgreSQLDataSource - планируется',
-                'MySQLDataSource - планируется',
-              ].map((item, index) => (
-                <Typography
-                  key={index}
-                  variant="body2"
-                  sx={{
-                    mb: { xs: '2px', md: 1 },
-                    fontSize: { xs: '0.7rem', md: '0.875rem' },
-                    color: 'text.secondary',
-                  }}
-                >
-                  • {item}
-                </Typography>
-              ))}
-            </Card>
-          </motion.div>
-        </Box>
-
-        {/* Configuration Example */}
-        <Paper sx={{ p: { xs: '4px', md: 3 }, mb: { xs: 1, md: 4 } }}>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: { xs: 1, md: 2 },
-              fontWeight: 700,
-              fontSize: { xs: '1rem', md: '1.5rem' },
-            }}
-          >
-            Конфигурация источника данных
-          </Typography>
-          <SyntaxHighlighter
-            language="typescript"
-            style={oneDark}
-            customStyle={{
-              borderRadius: 8,
-              fontSize: '0.75rem',
-              overflow: 'auto',
-            }}
-          >
-            {`// src/config/datasource.ts
-export type DataSourceType = 'supabase' | 'mock' | 'postgresql' | 'mysql';
-
-// НАСТРОЙКА: Измените эту переменную для переключения источника данных
-export const CURRENT_DATASOURCE: DataSourceType = 'supabase'; // или 'mock'
-
-// Переключение на mock для тестирования и демо
-// export const CURRENT_DATASOURCE: DataSourceType = 'mock';
-
-// Демо режим с предзаполненными данными
-// - Пользователи из разных комнат
-// - Письма в разных статусах
-// - Имитация задержек API`}
-          </SyntaxHighlighter>
-        </Paper>
-
-        {/* Usage Example */}
-        <Paper sx={{ p: { xs: '4px', md: 3 }, mb: { xs: 1, md: 4 } }}>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: { xs: 1, md: 2 },
-              fontWeight: 700,
-              fontSize: { xs: '1rem', md: '1.5rem' },
-            }}
-          >
-            Использование в компонентах
-          </Typography>
-          <SyntaxHighlighter
-            language="typescript"
-            style={oneDark}
-            customStyle={{
-              borderRadius: 8,
-              fontSize: '0.75rem',
-              overflow: 'auto',
-            }}
-          >
-            {`// Использование через хуки (рекомендуется)
-import { useUsersDataSource, useUserMutationsDataSource } from '@/hooks/useUsersDataSource';
-
-function UsersList() {
-  // Получение данных с React Query кешированием
-  const { data: users, isLoading, error } = useUsersDataSource();
-  
-  // Мутации с автоматическим обновлением кеша
-  const { createUser, updateUser, deleteUser } = useUserMutationsDataSource();
-  
-  const handleCreateUser = async () => {
-    await createUser.mutateAsync({
-      first_name: 'Иван',
-      last_name: 'Петров',
-      email: 'ivan@example.com',
-      room_number: '101',
-    });
-  };
-  
-  if (isLoading) return <div>Загрузка...</div>;
-  if (error) return <div>Ошибка: {error.message}</div>;
-  
-  return (
-    <div>
-      {users?.map(user => (
-        <div key={user.id}>{user.first_name} {user.last_name}</div>
-      ))}
-    </div>
-  );
-}`}
-          </SyntaxHighlighter>
-        </Paper>
-
-        {/* Direct Usage */}
-        <Paper sx={{ p: { xs: '4px', md: 3 } }}>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: { xs: 1, md: 2 },
-              fontWeight: 700,
-              fontSize: { xs: '1rem', md: '1.5rem' },
-            }}
-          >
-            Прямое использование DataSource
-          </Typography>
-          <SyntaxHighlighter
-            language="typescript"
-            style={oneDark}
-            customStyle={{
-              borderRadius: 8,
-              fontSize: '0.75rem',
-              overflow: 'auto',
-            }}
-          >
-            {`// Прямое использование (для серверного кода)
-import { getDataSource } from '@/datasources/factory';
-
-async function processUsers() {
-  const dataSource = getDataSource();
-  
-  // Работа с пользователями
-  const users = await dataSource.users.getUsers();
-  const newUser = await dataSource.users.createUser({
-    first_name: 'Анна',
-    last_name: 'Сидорова',
-    email: 'anna@example.com',
-    room_number: '205',
-  });
-  
-  // Работа с письмами
-  const letters = await dataSource.letters.getLetters();
-  const stats = await dataSource.letters.getLetterStats();
-  
-  // Работа с комнатами
-  const rooms = await dataSource.rooms.getRoomsWithLetters();
-  
-  return { users, letters, stats, rooms };
-}`}
-          </SyntaxHighlighter>
-        </Paper>
+        <DataSourceTab />
       </TabPanel>
 
       {/* Security */}
@@ -1047,83 +309,100 @@ async function processUsers() {
             wordBreak: 'break-word',
           }}
         >
-          Система безопасности
+          Безопасность
         </Typography>
 
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            flexWrap: { xs: 'nowrap', md: 'wrap' },
-            gap: { xs: '4px', md: 4 },
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' },
+            gap: { xs: '4px', md: 2 },
             justifyContent: 'center',
-            mb: { xs: 1, md: 6 },
-            alignItems: { xs: 'center', md: 'stretch' },
+            mb: { xs: 1, md: 8 },
             px: { xs: '2px', md: 0 },
+            maxWidth: { md: '100%' },
           }}
         >
           {[
             {
               title: 'Row Level Security',
-              description: 'Политики безопасности на уровне строк БД',
-              color: '#dc2626',
+              description: 'Защита данных на уровне строк в PostgreSQL',
+              icon: '🔒',
               features: [
-                'Изоляция данных пользователей',
-                'Контроль доступа админов',
                 'Автоматическая фильтрация',
+                'Политики доступа',
+                'Защита от SQL-инъекций',
+                'Контроль по ролям',
               ],
             },
             {
-              title: 'JWT Аутентификация',
-              description: 'Безопасная аутентификация через Supabase',
-              color: '#2563eb',
-              features: ['Токены доступа', 'Refresh токены', 'Автоматическое обновление'],
+              title: 'JWT Authentication',
+              description: 'Безопасная аутентификация с токенами',
+              icon: '🎫',
+              features: [
+                'Статeless токены',
+                'Автоматическое обновление',
+                'Защищенные маршруты',
+                'Middleware проверка',
+              ],
             },
             {
-              title: 'Валидация данных',
-              description: 'Проверка данных на всех уровнях',
-              color: '#059669',
-              features: ['Client-side валидация', 'Server-side проверки', 'Типизация TypeScript'],
+              title: 'API Protection',
+              description: 'Защита API эндпоинтов',
+              icon: '🛡️',
+              features: [
+                'Rate limiting',
+                'CORS настройки',
+                'Валидация входных данных',
+                'Логирование запросов',
+              ],
+            },
+            {
+              title: 'Data Encryption',
+              description: 'Шифрование чувствительных данных',
+              icon: '🔐',
+              features: [
+                'HTTPS/TLS',
+                'Хеширование паролей',
+                'Шифрование в БД',
+                'Безопасные cookies',
+              ],
             },
           ].map((security, index) => (
             <Box
               key={security.title}
               sx={{
-                flex: { xs: '1 1 100%', md: '1 1 calc(33.333% - 21px)' },
-                minWidth: { xs: 'auto', md: 280 },
-                width: { xs: '100%', md: 'auto' },
-                maxWidth: { xs: 400, md: 'none' },
+                gridColumn: { xs: '1', sm: index < 2 ? '1 / -1' : 'auto', md: 'auto' },
               }}
             >
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
               >
                 <Card
                   sx={{
-                    p: { xs: 2, md: 3 },
-                    height: '100%',
-                    background: `linear-gradient(135deg, ${security.color}10 0%, ${security.color}05 100%)`,
-                    border: `1px solid ${security.color}30`,
+                    p: { xs: '4px', md: 2 },
+                    textAlign: 'center',
+                    minHeight: { xs: 'auto', md: 200 },
+                    height: { xs: 'auto', md: '100%' },
                   }}
                 >
-                  <Avatar
+                  <Typography
+                    variant="h3"
                     sx={{
-                      bgcolor: security.color,
-                      mb: 2,
-                      width: { xs: 36, md: 40 },
-                      height: { xs: 36, md: 40 },
+                      fontSize: { xs: '1.5rem', md: '2.5rem' },
+                      mb: { xs: '2px', md: 1 },
                     }}
                   >
-                    <SecurityIcon />
-                  </Avatar>
+                    {security.icon}
+                  </Typography>
                   <Typography
                     variant="h6"
                     sx={{
                       fontWeight: 700,
-                      mb: 1,
-                      fontSize: { xs: '1.1rem', md: '1.25rem' },
+                      mb: { xs: '2px', md: 1 },
+                      fontSize: { xs: '0.8rem', md: '1.25rem' },
                     }}
                   >
                     {security.title}
@@ -1132,8 +411,8 @@ async function processUsers() {
                     variant="body2"
                     color="text.secondary"
                     sx={{
-                      mb: 2,
-                      fontSize: { xs: '0.8rem', md: '0.875rem' },
+                      mb: { xs: '4px', md: 2 },
+                      fontSize: { xs: '0.7rem', md: '0.875rem' },
                     }}
                   >
                     {security.description}
@@ -1145,9 +424,9 @@ async function processUsers() {
                       size="small"
                       variant="outlined"
                       sx={{
-                        mr: 1,
-                        mb: 1,
-                        fontSize: { xs: '0.7rem', md: '0.75rem' },
+                        mr: { xs: '2px', md: 1 },
+                        mb: { xs: '2px', md: 1 },
+                        fontSize: { xs: '0.6rem', md: '0.75rem' },
                       }}
                     />
                   ))}
