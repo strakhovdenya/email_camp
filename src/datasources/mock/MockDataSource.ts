@@ -21,8 +21,8 @@ import type { LetterWithRelations, Database } from '@/types/supabase';
 type DBUser = Database['public']['Tables']['users']['Row'];
 type Room = Database['public']['Tables']['rooms']['Row'];
 
-// Моковые данные
-const mockUsers: DBUser[] = [
+// Моковые данные - теперь глобальные для всех экземпляров
+const sharedMockUsers: DBUser[] = [
   {
     id: 'mock-user-1',
     email: 'anna.demo@example.com',
@@ -49,7 +49,7 @@ const mockUsers: DBUser[] = [
   },
 ];
 
-const mockRooms: Room[] = [
+const sharedMockRooms: Room[] = [
   {
     id: 'mock-room-1',
     room_number: '101',
@@ -62,7 +62,7 @@ const mockRooms: Room[] = [
   },
 ];
 
-const mockLetters: LetterWithRelations[] = [
+const sharedMockLetters: LetterWithRelations[] = [
   {
     id: 'mock-letter-1',
     room_id: 'mock-room-1',
@@ -74,8 +74,8 @@ const mockLetters: LetterWithRelations[] = [
     created_at: '2024-01-01T00:00:00Z',
     delivered_at: null,
     notification_statuses: { email: 'sent' },
-    users: mockUsers[0],
-    rooms: mockRooms[0],
+    users: sharedMockUsers[0],
+    rooms: sharedMockRooms[0],
   },
   {
     id: 'mock-letter-2',
@@ -88,17 +88,20 @@ const mockLetters: LetterWithRelations[] = [
     created_at: '2024-01-01T00:00:00Z',
     delivered_at: '2024-01-02T00:00:00Z',
     notification_statuses: { email: 'sent' },
-    users: mockUsers[1],
-    rooms: mockRooms[1],
+    users: sharedMockUsers[1],
+    rooms: sharedMockRooms[1],
   },
 ];
 
 class MockUserDataSource implements IUserDataSource {
-  private users = [...mockUsers];
+  // Теперь ссылается на общий массив
+  private get users() {
+    return sharedMockUsers;
+  }
 
   // Хелпер для преобразования DBUser в User с информацией о комнате
   private mapUserWithRoom(user: DBUser): User {
-    const room = user.room_id ? mockRooms.find((r) => r.id === user.room_id) : null;
+    const room = user.room_id ? sharedMockRooms.find((r) => r.id === user.room_id) : null;
     return {
       id: user.id,
       email: user.email,
@@ -128,7 +131,7 @@ class MockUserDataSource implements IUserDataSource {
   }
 
   async getUsersByRoom(roomNumber: string): Promise<User[]> {
-    const room = mockRooms.find((r) => r.room_number === roomNumber);
+    const room = sharedMockRooms.find((r) => r.room_number === roomNumber);
     if (!room) return Promise.resolve([]);
     const users = this.users.filter((u) => u.room_id === room.id);
     return Promise.resolve(users.map((user) => this.mapUserWithRoom(user)));
@@ -211,7 +214,10 @@ class MockUserDataSource implements IUserDataSource {
 }
 
 class MockLetterDataSource implements ILetterDataSource {
-  private letters = [...mockLetters];
+  // Теперь ссылается на общий массив
+  private get letters() {
+    return sharedMockLetters;
+  }
 
   async getAllLetters(): Promise<Letter[]> {
     return Promise.resolve(
@@ -259,7 +265,7 @@ class MockLetterDataSource implements ILetterDataSource {
   }
 
   async getLettersByRoom(roomNumber: string): Promise<Letter[]> {
-    const room = mockRooms.find((r) => r.room_number === roomNumber);
+    const room = sharedMockRooms.find((r) => r.room_number === roomNumber);
     if (!room) return Promise.resolve([]);
     const filtered = this.letters.filter((l) => l.room_id === room.id);
     return Promise.resolve(
@@ -306,7 +312,7 @@ class MockLetterDataSource implements ILetterDataSource {
     // Получаем room_id либо напрямую, либо по room_number
     let roomId = data.room_id;
     if (!roomId && data.room_number) {
-      const room = mockRooms.find((r) => r.room_number === data.room_number);
+      const room = sharedMockRooms.find((r) => r.room_number === data.room_number);
       roomId = room?.id;
     }
 
@@ -314,7 +320,7 @@ class MockLetterDataSource implements ILetterDataSource {
       throw new Error('Room not found');
     }
 
-    const room = mockRooms.find((r) => r.id === roomId);
+    const room = sharedMockRooms.find((r) => r.id === roomId);
     const newLetter: Letter = {
       id: `mock-letter-${Date.now()}`,
       room_id: roomId,
@@ -331,7 +337,7 @@ class MockLetterDataSource implements ILetterDataSource {
     };
 
     // Добавляем в массив с отношениями
-    const user = mockUsers.find((u) => u.id === data.user_id);
+    const user = sharedMockUsers.find((u) => u.id === data.user_id);
 
     const letterWithRelations: LetterWithRelations = {
       id: newLetter.id,
@@ -442,7 +448,10 @@ class MockLetterDataSource implements ILetterDataSource {
 }
 
 class MockRoomDataSource implements IRoomDataSource {
-  private rooms = [...mockRooms];
+  // Теперь ссылается на общий массив
+  private get rooms() {
+    return sharedMockRooms;
+  }
 
   async getRooms(): Promise<Room[]> {
     return Promise.resolve([...this.rooms]);
@@ -478,7 +487,7 @@ class MockRoomDataSource implements IRoomDataSource {
 
   async deleteRoom(id: string): Promise<void> {
     // Проверяем, есть ли пользователи в комнате
-    const usersInRoom = mockUsers.filter((u) => u.room_id === id);
+    const usersInRoom = sharedMockUsers.filter((u) => u.room_id === id);
     if (usersInRoom.length > 0) {
       throw new Error('Сначала удалите или переместите всех пользователей из этой комнаты');
     }
@@ -493,7 +502,7 @@ class MockRoomDataSource implements IRoomDataSource {
     Array<Room & { total_letters: number; delivered_count: number; undelivered_count: number }>
   > {
     const roomsWithCounts = this.rooms.map((room) => {
-      const roomLetters = mockLetters.filter((l) => l.room_id === room.id);
+      const roomLetters = sharedMockLetters.filter((l) => l.room_id === room.id);
       const deliveredCount = roomLetters.filter((l) => l.status === 'delivered').length;
       const undeliveredCount = roomLetters.filter((l) => l.status === 'pending').length;
 
