@@ -428,234 +428,281 @@ export default function GalleryPage() {
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Header */}
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
+      <Box sx={{ textAlign: 'center', mb: { xs: 3, md: 6 } }}>
         <Typography
           variant="h2"
           component={motion.h1}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          sx={{ mb: 2, fontWeight: 800 }}
+          sx={{
+            mb: { xs: 1, md: 2 },
+            fontWeight: 800,
+            fontSize: { xs: '1.8rem', md: '3.5rem' },
+          }}
         >
           Галерея
         </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
+        <Typography
+          variant="h6"
+          color="text.secondary"
+          sx={{
+            maxWidth: 800,
+            mx: 'auto',
+            fontSize: { xs: '0.9rem', md: '1.25rem' },
+          }}
+        >
           Скриншоты интерфейса и демонстрация возможностей системы
         </Typography>
       </Box>
 
-      {/* Device Category Filter */}
-      <Paper sx={{ p: { xs: 2, md: 3 }, mb: 4 }}>
-        <Typography
-          variant="h5"
-          sx={{
-            mb: { xs: 2, md: 3 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '1.25rem', md: '1.5rem' },
-          }}
-        >
-          Устройства
-        </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            gap: { xs: 1, md: 2 },
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          {deviceCategories.map((category) => (
-            <Box key={category.key} sx={{ display: { xs: 'block', md: 'none' } }}>
-              {/* Mobile Version - Compact Buttons */}
-              <Button
-                component={motion.div}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedDeviceCategory(category.key)}
-                variant={selectedDeviceCategory === category.key ? 'contained' : 'outlined'}
-                size="small"
-                startIcon={category.icon}
-                sx={{
-                  minWidth: 100,
-                  px: 2,
-                  py: 1,
-                  fontSize: '0.75rem',
-                  backgroundColor:
-                    selectedDeviceCategory === category.key ? category.color : 'transparent',
-                  borderColor: category.color,
-                  color: selectedDeviceCategory === category.key ? 'white' : category.color,
-                  '&:hover': {
-                    backgroundColor:
-                      selectedDeviceCategory === category.key
-                        ? category.color
-                        : `${category.color}10`,
-                    borderColor: category.color,
-                  },
-                }}
-              >
-                <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.75rem' }}>
-                    {category.label}
-                  </Typography>
-                  <Typography variant="caption" sx={{ fontSize: '0.6rem', opacity: 0.8 }}>
-                    {getDeviceCategoryCount(category.key)}
-                  </Typography>
-                </Box>
-              </Button>
-            </Box>
-          ))}
-          {deviceCategories.map((category) => (
-            <Box key={`desktop-${category.key}`} sx={{ display: { xs: 'none', md: 'block' } }}>
-              {/* Desktop Version - Original Cards */}
-              <Card
-                component={motion.div}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedDeviceCategory(category.key)}
-                sx={{
-                  cursor: 'pointer',
-                  minWidth: 140,
-                  background:
-                    selectedDeviceCategory === category.key
-                      ? `linear-gradient(135deg, ${category.color}20 0%, ${category.color}10 100%)`
-                      : 'background.paper',
-                  border:
-                    selectedDeviceCategory === category.key
-                      ? `2px solid ${category.color}`
-                      : '1px solid rgba(0, 0, 0, 0.12)',
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                <CardContent sx={{ textAlign: 'center', p: 2 }}>
-                  <Avatar
+      {/* Filters Section */}
+      <Box
+        sx={{
+          display: { xs: 'block', md: 'flex' },
+          gap: { md: 3 },
+          mb: { xs: 4, md: 6 },
+        }}
+      >
+        {/* Device Category Filter */}
+        <Box sx={{ flex: { md: 1 } }}>
+          <Paper sx={{ p: { xs: 1.5, md: 3 }, mb: { xs: 4, md: 0 } }}>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: { xs: 1.5, md: 3 },
+                fontWeight: 700,
+                textAlign: 'center',
+                fontSize: { xs: '1.1rem', md: '1.5rem' },
+              }}
+            >
+              Устройства
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: { xs: 0.5, md: 2 },
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              {deviceCategories.map((category) => (
+                <Box key={category.key} sx={{ display: { xs: 'block', md: 'none' } }}>
+                  {/* Mobile Version - Compact Buttons */}
+                  <Button
+                    component={motion.div}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedDeviceCategory(category.key)}
+                    variant={selectedDeviceCategory === category.key ? 'contained' : 'outlined'}
+                    size="small"
+                    startIcon={category.icon}
                     sx={{
-                      bgcolor: category.color,
-                      mx: 'auto',
-                      mb: 1,
-                      width: 40,
-                      height: 40,
+                      minWidth: 70,
+                      px: 1,
+                      py: 0.5,
+                      fontSize: '0.65rem',
+                      backgroundColor:
+                        selectedDeviceCategory === category.key ? category.color : 'transparent',
+                      borderColor: category.color,
+                      color: selectedDeviceCategory === category.key ? 'white' : category.color,
+                      '&:hover': {
+                        backgroundColor:
+                          selectedDeviceCategory === category.key
+                            ? category.color
+                            : `${category.color}10`,
+                        borderColor: category.color,
+                      },
+                      '& .MuiButton-startIcon': {
+                        marginRight: '4px',
+                        '& svg': {
+                          fontSize: '0.9rem',
+                        },
+                      },
                     }}
                   >
-                    {category.icon}
-                  </Avatar>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    {category.label}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {getDeviceCategoryCount(category.key)} элементов
-                  </Typography>
-                </CardContent>
-              </Card>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.65rem' }}>
+                        {category.label}
+                      </Typography>
+                      <Typography variant="caption" sx={{ fontSize: '0.55rem', opacity: 0.8 }}>
+                        {getDeviceCategoryCount(category.key)}
+                      </Typography>
+                    </Box>
+                  </Button>
+                </Box>
+              ))}
+              {deviceCategories.map((category) => (
+                <Box key={`desktop-${category.key}`} sx={{ display: { xs: 'none', md: 'block' } }}>
+                  {/* Desktop Version - Original Cards */}
+                  <Card
+                    component={motion.div}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedDeviceCategory(category.key)}
+                    sx={{
+                      cursor: 'pointer',
+                      minWidth: 100,
+                      background:
+                        selectedDeviceCategory === category.key
+                          ? `linear-gradient(135deg, ${category.color}20 0%, ${category.color}10 100%)`
+                          : 'background.paper',
+                      border:
+                        selectedDeviceCategory === category.key
+                          ? `2px solid ${category.color}`
+                          : '1px solid rgba(0, 0, 0, 0.12)',
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    <CardContent sx={{ textAlign: 'center', p: 1.5 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: category.color,
+                          mx: 'auto',
+                          mb: 0.5,
+                          width: 32,
+                          height: 32,
+                        }}
+                      >
+                        {category.icon}
+                      </Avatar>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        {category.label}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontSize: '0.7rem' }}
+                      >
+                        {getDeviceCategoryCount(category.key)} элементов
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Box>
+              ))}
             </Box>
-          ))}
+          </Paper>
         </Box>
-      </Paper>
 
-      {/* Functional Category Filter */}
-      <Paper sx={{ p: { xs: 2, md: 3 }, mb: 6 }}>
-        <Typography
-          variant="h5"
-          sx={{
-            mb: { xs: 2, md: 3 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '1.25rem', md: '1.5rem' },
-          }}
-        >
-          Категории
-        </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            gap: { xs: 1, md: 2 },
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          {functionalCategories.map((category) => (
-            <Box key={category.key} sx={{ display: { xs: 'block', md: 'none' } }}>
-              {/* Mobile Version - Compact Buttons */}
-              <Button
-                component={motion.div}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedFunctionalCategory(category.key)}
-                variant={selectedFunctionalCategory === category.key ? 'contained' : 'outlined'}
-                size="small"
-                startIcon={category.icon}
-                sx={{
-                  minWidth: 80,
-                  px: 1.5,
-                  py: 1,
-                  fontSize: '0.7rem',
-                  backgroundColor:
-                    selectedFunctionalCategory === category.key ? category.color : 'transparent',
-                  borderColor: category.color,
-                  color: selectedFunctionalCategory === category.key ? 'white' : category.color,
-                  '&:hover': {
-                    backgroundColor:
-                      selectedFunctionalCategory === category.key
-                        ? category.color
-                        : `${category.color}10`,
-                    borderColor: category.color,
-                  },
-                }}
-              >
-                <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.7rem' }}>
-                    {category.label}
-                  </Typography>
-                  <Typography variant="caption" sx={{ fontSize: '0.6rem', opacity: 0.8 }}>
-                    {getFunctionalCategoryCount(category.key)}
-                  </Typography>
-                </Box>
-              </Button>
-            </Box>
-          ))}
-          {functionalCategories.map((category) => (
-            <Box key={`desktop-${category.key}`} sx={{ display: { xs: 'none', md: 'block' } }}>
-              {/* Desktop Version - Original Cards */}
-              <Card
-                component={motion.div}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedFunctionalCategory(category.key)}
-                sx={{
-                  cursor: 'pointer',
-                  minWidth: 140,
-                  background:
-                    selectedFunctionalCategory === category.key
-                      ? `linear-gradient(135deg, ${category.color}20 0%, ${category.color}10 100%)`
-                      : 'background.paper',
-                  border:
-                    selectedFunctionalCategory === category.key
-                      ? `2px solid ${category.color}`
-                      : '1px solid rgba(0, 0, 0, 0.12)',
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                <CardContent sx={{ textAlign: 'center', p: 2 }}>
-                  <Avatar
+        {/* Functional Category Filter */}
+        <Box sx={{ flex: { md: 1 } }}>
+          <Paper sx={{ p: { xs: 1.5, md: 3 } }}>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: { xs: 1.5, md: 3 },
+                fontWeight: 700,
+                textAlign: 'center',
+                fontSize: { xs: '1.1rem', md: '1.5rem' },
+              }}
+            >
+              Категории
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: { xs: 0.5, md: 2 },
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              {functionalCategories.map((category) => (
+                <Box key={category.key} sx={{ display: { xs: 'block', md: 'none' } }}>
+                  {/* Mobile Version - Compact Buttons */}
+                  <Button
+                    component={motion.div}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedFunctionalCategory(category.key)}
+                    variant={selectedFunctionalCategory === category.key ? 'contained' : 'outlined'}
+                    size="small"
+                    startIcon={category.icon}
                     sx={{
-                      bgcolor: category.color,
-                      mx: 'auto',
-                      mb: 1,
-                      width: 40,
-                      height: 40,
+                      minWidth: 70,
+                      px: 1,
+                      py: 0.5,
+                      fontSize: '0.65rem',
+                      backgroundColor:
+                        selectedFunctionalCategory === category.key
+                          ? category.color
+                          : 'transparent',
+                      borderColor: category.color,
+                      color: selectedFunctionalCategory === category.key ? 'white' : category.color,
+                      '&:hover': {
+                        backgroundColor:
+                          selectedFunctionalCategory === category.key
+                            ? category.color
+                            : `${category.color}10`,
+                        borderColor: category.color,
+                      },
+                      '& .MuiButton-startIcon': {
+                        marginRight: '4px',
+                        '& svg': {
+                          fontSize: '0.9rem',
+                        },
+                      },
                     }}
                   >
-                    {category.icon}
-                  </Avatar>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    {category.label}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {getFunctionalCategoryCount(category.key)} элементов
-                  </Typography>
-                </CardContent>
-              </Card>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.65rem' }}>
+                        {category.label}
+                      </Typography>
+                      <Typography variant="caption" sx={{ fontSize: '0.55rem', opacity: 0.8 }}>
+                        {getFunctionalCategoryCount(category.key)}
+                      </Typography>
+                    </Box>
+                  </Button>
+                </Box>
+              ))}
+              {functionalCategories.map((category) => (
+                <Box key={`desktop-${category.key}`} sx={{ display: { xs: 'none', md: 'block' } }}>
+                  {/* Desktop Version - Original Cards */}
+                  <Card
+                    component={motion.div}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedFunctionalCategory(category.key)}
+                    sx={{
+                      cursor: 'pointer',
+                      minWidth: 100,
+                      background:
+                        selectedFunctionalCategory === category.key
+                          ? `linear-gradient(135deg, ${category.color}20 0%, ${category.color}10 100%)`
+                          : 'background.paper',
+                      border:
+                        selectedFunctionalCategory === category.key
+                          ? `2px solid ${category.color}`
+                          : '1px solid rgba(0, 0, 0, 0.12)',
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    <CardContent sx={{ textAlign: 'center', p: 1.5 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: category.color,
+                          mx: 'auto',
+                          mb: 0.5,
+                          width: 32,
+                          height: 32,
+                        }}
+                      >
+                        {category.icon}
+                      </Avatar>
+                      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.8rem' }}>
+                        {category.label}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontSize: '0.7rem' }}
+                      >
+                        {getFunctionalCategoryCount(category.key)} элементов
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Box>
+              ))}
             </Box>
-          ))}
+          </Paper>
         </Box>
-      </Paper>
+      </Box>
 
       {/* Gallery Grid */}
       <Box sx={{ mb: 6 }}>
