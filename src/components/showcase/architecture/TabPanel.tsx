@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
+import * as styles from './TabPanel.styles';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -17,11 +18,7 @@ export function TabPanel(props: TabPanelProps) {
       aria-labelledby={`arch-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: { xs: '2px', md: 3 }, overflow: 'hidden', width: '100%', minWidth: 0 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={styles.tabPanelBoxStyles}>{children}</Box>}
     </div>
   );
 }

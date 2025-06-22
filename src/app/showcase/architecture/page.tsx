@@ -17,6 +17,7 @@ import {
   DatabaseTab,
   DataSourceTab,
 } from '@/components/showcase/architecture';
+import * as styles from './styles';
 
 export default function ArchitecturePage() {
   const [tabValue, setTabValue] = useState(0);
@@ -41,53 +42,19 @@ export default function ArchitecturePage() {
   ];
 
   return (
-    <Container
-      maxWidth="xl"
-      sx={{
-        py: { xs: 0.5, md: 4 },
-        px: { xs: 0, sm: 1, md: 3 },
-        width: '100%',
-        maxWidth: { xs: '100vw', md: 'xl' },
-      }}
-    >
+    <Container maxWidth="xl" sx={styles.containerStyles}>
       {/* Header */}
-      <Box
-        sx={{
-          textAlign: 'center',
-          mb: { xs: 1, md: 6 },
-          px: { xs: '4px', md: 0 },
-          overflow: 'hidden',
-          width: '100%',
-        }}
-      >
+      <Box sx={styles.headerBoxStyles}>
         <Typography
           variant="h2"
           component={motion.h1}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          sx={{
-            mb: { xs: 0.5, md: 2 },
-            fontWeight: 800,
-            fontSize: { xs: '1.3rem', sm: '2.5rem', md: '3.5rem' },
-            wordBreak: 'break-word',
-            hyphens: 'auto',
-          }}
+          sx={styles.titleStyles}
         >
           Архитектура системы
         </Typography>
-        <Typography
-          variant="h6"
-          color="text.secondary"
-          sx={{
-            maxWidth: '100%',
-            mx: 'auto',
-            px: { xs: '4px', sm: 0 },
-            fontSize: { xs: '0.75rem', md: '1.25rem' },
-            wordBreak: 'break-word',
-            hyphens: 'auto',
-            lineHeight: { xs: 1.2, md: 1.5 },
-          }}
-        >
+        <Typography variant="h6" color="text.secondary" sx={styles.subtitleStyles}>
           Детальное описание структуры базы данных и архитектуры приложения
         </Typography>
       </Box>
@@ -96,7 +63,7 @@ export default function ArchitecturePage() {
       <ArchitectureOverview />
 
       {/* Tabs */}
-      <Paper sx={{ mb: { xs: 1, md: 4 }, mx: { xs: 0, sm: 0 }, overflow: 'hidden' }}>
+      <Paper sx={styles.tabsPaperStyles}>
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
@@ -104,28 +71,11 @@ export default function ArchitecturePage() {
           variant="scrollable"
           scrollButtons="auto"
           allowScrollButtonsMobile
-          sx={{
-            '& .MuiTab-root': {
-              fontWeight: 600,
-              fontSize: { xs: '0.7rem', md: '1rem' },
-              minWidth: { xs: 50, md: 160 },
-              px: { xs: '4px', md: 3 },
-              py: { xs: '4px', md: 1.5 },
-            },
-            '& .MuiTabs-indicator': {
-              height: 3,
-            },
-            '& .MuiTabs-scrollButtons': {
-              width: { xs: 24, md: 48 },
-            },
-            '& .MuiTabs-scroller': {
-              overflow: 'auto !important',
-            },
-          }}
+          sx={styles.tabsStyles}
         >
           <Tab
             label={
-              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+              <Box sx={styles.tabLabelBoxStyles}>
                 <Box sx={{ display: { xs: 'none', md: 'block' } }}>База данных</Box>
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>БД</Box>
               </Box>
@@ -133,7 +83,7 @@ export default function ArchitecturePage() {
           />
           <Tab
             label={
-              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+              <Box sx={styles.tabLabelBoxStyles}>
                 <Box sx={{ display: { xs: 'none', md: 'block' } }}>API Структура</Box>
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>API</Box>
               </Box>
@@ -141,7 +91,7 @@ export default function ArchitecturePage() {
           />
           <Tab
             label={
-              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+              <Box sx={styles.tabLabelBoxStyles}>
                 <Box sx={{ display: { xs: 'none', md: 'block' } }}>DataSource</Box>
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>DS</Box>
               </Box>
@@ -149,7 +99,7 @@ export default function ArchitecturePage() {
           />
           <Tab
             label={
-              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+              <Box sx={styles.tabLabelBoxStyles}>
                 <Box sx={{ display: { xs: 'none', md: 'block' } }}>Безопасность</Box>
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>Защита</Box>
               </Box>
@@ -157,7 +107,7 @@ export default function ArchitecturePage() {
           />
           <Tab
             label={
-              <Box sx={{ display: { xs: 'block', md: 'block' }, textAlign: 'center' }}>
+              <Box sx={styles.tabLabelBoxStyles}>
                 <Box sx={{ display: { xs: 'none', md: 'block' } }}>Метрики</Box>
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>Метрики</Box>
               </Box>
@@ -173,70 +123,23 @@ export default function ArchitecturePage() {
 
       {/* API Structure */}
       <TabPanel value={tabValue} index={1}>
-        <Typography
-          variant="h4"
-          sx={{
-            mb: { xs: 1, md: 4 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '1rem', md: '2.125rem' },
-            px: { xs: '2px', md: 0 },
-            wordBreak: 'break-word',
-          }}
-        >
+        <Typography variant="h4" sx={styles.apiTitleStyles}>
           API Структура
         </Typography>
 
         <Box sx={{ mb: { xs: 1, md: 6 } }}>
           {apiEndpoints.map((endpoint, index) => (
-            <Card key={index} sx={{ mb: { xs: '4px', md: 2 }, p: { xs: '4px', md: 3 } }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: { xs: 'flex-start', md: 'center' },
-                  gap: { xs: '2px', md: 2 },
-                  flexDirection: { xs: 'column', sm: 'row' },
-                  flexWrap: 'wrap',
-                }}
-              >
+            <Card key={index} sx={styles.apiEndpointCardStyles}>
+              <Box sx={styles.apiEndpointBoxStyles}>
                 <Chip
                   label={endpoint.method}
                   size="small"
-                  sx={{
-                    bgcolor:
-                      endpoint.method === 'GET'
-                        ? '#10b981'
-                        : endpoint.method === 'POST'
-                          ? '#3b82f6'
-                          : '#f59e0b',
-                    color: 'white',
-                    fontWeight: 600,
-                    fontSize: { xs: '0.6rem', md: '0.75rem' },
-                    minWidth: { xs: 'auto', md: 60 },
-                  }}
+                  sx={styles.getMethodChipStyles(endpoint.method)}
                 />
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontFamily: 'monospace',
-                    fontWeight: 600,
-                    fontSize: { xs: '0.7rem', md: '0.875rem' },
-                    flex: 1,
-                    minWidth: 0,
-                    wordBreak: 'break-all',
-                  }}
-                >
+                <Typography variant="body2" sx={styles.apiPathStyles}>
                   {endpoint.path}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{
-                    fontSize: { xs: '0.7rem', md: '0.875rem' },
-                    flex: { xs: 1, sm: 'auto' },
-                    minWidth: 0,
-                  }}
-                >
+                <Typography variant="body2" color="text.secondary" sx={styles.apiDescriptionStyles}>
                   {endpoint.description}
                 </Typography>
               </Box>
@@ -244,25 +147,14 @@ export default function ArchitecturePage() {
           ))}
         </Box>
 
-        <Paper sx={{ p: { xs: 2, md: 3 } }}>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: 2,
-              fontWeight: 700,
-              fontSize: { xs: '1.25rem', md: '1.5rem' },
-            }}
-          >
+        <Paper sx={styles.codeExamplePaperStyles}>
+          <Typography variant="h5" sx={styles.codeExampleTitleStyles}>
             Пример использования API
           </Typography>
           <SyntaxHighlighter
             language="typescript"
             style={oneDark}
-            customStyle={{
-              borderRadius: 8,
-              fontSize: '0.75rem',
-              overflow: 'auto',
-            }}
+            customStyle={styles.syntaxHighlighterStyles}
           >
             {`// Получение списка писем
 const response = await fetch('/api/letters', {
@@ -298,31 +190,11 @@ const newLetter = await fetch('/api/letters', {
 
       {/* Security */}
       <TabPanel value={tabValue} index={3}>
-        <Typography
-          variant="h4"
-          sx={{
-            mb: { xs: 1, md: 4 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '1rem', md: '2.125rem' },
-            px: { xs: '2px', md: 0 },
-            wordBreak: 'break-word',
-          }}
-        >
+        <Typography variant="h4" sx={styles.apiTitleStyles}>
           Безопасность
         </Typography>
 
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' },
-            gap: { xs: '4px', md: 2 },
-            justifyContent: 'center',
-            mb: { xs: 1, md: 8 },
-            px: { xs: '2px', md: 0 },
-            maxWidth: { md: '100%' },
-          }}
-        >
+        <Box sx={styles.securityGridStyles}>
           {[
             {
               title: 'Row Level Security',
@@ -369,51 +241,23 @@ const newLetter = await fetch('/api/letters', {
               ],
             },
           ].map((security, index) => (
-            <Box
-              key={security.title}
-              sx={{
-                gridColumn: { xs: '1', sm: index < 2 ? '1 / -1' : 'auto', md: 'auto' },
-              }}
-            >
+            <Box key={security.title} sx={styles.getSecurityGridItemStyles(index)}>
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card
-                  sx={{
-                    p: { xs: '4px', md: 2 },
-                    textAlign: 'center',
-                    minHeight: { xs: 'auto', md: 200 },
-                    height: { xs: 'auto', md: '100%' },
-                  }}
-                >
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      fontSize: { xs: '1.5rem', md: '2.5rem' },
-                      mb: { xs: '2px', md: 1 },
-                    }}
-                  >
+                <Card sx={styles.securityCardStyles}>
+                  <Typography variant="h3" sx={styles.securityIconStyles}>
                     {security.icon}
                   </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 700,
-                      mb: { xs: '2px', md: 1 },
-                      fontSize: { xs: '0.8rem', md: '1.25rem' },
-                    }}
-                  >
+                  <Typography variant="h6" sx={styles.securityTitleStyles}>
                     {security.title}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{
-                      mb: { xs: '4px', md: 2 },
-                      fontSize: { xs: '0.7rem', md: '0.875rem' },
-                    }}
+                    sx={styles.securityDescriptionStyles}
                   >
                     {security.description}
                   </Typography>
@@ -423,11 +267,7 @@ const newLetter = await fetch('/api/letters', {
                       label={feature}
                       size="small"
                       variant="outlined"
-                      sx={{
-                        mr: { xs: '2px', md: 1 },
-                        mb: { xs: '2px', md: 1 },
-                        fontSize: { xs: '0.6rem', md: '0.75rem' },
-                      }}
+                      sx={styles.securityChipStyles}
                     />
                   ))}
                 </Card>
@@ -436,25 +276,14 @@ const newLetter = await fetch('/api/letters', {
           ))}
         </Box>
 
-        <Paper sx={{ p: { xs: 2, md: 3 } }}>
-          <Typography
-            variant="h5"
-            sx={{
-              mb: 2,
-              fontWeight: 700,
-              fontSize: { xs: '1.25rem', md: '1.5rem' },
-            }}
-          >
+        <Paper sx={styles.codeExamplePaperStyles}>
+          <Typography variant="h5" sx={styles.codeExampleTitleStyles}>
             Пример RLS политики
           </Typography>
           <SyntaxHighlighter
             language="sql"
             style={oneDark}
-            customStyle={{
-              borderRadius: 8,
-              fontSize: '0.75rem',
-              overflow: 'auto',
-            }}
+            customStyle={styles.syntaxHighlighterStyles}
           >
             {`-- Политика для таблицы letters
 CREATE POLICY "Users can view own letters" ON letters
@@ -474,31 +303,11 @@ CREATE POLICY "Only admins can insert letters" ON letters
 
       {/* Metrics Tab */}
       <TabPanel value={tabValue} index={4}>
-        <Typography
-          variant="h4"
-          sx={{
-            mb: { xs: 1, md: 4 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '1rem', md: '2.125rem' },
-            px: { xs: '2px', md: 0 },
-            wordBreak: 'break-word',
-          }}
-        >
+        <Typography variant="h4" sx={styles.apiTitleStyles}>
           Ключевые метрики
         </Typography>
 
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(3, 1fr)', md: 'repeat(6, 1fr)' },
-            gap: { xs: '4px', md: 2 },
-            justifyContent: 'center',
-            mb: { xs: 1, md: 8 },
-            px: { xs: '2px', md: 0 },
-            maxWidth: { md: '100%' },
-          }}
-        >
+        <Box sx={styles.metricsGridStyles}>
           {[
             { label: 'Время разработки', value: '8 недель', color: '#2563eb' },
             { label: 'Строк кода', value: '15,000+', color: '#7c3aed' },
@@ -513,37 +322,11 @@ CREATE POLICY "Only admins can insert letters" ON letters
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card
-                sx={{
-                  p: { xs: '4px', md: 2 },
-                  textAlign: 'center',
-                  minWidth: { xs: 0, md: 160 },
-                  minHeight: { xs: 'auto', md: 120 },
-                  height: { xs: 'auto', md: '100%' },
-                  background: `linear-gradient(135deg, ${metric.color}10 0%, ${metric.color}05 100%)`,
-                  border: `1px solid ${metric.color}30`,
-                }}
-              >
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: 800,
-                    color: metric.color,
-                    mb: { xs: '2px', md: 1 },
-                    fontSize: { xs: '0.9rem', sm: '1.75rem', md: '1.5rem' },
-                  }}
-                >
+              <Card sx={styles.getMetricCardStyles(metric.color)}>
+                <Typography variant="h4" sx={styles.getMetricValueStyles(metric.color)}>
                   {metric.value}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{
-                    fontWeight: 600,
-                    fontSize: { xs: '0.6rem', md: '0.875rem' },
-                    lineHeight: { xs: 1.1, md: 1.43 },
-                  }}
-                >
+                <Typography variant="body2" color="text.secondary" sx={styles.metricLabelStyles}>
                   {metric.label}
                 </Typography>
               </Card>
@@ -551,31 +334,11 @@ CREATE POLICY "Only admins can insert letters" ON letters
           ))}
         </Box>
 
-        <Typography
-          variant="h4"
-          sx={{
-            mb: { xs: 1, md: 4 },
-            fontWeight: 700,
-            textAlign: 'center',
-            fontSize: { xs: '1rem', md: '2.125rem' },
-            px: { xs: '2px', md: 0 },
-            wordBreak: 'break-word',
-          }}
-        >
+        <Typography variant="h4" sx={styles.apiTitleStyles}>
           Технические особенности
         </Typography>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            flexWrap: { xs: 'nowrap', md: 'wrap' },
-            gap: { xs: '4px', md: 4 },
-            justifyContent: 'center',
-            alignItems: { xs: 'center', md: 'stretch' },
-            px: { xs: '2px', md: 0 },
-          }}
-        >
+        <Box sx={styles.techFeaturesBoxStyles}>
           {[
             {
               icon: <SecurityIcon />,
@@ -613,46 +376,16 @@ CREATE POLICY "Only admins can insert letters" ON letters
               ],
             },
           ].map((highlight, index) => (
-            <Box
-              key={highlight.title}
-              sx={{
-                flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 16px)' },
-                minWidth: { xs: 0, md: 280 },
-                width: { xs: '100%', md: 'auto' },
-                maxWidth: { xs: '100%', md: 'none' },
-              }}
-            >
+            <Box key={highlight.title} sx={styles.techFeatureItemStyles}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
               >
-                <Card sx={{ p: { xs: '4px', md: 3 }, height: '100%' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      mb: { xs: '4px', md: 2 },
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    <Avatar
-                      sx={{
-                        bgcolor: 'primary.main',
-                        mr: { xs: '4px', md: 2 },
-                        width: { xs: 24, md: 40 },
-                        height: { xs: 24, md: 40 },
-                      }}
-                    >
-                      {highlight.icon}
-                    </Avatar>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: { xs: '0.85rem', md: '1.25rem' },
-                      }}
-                    >
+                <Card sx={styles.techFeatureCardStyles}>
+                  <Box sx={styles.techFeatureHeaderStyles}>
+                    <Avatar sx={styles.techFeatureAvatarStyles}>{highlight.icon}</Avatar>
+                    <Typography variant="h6" sx={styles.techFeatureTitleStyles}>
                       {highlight.title}
                     </Typography>
                   </Box>
@@ -662,11 +395,7 @@ CREATE POLICY "Only admins can insert letters" ON letters
                       label={item}
                       size="small"
                       variant="outlined"
-                      sx={{
-                        mr: { xs: '2px', md: 1 },
-                        mb: { xs: '2px', md: 1 },
-                        fontSize: { xs: '0.6rem', md: '0.75rem' },
-                      }}
+                      sx={styles.techFeatureChipStyles}
                     />
                   ))}
                 </Card>

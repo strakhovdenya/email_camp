@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { DatabaseTable } from './DatabaseTable';
+import * as styles from './DatabaseTab.styles';
 
 interface DatabaseColumn {
   name: string;
@@ -59,34 +60,11 @@ const databaseTables: DatabaseTableData[] = [
 export function DatabaseTab() {
   return (
     <>
-      <Typography
-        variant="h4"
-        sx={{
-          mb: { xs: 1, md: 4 },
-          fontWeight: 700,
-          textAlign: 'center',
-          fontSize: { xs: '1rem', md: '2.125rem' },
-          px: { xs: '2px', md: 0 },
-          wordBreak: 'break-word',
-        }}
-      >
+      <Typography variant="h4" sx={styles.titleStyles}>
         Схема базы данных
       </Typography>
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          flexWrap: { xs: 'nowrap', md: 'wrap' },
-          gap: { xs: '4px', md: 4 },
-          justifyContent: 'center',
-          mb: { xs: 1, md: 6 },
-          alignItems: { xs: 'stretch', md: 'flex-start' },
-          px: { xs: '2px', md: 0 },
-          overflow: 'hidden',
-          width: '100%',
-        }}
-      >
+      <Box sx={styles.tablesContainerStyles}>
         {databaseTables.map((table, index) => (
           <motion.div
             key={table.name}
@@ -99,69 +77,44 @@ export function DatabaseTab() {
         ))}
       </Box>
 
-      <Paper sx={{ p: { xs: '4px', md: 3 }, mb: { xs: 1, md: 4 } }}>
-        <Typography
-          variant="h5"
-          sx={{
-            mb: { xs: 1, md: 2 },
-            fontWeight: 700,
-            fontSize: { xs: '1rem', md: '1.5rem' },
-          }}
-        >
+      <Paper sx={styles.paperStyles}>
+        <Typography variant="h5" sx={styles.sectionTitleStyles}>
           Связи между таблицами
         </Typography>
-        <Box sx={{ mb: { xs: 1, md: 3 } }}>
-          <Typography
-            variant="body1"
-            sx={{ mb: { xs: '2px', md: 1 }, fontSize: { xs: '0.8rem', md: '1rem' } }}
-          >
+        <Box sx={styles.relationshipBoxStyles}>
+          <Typography variant="body1" sx={styles.relationshipTitleStyles}>
             <strong>users.room_number</strong> → <strong>rooms.room_number</strong>
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ ml: { xs: 1, md: 2 }, fontSize: { xs: '0.7rem', md: '0.875rem' } }}
+            sx={styles.relationshipDescriptionStyles}
           >
             Каждый пользователь привязан к определенной комнате
           </Typography>
         </Box>
         <Box>
-          <Typography
-            variant="body1"
-            sx={{ mb: { xs: '2px', md: 1 }, fontSize: { xs: '0.8rem', md: '1rem' } }}
-          >
+          <Typography variant="body1" sx={styles.relationshipTitleStyles}>
             <strong>letters.user_id</strong> → <strong>users.id</strong>
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ ml: { xs: 1, md: 2 }, fontSize: { xs: '0.7rem', md: '0.875rem' } }}
+            sx={styles.relationshipDescriptionStyles}
           >
             Каждое письмо адресовано конкретному пользователю
           </Typography>
         </Box>
       </Paper>
 
-      <Paper sx={{ p: { xs: '4px', md: 3 } }}>
-        <Typography
-          variant="h5"
-          sx={{
-            mb: { xs: 1, md: 2 },
-            fontWeight: 700,
-            fontSize: { xs: '1rem', md: '1.5rem' },
-          }}
-        >
+      <Paper sx={styles.lastPaperStyles}>
+        <Typography variant="h5" sx={styles.sectionTitleStyles}>
           Пример SQL запроса
         </Typography>
         <SyntaxHighlighter
           language="sql"
           style={oneDark}
-          customStyle={{
-            borderRadius: 8,
-            fontSize: '0.65rem',
-            overflow: 'auto',
-            padding: '8px',
-          }}
+          customStyle={styles.syntaxHighlighterStyles}
         >
           {`-- Получить все письма с информацией о получателях и комнатах
 SELECT 
