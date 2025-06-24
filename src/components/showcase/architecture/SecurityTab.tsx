@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Card, Paper, Chip } from '@mui/material';
+import { Typography, Box, Card, Paper, Chip, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -55,6 +55,9 @@ const securityFeatures: SecurityFeature[] = [
 ];
 
 export function SecurityTab() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   return (
     <>
       <Typography variant="h4" sx={securityTabStyles.title}>
@@ -74,7 +77,13 @@ export function SecurityTab() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card sx={securityTabStyles.securityCard}>
+              <Card
+                sx={{
+                  ...securityTabStyles.securityCard,
+                  bgcolor: isDark ? 'grey.900' : 'background.paper',
+                  border: `1px solid ${isDark ? 'grey.700' : '#e2e8f0'}`,
+                }}
+              >
                 <Typography variant="h3" sx={securityTabStyles.securityIcon}>
                   {security.icon}
                 </Typography>
@@ -103,7 +112,12 @@ export function SecurityTab() {
         ))}
       </Box>
 
-      <Paper sx={securityTabStyles.codePaper}>
+      <Paper
+        sx={{
+          ...securityTabStyles.codePaper,
+          bgcolor: isDark ? 'grey.900' : 'background.paper',
+        }}
+      >
         <Typography variant="h5" sx={securityTabStyles.codeTitle}>
           Пример RLS политики
         </Typography>

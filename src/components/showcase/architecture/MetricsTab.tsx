@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Card, Avatar, Chip } from '@mui/material';
+import { Typography, Box, Card, Avatar, Chip, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import {
   Security as SecurityIcon,
@@ -68,6 +68,9 @@ const techHighlights: TechHighlight[] = [
 ];
 
 export function MetricsTab() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   return (
     <>
       <Typography
@@ -103,8 +106,8 @@ export function MetricsTab() {
               sx={{
                 p: { xs: '4px', md: 3 },
                 textAlign: 'center',
-                background: `linear-gradient(135deg, ${metric.color}15 0%, ${metric.color}25 100%)`,
-                border: `1px solid ${metric.color}`,
+                bgcolor: isDark ? 'grey.900' : 'background.paper',
+                border: `1px solid ${metric.color}${isDark ? '80' : ''}`,
                 borderRadius: 2,
                 height: '100%',
               }}
@@ -167,8 +170,8 @@ export function MetricsTab() {
                 sx={{
                   p: { xs: '4px', md: 3 },
                   height: '100%',
-                  background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-                  border: '1px solid #e2e8f0',
+                  bgcolor: isDark ? 'grey.900' : 'background.paper',
+                  border: `1px solid ${isDark ? 'grey.700' : '#e2e8f0'}`,
                 }}
               >
                 <Box

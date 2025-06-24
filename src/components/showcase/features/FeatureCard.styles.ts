@@ -1,10 +1,8 @@
 import { SxProps, Theme } from '@mui/material/styles';
 
 // Card styles
-export const getCardStyles = (color: string): SxProps<Theme> => ({
+export const getCardStyles = (): SxProps<Theme> => ({
   height: '100%',
-  background: `linear-gradient(135deg, ${color}15 0%, ${color}05 100%)`,
-  border: `2px solid ${color}30`,
   position: 'relative',
   overflow: 'visible',
 });

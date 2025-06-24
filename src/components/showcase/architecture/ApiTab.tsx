@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Card, Paper, Chip } from '@mui/material';
+import { Typography, Box, Card, Paper, Chip, useTheme } from '@mui/material';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -35,6 +35,9 @@ const getMethodChipStyles = (method: string) => {
 };
 
 export function ApiTab() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   return (
     <>
       <Typography
@@ -58,8 +61,8 @@ export function ApiTab() {
             sx={{
               p: { xs: '4px', md: 2 },
               mb: { xs: '4px', md: 2 },
-              background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-              border: '1px solid #e2e8f0',
+              bgcolor: isDark ? 'grey.900' : 'background.paper',
+              border: `1px solid ${isDark ? 'grey.700' : '#e2e8f0'}`,
             }}
           >
             <Box
@@ -109,7 +112,12 @@ export function ApiTab() {
         ))}
       </Box>
 
-      <Paper sx={{ p: { xs: '4px', md: 3 } }}>
+      <Paper
+        sx={{
+          p: { xs: '4px', md: 3 },
+          bgcolor: isDark ? 'grey.900' : 'background.paper',
+        }}
+      >
         <Typography
           variant="h5"
           sx={{

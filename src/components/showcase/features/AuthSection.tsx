@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Paper, Card, Avatar, Chip } from '@mui/material';
+import { Typography, Box, Paper, Card, Avatar, Chip, useTheme } from '@mui/material';
 import {
   Email as EmailIcon,
   AdminPanelSettings as AdminIcon,
@@ -9,6 +9,9 @@ import {
 import { motion } from 'framer-motion';
 
 export function AuthSection() {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   const authMethods = [
     {
       title: 'Email регистрация',
@@ -86,8 +89,8 @@ export function AuthSection() {
           p: { xs: 3, md: 6 },
           maxWidth: '1200px',
           width: '100%',
-          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-          border: '1px solid #cbd5e1',
+          bgcolor: isDark ? 'grey.900' : 'background.paper',
+          border: `1px solid ${isDark ? 'grey.700' : '#cbd5e1'}`,
         }}
       >
         <Typography
@@ -126,8 +129,8 @@ export function AuthSection() {
                   sx={{
                     p: 3,
                     height: '100%',
-                    background: `linear-gradient(135deg, ${method.color}15 0%, ${method.color}10 100%)`,
-                    border: `2px solid ${method.color}30`,
+                    bgcolor: isDark ? 'grey.800' : 'background.paper',
+                    border: `2px solid ${method.color}${isDark ? '60' : '30'}`,
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -207,8 +210,8 @@ export function AuthSection() {
                     sx={{
                       p: 3,
                       height: '100%',
-                      background: `linear-gradient(135deg, ${feature.color}10 0%, ${feature.color}05 100%)`,
-                      border: `1px solid ${feature.color}30`,
+                      bgcolor: isDark ? 'grey.800' : 'background.paper',
+                      border: `1px solid ${feature.color}${isDark ? '60' : '30'}`,
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>

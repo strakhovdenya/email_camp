@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Avatar, Chip } from '@mui/material';
+import { Card, CardContent, Typography, Box, Avatar, Chip, useTheme } from '@mui/material';
 import { CheckCircle as CheckIcon } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import * as styles from './FeatureCard.styles';
@@ -21,8 +21,19 @@ export function FeatureCard({
   benefits,
   stats,
 }: FeatureCardProps) {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+
   return (
-    <Card component={motion.div} whileHover={{ scale: 1.02 }} sx={styles.getCardStyles(color)}>
+    <Card
+      component={motion.div}
+      whileHover={{ scale: 1.02 }}
+      sx={{
+        ...styles.getCardStyles(),
+        bgcolor: isDark ? 'grey.900' : 'background.paper',
+        border: `2px solid ${color}${isDark ? '60' : '30'}`,
+      }}
+    >
       <CardContent sx={styles.cardContentStyles}>
         {/* Icon Header */}
         <Box sx={styles.headerStyles}>
