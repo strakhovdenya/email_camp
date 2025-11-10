@@ -2,8 +2,11 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { motion } from 'framer-motion';
 import * as styles from './FeaturesHeader.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export function FeaturesHeader() {
+  const { t } = useLocale();
+
   return (
     <Box sx={styles.containerStyles}>
       <Typography
@@ -13,10 +16,10 @@ export function FeaturesHeader() {
         animate={{ opacity: 1, y: 0 }}
         sx={styles.titleStyles}
       >
-        Ключевые возможности
+        {t('features.title')}
       </Typography>
       <Typography variant="h6" color="text.secondary" sx={styles.subtitleStyles}>
-        Четыре основных преимущества, которые делают Email Camp эффективным решением
+        {t('features.subtitle')}
       </Typography>
     </Box>
   );

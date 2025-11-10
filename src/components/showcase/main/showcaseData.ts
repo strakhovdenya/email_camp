@@ -21,53 +21,53 @@ export interface StatData {
   suffix: string;
 }
 
-export const features: FeatureData[] = [
+export const getFeatures = (t: (key: string) => string): FeatureData[] => [
   {
     icon: React.createElement(EmailIcon),
-    title: 'Управление письмами',
-    description: 'Добавление, отслеживание и выдача писем с полной историей операций',
+    title: t('features.mainFeatures.qrCodes.title'),
+    description: t('features.mainFeatures.qrCodes.description'),
     color: '#2563eb',
   },
   {
     icon: React.createElement(RoomIcon),
-    title: 'Система комнат',
-    description: 'Организация писем по комнатам с удобной навигацией и поиском',
+    title: t('features.mainFeatures.notifications.title'),
+    description: t('features.mainFeatures.notifications.description'),
     color: '#7c3aed',
   },
   {
     icon: React.createElement(NotificationIcon),
-    title: 'Уведомления',
-    description: 'Мгновенные уведомления через Telegram и Email при получении писем',
+    title: t('features.mainFeatures.tracking.title'),
+    description: t('features.mainFeatures.tracking.description'),
     color: '#059669',
   },
   {
     icon: React.createElement(DashboardIcon),
-    title: 'Админ панель',
-    description: 'Полнофункциональная панель администратора с аналитикой и управлением',
+    title: t('features.mainFeatures.analytics.title'),
+    description: t('features.mainFeatures.analytics.description'),
     color: '#dc2626',
   },
   {
     icon: React.createElement(SecurityIcon),
-    title: 'Безопасность',
-    description: 'Row Level Security, аутентификация и авторизация пользователей',
+    title: t('features.mainFeatures.security.title'),
+    description: t('features.mainFeatures.security.description'),
     color: '#ea580c',
   },
   {
     icon: React.createElement(SpeedIcon),
-    title: 'Производительность',
-    description: 'Оптимизированные запросы, кэширование и real-time обновления',
+    title: t('features.mainFeatures.performance.title'),
+    description: t('features.mainFeatures.performance.description'),
     color: '#0891b2',
   },
 ];
 
-export const stats: StatData[] = [
-  { label: 'Строк кода', value: 15000, suffix: '+' },
-  { label: 'Компонентов', value: 45, suffix: '' },
-  { label: 'API роутов', value: 12, suffix: '' },
-  { label: 'Тестов', value: 89, suffix: '%' },
+export const getStats = (t: (key: string) => string): StatData[] => [
+  { label: t('stats.items.linesOfCode'), value: 15000, suffix: '+' },
+  { label: t('stats.items.components'), value: 45, suffix: '' },
+  { label: t('stats.items.apiRoutes'), value: 12, suffix: '' },
+  { label: t('stats.items.tests'), value: 89, suffix: '%' },
 ];
 
-export const techStack = [
+export const getTechStack = () => [
   'Next.js 14',
   'TypeScript',
   'Supabase',
@@ -76,14 +76,13 @@ export const techStack = [
   'Framer Motion',
 ];
 
-export const showcaseData = {
+export const getShowcaseData = (t: (key: string) => string) => ({
   hero: {
-    title: 'Email Camp',
-    subtitle: 'Современная система управления письмами',
-    description:
-      'Полнофункциональное веб-приложение для эффективного управления почтовой корреспонденцией с уведомлениями в реальном времени',
+    title: t('hero.title'),
+    subtitle: t('hero.subtitle'),
+    description: t('hero.description'),
   },
-  features,
-  stats,
-  techStack,
-};
+  features: getFeatures(t),
+  stats: getStats(t),
+  techStack: getTechStack(),
+});

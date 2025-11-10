@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useMemo } from 'react';
 import { Typography, Box, Card, Avatar, Chip, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import {
@@ -7,6 +9,7 @@ import {
   Api as ApiIcon,
   Code as CodeIcon,
 } from '@mui/icons-material';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface ProjectMetric {
   label: string;
@@ -14,62 +17,98 @@ interface ProjectMetric {
   color: string;
 }
 
-const projectMetrics: ProjectMetric[] = [
-  { label: 'Время разработки', value: '8 недель', color: '#2563eb' },
-  { label: 'Строк кода', value: '15,000+', color: '#7c3aed' },
-  { label: 'Компонентов React', value: '45+', color: '#059669' },
-  { label: 'API эндпоинтов', value: '12', color: '#dc2626' },
-  { label: 'Покрытие тестами', value: '89%', color: '#ea580c' },
-  { label: 'Lighthouse Score', value: '95/100', color: '#0891b2' },
-];
-
 interface TechHighlight {
   icon: React.ReactNode;
   title: string;
   items: string[];
 }
 
-const techHighlights: TechHighlight[] = [
-  {
-    icon: <SecurityIcon />,
-    title: 'Безопасность',
-    items: ['Row Level Security', 'JWT аутентификация', 'Валидация данных', 'HTTPS/SSL'],
-  },
-  {
-    icon: <DatabaseIcon />,
-    title: 'Производительность',
-    items: [
-      'Server-Side Rendering',
-      'React Query кэширование',
-      'Оптимизация изображений',
-      'Code splitting',
-    ],
-  },
-  {
-    icon: <CodeIcon />,
-    title: 'UX/UI',
-    items: [
-      'Material Design 3',
-      'Адаптивная верстка',
-      'Темная/светлая тема',
-      'Анимации Framer Motion',
-    ],
-  },
-  {
-    icon: <ApiIcon />,
-    title: 'Архитектура',
-    items: [
-      'Микросервисная архитектура',
-      'API-first подход',
-      'Real-time обновления',
-      'Serverless функции',
-    ],
-  },
-];
-
 export function MetricsTab() {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  const { t } = useLocale();
+
+  const projectMetrics: ProjectMetric[] = useMemo(
+    () => [
+      {
+        label: t('architecture.metricsTab.projectMetrics.labels.0'),
+        value: t('architecture.metricsTab.projectMetrics.values.0'),
+        color: '#2563eb',
+      },
+      {
+        label: t('architecture.metricsTab.projectMetrics.labels.1'),
+        value: t('architecture.metricsTab.projectMetrics.values.1'),
+        color: '#7c3aed',
+      },
+      {
+        label: t('architecture.metricsTab.projectMetrics.labels.2'),
+        value: t('architecture.metricsTab.projectMetrics.values.2'),
+        color: '#059669',
+      },
+      {
+        label: t('architecture.metricsTab.projectMetrics.labels.3'),
+        value: t('architecture.metricsTab.projectMetrics.values.3'),
+        color: '#dc2626',
+      },
+      {
+        label: t('architecture.metricsTab.projectMetrics.labels.4'),
+        value: t('architecture.metricsTab.projectMetrics.values.4'),
+        color: '#ea580c',
+      },
+      {
+        label: t('architecture.metricsTab.projectMetrics.labels.5'),
+        value: t('architecture.metricsTab.projectMetrics.values.5'),
+        color: '#0891b2',
+      },
+    ],
+    [t]
+  );
+
+  const techHighlights: TechHighlight[] = useMemo(
+    () => [
+      {
+        icon: <SecurityIcon />,
+        title: t('architecture.metricsTab.techFeatures.security.title'),
+        items: [
+          t('architecture.metricsTab.techFeatures.security.items.0'),
+          t('architecture.metricsTab.techFeatures.security.items.1'),
+          t('architecture.metricsTab.techFeatures.security.items.2'),
+          t('architecture.metricsTab.techFeatures.security.items.3'),
+        ],
+      },
+      {
+        icon: <DatabaseIcon />,
+        title: t('architecture.metricsTab.techFeatures.performance.title'),
+        items: [
+          t('architecture.metricsTab.techFeatures.performance.items.0'),
+          t('architecture.metricsTab.techFeatures.performance.items.1'),
+          t('architecture.metricsTab.techFeatures.performance.items.2'),
+          t('architecture.metricsTab.techFeatures.performance.items.3'),
+        ],
+      },
+      {
+        icon: <CodeIcon />,
+        title: t('architecture.metricsTab.techFeatures.ux.title'),
+        items: [
+          t('architecture.metricsTab.techFeatures.ux.items.0'),
+          t('architecture.metricsTab.techFeatures.ux.items.1'),
+          t('architecture.metricsTab.techFeatures.ux.items.2'),
+          t('architecture.metricsTab.techFeatures.ux.items.3'),
+        ],
+      },
+      {
+        icon: <ApiIcon />,
+        title: t('architecture.metricsTab.techFeatures.architecture.title'),
+        items: [
+          t('architecture.metricsTab.techFeatures.architecture.items.0'),
+          t('architecture.metricsTab.techFeatures.architecture.items.1'),
+          t('architecture.metricsTab.techFeatures.architecture.items.2'),
+          t('architecture.metricsTab.techFeatures.architecture.items.3'),
+        ],
+      },
+    ],
+    [t]
+  );
 
   return (
     <>
@@ -84,7 +123,7 @@ export function MetricsTab() {
           wordBreak: 'break-word',
         }}
       >
-        Ключевые метрики
+        {t('architecture.metricsTab.title')}
       </Typography>
 
       <Box
@@ -149,7 +188,7 @@ export function MetricsTab() {
           wordBreak: 'break-word',
         }}
       >
-        Технические особенности
+        {t('architecture.metricsTab.techFeatures.title')}
       </Typography>
 
       <Box

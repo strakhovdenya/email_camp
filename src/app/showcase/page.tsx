@@ -7,15 +7,19 @@ import {
   StatsSection,
   FeaturesSection,
   TechStackSection,
-  showcaseData,
 } from '@/components/showcase/main';
+import { getShowcaseData } from '@/components/showcase/main/showcaseData';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function ShowcasePage() {
   const [isVisible, setIsVisible] = useState(false);
+  const { t } = useLocale();
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const showcaseData = getShowcaseData(t);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>

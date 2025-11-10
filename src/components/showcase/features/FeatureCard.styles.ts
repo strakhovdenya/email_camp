@@ -3,8 +3,11 @@ import { SxProps, Theme } from '@mui/material/styles';
 // Card styles
 export const getCardStyles = (): SxProps<Theme> => ({
   height: '100%',
+  width: '100%',
   position: 'relative',
   overflow: 'visible',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 // Card content styles

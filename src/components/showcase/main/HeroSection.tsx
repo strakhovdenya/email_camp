@@ -1,9 +1,12 @@
+'use client';
+
 import React from 'react';
 import { Box, Typography, Button, Fade } from '@mui/material';
 import { PlayArrow as PlayIcon, GitHub as GitHubIcon } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { heroSectionStyles } from './HeroSection.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface HeroSectionProps {
   title: string;
@@ -13,6 +16,8 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ title, subtitle, description, isVisible }: HeroSectionProps) => {
+  const { t } = useLocale();
+
   return (
     <Box sx={heroSectionStyles.container}>
       {/* Animated background */}
@@ -79,7 +84,7 @@ export const HeroSection = ({ title, subtitle, description, isVisible }: HeroSec
               href="/showcase/demo"
               sx={heroSectionStyles.primaryButton}
             >
-              Попробовать демо
+              {t('hero.tryDemo')}
             </Button>
 
             <Button

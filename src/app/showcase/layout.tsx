@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Button, 
-  Box, 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
   IconButton,
   Drawer,
   List,
@@ -19,10 +19,12 @@ import {
   createTheme,
   CssBaseline,
   Fab,
-  Zoom
+  Zoom,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-import { 
-  Menu as MenuIcon, 
+import {
+  Menu as MenuIcon,
   Close as CloseIcon,
   Home as HomeIcon,
   Visibility as OverviewIcon,
@@ -32,11 +34,13 @@ import {
   PlayArrow as DemoIcon,
   PhotoLibrary as GalleryIcon,
   Brightness4,
-  Brightness7
+  Brightness7,
+  Language as LanguageIcon,
 } from '@mui/icons-material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LocaleProvider, useLocale } from '@/contexts/LocaleContext';
 
 const showcaseTheme = createTheme({
   palette: {
@@ -119,28 +123,31 @@ const darkTheme = createTheme({
   },
 });
 
-const navigationItems = [
-  { label: 'Главная', href: '/showcase', icon: <HomeIcon /> },
-  { label: 'Обзор', href: '/showcase/overview', icon: <OverviewIcon /> },
-  { label: 'Функции', href: '/showcase/features', icon: <FeaturesIcon /> },
-  { label: 'Архитектура', href: '/showcase/architecture', icon: <ArchitectureIcon /> },
-  { label: 'Технологии', href: '/showcase/tech-stack', icon: <TechIcon /> },
-  { label: 'Демо', href: '/showcase/demo', icon: <DemoIcon /> },
-  { label: 'Галерея', href: '/showcase/gallery', icon: <GalleryIcon /> },
+const getNavigationItems = (t: (key: string) => string) => [
+  { label: t('navigation.home'), href: '/showcase', icon: <HomeIcon /> },
+  { label: t('navigation.overview'), href: '/showcase/overview', icon: <OverviewIcon /> },
+  { label: t('navigation.features'), href: '/showcase/features', icon: <FeaturesIcon /> },
+  {
+    label: t('navigation.architecture'),
+    href: '/showcase/architecture',
+    icon: <ArchitectureIcon />,
+  },
+  { label: t('navigation.techStack'), href: '/showcase/tech-stack', icon: <TechIcon /> },
+  { label: t('navigation.demo'), href: '/showcase/demo', icon: <DemoIcon /> },
+  { label: t('navigation.gallery'), href: '/showcase/gallery', icon: <GalleryIcon /> },
 ];
 
-export default function ShowcaseLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function ShowcaseLayoutContent({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [languageMenuAnchor, setLanguageMenuAnchor] = useState<null | HTMLElement>(null);
   const pathname = usePathname();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { locale, setLocale, t } = useLocale();
 
   const currentTheme = darkMode ? darkTheme : showcaseTheme;
+  const navigationItems = getNavigationItems(t);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -148,6 +155,19 @@ export default function ShowcaseLayout({
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
+  };
+
+  const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setLanguageMenuAnchor(event.currentTarget);
+  };
+
+  const handleLanguageMenuClose = () => {
+    setLanguageMenuAnchor(null);
+  };
+
+  const handleLanguageChange = (newLocale: 'ru' | 'en') => {
+    setLocale(newLocale);
+    handleLanguageMenuClose();
   };
 
   const drawer = (
@@ -180,9 +200,7 @@ export default function ShowcaseLayout({
                 },
               }}
             >
-              <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-                {item.icon}
-              </Box>
+              <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>{item.icon}</Box>
               <ListItemText primary={item.label} />
             </ListItemButton>
           </ListItem>
@@ -218,7 +236,7 @@ export default function ShowcaseLayout({
                 <MenuIcon />
               </IconButton>
             )}
-            
+
             <Typography
               variant="h6"
               noWrap
@@ -233,7 +251,7 @@ export default function ShowcaseLayout({
                 textDecoration: 'none',
               }}
             >
-              Email Camp Showcase
+              {t('navigation.showcaseTitle')}
             </Typography>
 
             {!isMobile && (
@@ -252,6 +270,10 @@ export default function ShowcaseLayout({
                 ))}
               </Box>
             )}
+
+            <IconButton onClick={handleLanguageMenuOpen} color="inherit">
+              <LanguageIcon />
+            </IconButton>
 
             <IconButton onClick={toggleDarkMode} color="inherit">
               {darkMode ? <Brightness7 /> : <Brightness4 />}
@@ -285,7 +307,7 @@ export default function ShowcaseLayout({
             flexGrow: 1,
             pt: 8,
             minHeight: '100vh',
-            background: darkMode 
+            background: darkMode
               ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
               : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
           }}
@@ -320,7 +342,37 @@ export default function ShowcaseLayout({
             <DemoIcon />
           </Fab>
         </Zoom>
+
+        {/* Language Menu */}
+        <Menu
+          anchorEl={languageMenuAnchor}
+          open={Boolean(languageMenuAnchor)}
+          onClose={handleLanguageMenuClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem onClick={() => handleLanguageChange('ru')} selected={locale === 'ru'}>
+            🇷🇺 Русский
+          </MenuItem>
+          <MenuItem onClick={() => handleLanguageChange('en')} selected={locale === 'en'}>
+            🇺🇸 English
+          </MenuItem>
+        </Menu>
       </Box>
     </ThemeProvider>
   );
-} 
+}
+
+export default function ShowcaseLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <LocaleProvider>
+      <ShowcaseLayoutContent>{children}</ShowcaseLayoutContent>
+    </LocaleProvider>
+  );
+}

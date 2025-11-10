@@ -1,8 +1,11 @@
 export const featureCardStyles = {
   card: {
     height: '100%',
+    width: '100%',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
+    display: 'flex',
+    flexDirection: 'column',
     '&:hover': {
       transform: 'translateY(-8px)',
     },

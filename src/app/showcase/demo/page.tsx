@@ -13,10 +13,13 @@ import {
   demoTheme,
   demoMockDataSource,
 } from '@/components/showcase/demo';
+import { getDemoData } from '@/components/showcase/demo/demoData';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function DemoPage() {
   const [activeTab, setActiveTab] = useState(0);
   const [selectedRoom, setSelectedRoom] = useState('101');
+  const { t } = useLocale();
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -32,11 +35,18 @@ export default function DemoPage() {
     setActiveTab(2); // Переключаем на таб выдачи
   };
 
+  const demoData = getDemoData(t);
+
   return (
     <div className="p-4 sm:p-6">
-      <DemoHeader />
+      <DemoHeader title={demoData.title} description={demoData.description} />
 
-      <DemoTabs activeTab={activeTab} selectedRoom={selectedRoom} onTabChange={handleTabChange} />
+      <DemoTabs
+        activeTab={activeTab}
+        selectedRoom={selectedRoom}
+        onTabChange={handleTabChange}
+        tabs={demoData.tabs}
+      />
 
       {/* Оборачиваем в DataSourceProvider с mock данными и дефолтной темой */}
       <ThemeProvider theme={demoTheme}>
@@ -52,7 +62,7 @@ export default function DemoPage() {
         </DataSourceProvider>
       </ThemeProvider>
 
-      <DemoFeatures />
+      <DemoFeatures features={demoData.features} />
     </div>
   );
 }

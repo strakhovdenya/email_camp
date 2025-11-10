@@ -1,0 +1,924 @@
+{
+  "navigation": {
+    "home": "Home",
+    "overview": "Overview",
+    "features": "Features",
+    "architecture": "Architecture",
+    "techStack": "Tech Stack",
+    "demo": "Demo",
+    "gallery": "Gallery",
+    "showcaseTitle": "Email Camp Showcase"
+  },
+  "hero": {
+    "title": "Email Camp",
+    "subtitle": "Modern Email Management System",
+    "description": "Full-featured web application for efficient mail correspondence management with real-time notifications",
+    "tryDemo": "Try demo",
+    "techStackTitle": "Modern Technology Stack",
+    "learnMoreTech": "Learn more about technologies"
+  },
+  "features": {
+    "title": "Key Features",
+    "items": {
+      "emailManagement": {
+        "title": "Email Management",
+        "description": "Adding, tracking and issuing letters with full operation history"
+      },
+      "roomSystem": {
+        "title": "Room System",
+        "description": "Organizing letters by rooms with convenient navigation and search"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Instant notifications via Telegram and Email when receiving letters"
+      },
+      "adminPanel": {
+        "title": "Admin Panel",
+        "description": "Full-featured administrator panel with analytics and management"
+      },
+      "security": {
+        "title": "Security",
+        "description": "Row Level Security, user authentication and authorization"
+      },
+      "performance": {
+        "title": "Performance",
+        "description": "Optimized queries, caching and real-time updates"
+      }
+    }
+  },
+  "stats": {
+    "title": "Project Statistics",
+    "items": {
+      "linesOfCode": "Lines of Code",
+      "components": "Components",
+      "apiRoutes": "API Routes",
+      "tests": "Tests"
+    }
+  },
+  "techStack": {
+    "title": "Technology Stack",
+    "frontend": {
+      "title": "Frontend",
+      "items": {
+        "nextjs": {
+          "title": "Next.js",
+          "version": "14.0",
+          "description": "React framework with App Router, SSR and optimizations"
+        },
+        "typescript": {
+          "title": "TypeScript",
+          "version": "5.0",
+          "description": "Strict typing for reliability and better DX"
+        },
+        "mui": {
+          "title": "Material-UI",
+          "version": "5.14",
+          "description": "Component library with Material Design"
+        },
+        "framerMotion": {
+          "title": "Framer Motion",
+          "version": "10.16",
+          "description": "Animation library for React components"
+        }
+      }
+    },
+    "backend": {
+      "title": "Backend",
+      "items": {
+        "supabase": {
+          "title": "Supabase",
+          "version": "2.38",
+          "description": "Backend-as-a-Service with PostgreSQL and real-time"
+        },
+        "rls": {
+          "title": "Row Level Security",
+          "version": "PostgreSQL",
+          "description": "Database-level row security policies"
+        },
+        "reactQuery": {
+          "title": "React Query",
+          "version": "5.0",
+          "description": "Server state management and caching"
+        }
+      }
+    },
+    "devops": {
+      "title": "DevOps",
+      "items": {
+        "vercel": {
+          "title": "Vercel",
+          "version": "Platform",
+          "description": "Deployment platform with automatic CI/CD"
+        },
+        "eslint": {
+          "title": "ESLint + Prettier",
+          "version": "8.0 + 3.0",
+          "description": "Code linting and formatting"
+        },
+        "screenshots": {
+          "title": "Screenshot Automation",
+          "version": "Playwright",
+          "description": "Automatic screenshot generation for gallery"
+        }
+      }
+    },
+    "benefits": {
+      "title": "Benefits",
+      "items": {
+        "performance": {
+          "title": "Performance",
+          "description": "SSR, image optimization, query caching"
+        },
+        "security": {
+          "title": "Security",
+          "description": "RLS, authentication, validation at all levels"
+        },
+        "scalability": {
+          "title": "Scalability",
+          "description": "Serverless architecture, automatic scaling"
+        },
+        "developerExperience": {
+          "title": "Developer Experience",
+          "description": "TypeScript, hot reload, automatic testing"
+        }
+      }
+    }
+  },
+  "demo": {
+    "title": "Application Demo",
+    "description": {
+      "main": "This is a demo version of the application with mock data.",
+      "subtitle": "Real application components are used here, but data comes from a local mock source."
+    },
+    "features": {
+      "title": "Demo Features:",
+      "0": "Real components are used: RoomCard, AddLetterForm, LetterList",
+      "1": "Data comes from MockDataSource (local demo data)",
+      "2": "All hooks work through DataSource pattern",
+      "3": "Add button navigates to letter addition form for room",
+      "4": "Deliver button navigates to letter delivery page for room",
+      "5": "Letter addition form is fully functional"
+    },
+    "tabs": {
+      "home": {
+        "full": "Home Page",
+        "short": "Home"
+      },
+      "addLetter": {
+        "full": "Add Letter",
+        "short": "Add",
+        "active": "Add ({{room}})"
+      },
+      "deliverLetters": {
+        "full": "Deliver Letters",
+        "short": "Deliver",
+        "active": "Deliver ({{room}})"
+      }
+    },
+    "pages": {
+      "home": {
+        "title": "Email Camp",
+        "subtitle": "Rooms and letters awaiting delivery",
+        "emptyState": "No rooms with letters."
+      },
+      "addLetter": {
+        "roomTitle": "Room",
+        "lettersCount": "Letters:",
+        "addLetterTitle": "Add Letter",
+        "lettersListTitle": "Letters List"
+      },
+      "deliver": {
+        "title": "Letter Delivery — Room",
+        "lettersCount": "Letters:",
+        "userFilter": "Filter by User",
+        "allUsers": "All Users"
+      },
+      "buttons": {
+        "addLetter": "Add Letter",
+        "add": "Add",
+        "deliverLetters": "Deliver Letters",
+        "deliver": "Deliver"
+      }
+    }
+  },
+  "gallery": {
+    "title": "Screenshot Gallery",
+    "categories": {
+      "desktop": "Desktop",
+      "mobile": "Mobile Version"
+    },
+    "functionalCategories": {
+      "core": "Core Features",
+      "auth": "Authentication",
+      "admin": "Administration",
+      "showcase": "Showcase"
+    },
+    "items": {
+      "homepage": {
+        "title": "Home Page",
+        "description": "Screenshot: Home Page"
+      },
+      "roomPage": {
+        "title": "Room Page",
+        "description": "Screenshot: Room Page"
+      },
+      "deliverPage": {
+        "title": "Letter Delivery",
+        "description": "Screenshot: Letter Delivery"
+      },
+      "authPage": {
+        "title": "Authentication",
+        "description": "Screenshot: Authentication"
+      },
+      "signupPage": {
+        "title": "Registration",
+        "description": "Screenshot: Registration"
+      },
+      "adminDashboard": {
+        "title": "Admin Panel",
+        "description": "Screenshot: Admin Panel"
+      },
+      "adminLetters": {
+        "title": "Letter Management",
+        "description": "Screenshot: Letter Management"
+      },
+      "adminRooms": {
+        "title": "Room Management",
+        "description": "Screenshot: Room Management"
+      },
+      "adminUsers": {
+        "title": "User Management",
+        "description": "Screenshot: User Management"
+      },
+      "showcaseOverview": {
+        "title": "Project Overview",
+        "description": "Screenshot: Project Overview"
+      },
+      "showcaseDemo": {
+        "title": "Application Demo",
+        "description": "Screenshot: Application Demo"
+      },
+      "showcaseFeatures": {
+        "title": "Features",
+        "description": "Screenshot: Features"
+      },
+      "showcaseTech": {
+        "title": "Technologies",
+        "description": "Screenshot: Technologies"
+      },
+      "showcaseArchitecture": {
+        "title": "Architecture",
+        "description": "Screenshot: Architecture"
+      }
+    }
+  },
+  "overview": {
+    "title": "Project Overview",
+    "subtitle": "Detailed analysis of mail management system development for camps",
+    "projectSummary": {
+      "title": "About the Project",
+      "description": "Email Camp is a digital solution for automating the process of receiving and issuing mail in camps. The system eliminates the need for daily manual mail searches and provides instant notifications to camp residents.",
+      "problem": "Problem: Every day after 2:00 PM, many people come to the info point asking \"Are there any letters for me?\". Staff are forced to manually check each room's folders, wasting time even when there are no letters.",
+      "solution": "Solution: When mail arrives, staff register letters in the system through QR codes on room folders. Residents receive automatic notifications and come for mail only when it's guaranteed to be there."
+    },
+    "steps": {
+      "1": {
+        "title": "Mail Arrival at Camp",
+        "description": "Postman delivers letters, staff sorts by rooms",
+        "details": [
+          "Each room folder has two QR codes attached",
+          "QR code \"Receive\" - for registration of arrival",
+          "QR code \"Issue\" - for marking receipt",
+          "Letters are placed in corresponding folders"
+        ]
+      },
+      "2": {
+        "title": "Quick Registration via QR",
+        "description": "Staff scans the folder's QR code and registers the letter in seconds",
+        "details": [
+          "Scanning \"Receive\" QR code on room folder",
+          "Selecting letter recipient from residents list",
+          "Photographing the letter for confirmation",
+          "Automatic saving to database"
+        ]
+      },
+      "3": {
+        "title": "Instant Notifications",
+        "description": "Camp resident immediately receives notification about the letter",
+        "details": [
+          "Automatic Email notification sending",
+          "Telegram bot message (if connected)",
+          "Notification contains letter information",
+          "Resident knows for sure that there's a letter"
+        ]
+      },
+      "4": {
+        "title": "Targeted Info Point Visit",
+        "description": "Resident comes only knowing that the letter is guaranteed to be there",
+        "details": [
+          "No daily \"checking\" visits",
+          "Resident is confident about letter presence",
+          "No queues and time waste",
+          "Efficient use of everyone's time"
+        ]
+      },
+      "5": {
+        "title": "Quick Letter Issue",
+        "description": "Staff scans \"Issue\" QR and hands over the letter",
+        "details": [
+          "Scanning \"Issue\" QR code on folder",
+          "Quick letter search in the right folder",
+          "Marking issue in the application",
+          "Handing letter to camp resident",
+          "Automatic process closure"
+        ]
+      }
+    },
+    "keyAspects": {
+      "title": "Key Aspects",
+      "problem": {
+        "title": "Problem",
+        "description": "Inefficient mail reception process in the camp",
+        "details": [
+          "Daily queues at the info-point after 2:00 PM",
+          "Manual checking of folders for each room by staff",
+          "Loss of time when there are no letters",
+          "Uncertainty for camp residents"
+        ]
+      },
+      "solution": {
+        "title": "Solution",
+        "description": "QR-system with automatic notifications",
+        "details": [
+          "QR codes on room folders for quick registration",
+          "Automatic notifications in Telegram/Email",
+          "Residents come only when mail is available",
+          "Saving time for staff and residents"
+        ]
+      },
+      "result": {
+        "title": "Result",
+        "description": "Optimized mail reception process",
+        "details": [
+          "Elimination of daily queues at the info-point",
+          "Guaranteed mail reception upon visit",
+          "Minimal time expenditure for staff",
+          "Full transparency and process tracking"
+        ]
+      }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "subtitle": "From the arrival of a letter to its receipt by a camp resident — the entire process is automated"
+    },
+    "notificationExamples": {
+      "title": "Examples of notifications",
+      "telegram": {
+        "title": "Telegram notification",
+        "message": "📬 <strong>New letter in the camp!</strong>\nFor: Ivan Petrov\nRoom: 101\nTime of receipt: 14:30\n\nPick up the letter at the info-point! 📮\nYour letter is ready for pickup."
+      },
+      "email": {
+        "title": "Email notification",
+        "caption": "Real example of Email notification for a camp resident",
+        "alt": "Example of Email notification for a camp resident"
+      }
+    }
+  },
+  "features": {
+    "title": "Key Features",
+    "subtitle": "Four main advantages that make Email Camp an effective solution",
+    "mainFeatures": {
+      "qrCodes": {
+        "title": "QR Codes for Speed",
+        "description": "Instant letter registration and delivery",
+        "benefits": [
+          "Two QR codes on each room folder",
+          "Scanning instead of manual data entry",
+          "Letter registration in 10-15 seconds",
+          "Elimination of data entry errors"
+        ],
+        "stats": {
+          "seconds": "seconds",
+          "perRegistration": "per registration"
+        }
+      },
+      "notifications": {
+        "title": "Automatic Notifications",
+        "description": "Instant information delivery to residents",
+        "benefits": [
+          "Telegram bot for instant notifications",
+          "Email backup for reliability",
+          "Automatic sending upon registration",
+          "Personalized messages"
+        ],
+        "stats": {
+          "channels": "channels",
+          "notifications": "notifications"
+        }
+      },
+      "tracking": {
+        "title": "Real-time Tracking",
+        "description": "Complete transparency of the delivery process",
+        "benefits": [
+          "Statuses: received, notified, delivered",
+          "History of all letter operations",
+          "Arrival and delivery times",
+          "Search and filter by any criteria"
+        ],
+        "stats": {
+          "statuses": "statuses",
+          "tracking": "tracking"
+        }
+      },
+      "analytics": {
+        "title": "Analytics and Reports",
+        "description": "Data for workflow optimization",
+        "benefits": [
+          "Statistics by rooms and periods",
+          "Processing and delivery times",
+          "Staff efficiency metrics",
+          "Data export (planned for implementation)"
+        ],
+        "stats": {
+          "metrics": "metrics",
+          "analytics": "analytics"
+        }
+      },
+      "security": {
+        "title": "Security",
+        "description": "Row Level Security, user authentication and authorization"
+      },
+      "performance": {
+        "title": "Performance",
+        "description": "Optimized queries, caching and real-time updates"
+      }
+    },
+    "authSection": {
+      "title": "Authorization System and Security",
+      "authMethods": {
+        "emailRegistration": {
+          "title": "Email Registration",
+          "description": "Classic method with confirmation",
+          "steps": [
+            "Form filling: name, surname, email, password, role",
+            "Sending confirmation email to email",
+            "Automatic login after confirmation",
+            "Creating a record in the user database"
+          ]
+        },
+        "googleOAuth": {
+          "title": "Google OAuth",
+          "description": "Quick login via Google account",
+          "steps": [
+            "Redirect to Google authorization page",
+            "Retrieving profile data (name, email)",
+            "Profile completion (role, additional data)",
+            "Automatic login to the system"
+          ]
+        }
+      },
+      "securityFeatures": {
+        "title": "Security Features",
+        "firstAdmin": {
+          "title": "First = Administrator",
+          "description": "The first registered user automatically receives administrator rights"
+        },
+        "controlledRegistration": {
+          "title": "Controlled Registration",
+          "description": "After admin creation, self-registration is blocked"
+        },
+        "rolesAndRights": {
+          "title": "Roles and Rights",
+          "description": "Three roles: Administrator, Employee, Resident with different access levels"
+        },
+        "middlewareProtection": {
+          "title": "Middleware Protection",
+          "description": "Automatic authorization check on every request to protected pages"
+        }
+      },
+      "technicalImplementation": {
+        "title": "Technical Implementation",
+        "techStack": [
+          "Supabase Auth",
+          "Next.js Middleware",
+          "OAuth 2.0",
+          "JWT Tokens",
+          "Email Verification"
+        ]
+      }
+    },
+    "benefitsSummary": {
+      "title": "Implementation Results",
+      "benefits": {
+        "timeSaving": {
+          "title": "Time Saving",
+          "description": "Elimination of daily queues after 2:00 PM"
+        },
+        "guaranteedDelivery": {
+          "title": "Guaranteed Delivery",
+          "description": "Residents come only when mail is available"
+        },
+        "fastProcessing": {
+          "title": "Fast Processing",
+          "description": "Registration and delivery in seconds"
+        },
+        "fullTransparency": {
+          "title": "Full Transparency",
+          "description": "Tracking every stage of the process"
+        }
+      }
+    }
+  },
+  "architecture": {
+    "title": "System Architecture",
+    "subtitle": "Detailed description of database structure and application architecture",
+    "tabs": {
+      "database": {
+        "full": "Database",
+        "short": "DB"
+      },
+      "api": {
+        "full": "API Structure",
+        "short": "API"
+      },
+      "datasource": {
+        "full": "DataSource",
+        "short": "DS"
+      },
+      "security": {
+        "full": "Security",
+        "short": "Sec"
+      },
+      "metrics": {
+        "full": "Metrics",
+        "short": "Metrics"
+      }
+    },
+    "overview": {
+      "title": "General Architecture"
+    },
+    "datasourceTab": {
+      "title": "DataSource Architecture",
+      "pattern": {
+        "title": "Data Abstraction Pattern",
+        "description": "DataSource architecture allows easy switching between various data sources (Supabase, Mock, PostgreSQL, MySQL) by changing a single configuration setting. MockDataSource is used for testing and demonstrating functionality without a real database."
+      },
+      "benefits": {
+        "0": "Unified interface",
+        "1": "Easy switching",
+        "2": "Testability",
+        "3": "Demo mode",
+        "4": "Type safety"
+      },
+      "interfaces": {
+        "title": "📋 Interfaces",
+        "items": {
+          "0": "IDataSource - main interface",
+          "1": "IUserDataSource - user operations",
+          "2": "ILetterDataSource - letter operations",
+          "3": "IRoomDataSource - room operations"
+        }
+      },
+      "factory": {
+        "title": "🏭 Factory",
+        "items": {
+          "0": "Singleton pattern",
+          "1": "Configuration-based switching",
+          "2": "Automatic initialization",
+          "3": "Lifecycle management"
+        }
+      },
+      "implementations": {
+        "title": "🔌 Implementations",
+        "items": {
+          "0": "SupabaseDataSource - production",
+          "1": "MockDataSource - testing and demo",
+          "2": "PostgreSQLDataSource - planned",
+          "3": "MySQLDataSource - planned"
+        }
+      },
+      "configuration": {
+        "title": "Data Source Configuration"
+      },
+      "usage": {
+        "title": "Usage in Components"
+      },
+      "directUsage": {
+        "title": "Direct DataSource Usage"
+      }
+    },
+    "databaseTab": {
+      "title": "Database Schema",
+      "relationships": {
+        "title": "Table Relationships",
+        "usersRooms": {
+          "title": "users.room_number → rooms.room_number",
+          "description": "Each user is linked to a specific room"
+        },
+        "lettersUsers": {
+          "title": "letters.user_id → users.id",
+          "description": "Each letter is addressed to a specific user"
+        }
+      },
+      "sqlExample": {
+        "title": "SQL Query Example"
+      }
+    },
+    "apiTab": {
+      "title": "API Structure",
+      "example": {
+        "title": "API Usage Example"
+      },
+      "endpoints": {
+        "0": "Get list of letters",
+        "1": "Add new letter",
+        "2": "Mark letter as delivered",
+        "3": "Get list of rooms",
+        "4": "Get room residents",
+        "5": "Get list of users",
+        "6": "Invite user",
+        "7": "Get current user"
+      }
+    },
+    "securityTab": {
+      "title": "Security",
+      "rls": {
+        "title": "Row Level Security",
+        "description": "Row-level data protection in PostgreSQL",
+        "features": {
+          "0": "Automatic filtering",
+          "1": "Access policies",
+          "2": "SQL injection protection",
+          "3": "Role-based control"
+        }
+      },
+      "jwt": {
+        "title": "JWT Authentication",
+        "description": "Secure authentication with tokens",
+        "features": {
+          "0": "Stateless tokens",
+          "1": "Automatic refresh",
+          "2": "Protected routes",
+          "3": "Middleware verification"
+        }
+      },
+      "apiProtection": {
+        "title": "API Protection",
+        "description": "API endpoint protection",
+        "features": {
+          "0": "Rate limiting",
+          "1": "CORS settings",
+          "2": "Input validation",
+          "3": "Request logging"
+        }
+      },
+      "encryption": {
+        "title": "Data Encryption",
+        "description": "Encryption of sensitive data",
+        "features": {
+          "0": "HTTPS/TLS",
+          "1": "Password hashing",
+          "2": "Database encryption",
+          "3": "Secure cookies"
+        }
+      },
+      "rlsExample": {
+        "title": "RLS Policy Example"
+      }
+    },
+    "metricsTab": {
+      "title": "Key Metrics",
+      "techFeatures": {
+        "title": "Technical Features",
+        "security": {
+          "title": "Security",
+          "items": {
+            "0": "Row Level Security",
+            "1": "JWT authentication",
+            "2": "Data validation",
+            "3": "HTTPS/SSL"
+          }
+        },
+        "performance": {
+          "title": "Performance",
+          "items": {
+            "0": "Server-Side Rendering",
+            "1": "React Query caching",
+            "2": "Image optimization",
+            "3": "Code splitting"
+          }
+        },
+        "ux": {
+          "title": "UX/UI",
+          "items": {
+            "0": "Material Design 3",
+            "1": "Responsive layout",
+            "2": "Dark/light theme",
+            "3": "Framer Motion animations"
+          }
+        },
+        "architecture": {
+          "title": "Architecture",
+          "items": {
+            "0": "Microservice architecture",
+            "1": "API-first approach",
+            "2": "Real-time updates",
+            "3": "Serverless functions"
+          }
+        }
+      },
+      "projectMetrics": {
+        "labels": {
+          "0": "Development time",
+          "1": "Lines of code",
+          "2": "React components",
+          "3": "API endpoints",
+          "4": "Test coverage",
+          "5": "Lighthouse Score"
+        },
+        "values": {
+          "0": "8 weeks",
+          "1": "15,000+",
+          "2": "45+",
+          "3": "12",
+          "4": "89%",
+          "5": "95/100"
+        }
+      }
+    }
+  },
+  "techStack": {
+    "title": "Technology Stack",
+    "subtitle": "Modern technologies for creating reliable and scalable applications",
+    "architecture": {
+      "title": "System Architecture",
+      "labels": {
+        "0": "Next.js Frontend",
+        "1": "→",
+        "2": "API Routes",
+        "3": "→",
+        "4": "Supabase",
+        "5": "→",
+        "6": "PostgreSQL"
+      }
+    },
+    "tabs": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "devops": "DevOps"
+    },
+    "codeExample": "Code Example",
+    "benefits": {
+      "title": "Benefits of the Selected Stack",
+      "items": {
+        "0": {
+          "title": "Performance",
+          "description": "SSR, image optimization, request caching"
+        },
+        "1": {
+          "title": "Security",
+          "description": "RLS, authentication, validation at all levels"
+        },
+        "2": {
+          "title": "Scalability",
+          "description": "Serverless architecture, automatic scaling"
+        },
+        "3": {
+          "title": "Developer Experience",
+          "description": "TypeScript, hot reload, automatic testing"
+        }
+      }
+    },
+    "technologies": {
+      "frontend": {
+        "0": {
+          "title": "Next.js",
+          "description": "React framework with App Router, SSR and optimizations",
+          "features": {
+            "0": "App Router",
+            "1": "Server Components",
+            "2": "API Routes",
+            "3": "Image Optimization"
+          }
+        },
+        "1": {
+          "title": "TypeScript",
+          "description": "Strict typing for reliability and better DX",
+          "features": {
+            "0": "Strict Mode",
+            "1": "Type Safety",
+            "2": "IntelliSense",
+            "3": "Refactoring"
+          }
+        },
+        "2": {
+          "title": "Material-UI",
+          "description": "Component library with Material Design",
+          "features": {
+            "0": "Theming",
+            "1": "Responsive",
+            "2": "Accessibility",
+            "3": "Customization"
+          }
+        },
+        "3": {
+          "title": "Framer Motion",
+          "description": "Animation library for React components",
+          "features": {
+            "0": "Gestures",
+            "1": "Layout Animations",
+            "2": "Scroll Triggers",
+            "3": "Variants"
+          }
+        }
+      },
+      "backend": {
+        "0": {
+          "title": "Supabase",
+          "description": "Backend-as-a-Service with PostgreSQL and real-time",
+          "features": {
+            "0": "PostgreSQL",
+            "1": "Real-time",
+            "2": "Auth",
+            "3": "Storage",
+            "4": "Edge Functions"
+          }
+        },
+        "1": {
+          "title": "Row Level Security",
+          "description": "Row-level database security policies",
+          "features": {
+            "0": "User Isolation",
+            "1": "Role-based Access",
+            "2": "Data Protection"
+          }
+        },
+        "2": {
+          "title": "React Query",
+          "description": "Server state management and caching",
+          "features": {
+            "0": "Caching",
+            "1": "Background Updates",
+            "2": "Optimistic Updates",
+            "3": "Offline Support"
+          }
+        }
+      },
+      "devops": {
+        "0": {
+          "title": "Vercel",
+          "description": "Deployment platform with automatic CI/CD",
+          "features": {
+            "0": "Auto Deploy",
+            "1": "Preview URLs",
+            "2": "Analytics",
+            "3": "Edge Network"
+          }
+        },
+        "1": {
+          "title": "ESLint + Prettier",
+          "description": "Code linting and formatting",
+          "features": {
+            "0": "Code Quality",
+            "1": "Formatting",
+            "2": "TypeScript Rules",
+            "3": "Auto Fix"
+          }
+        },
+        "2": {
+          "title": "Screenshot Automation",
+          "description": "Automatic screenshot generation for gallery",
+          "features": {
+            "0": "Auto Screenshots",
+            "1": "Mobile + Desktop",
+            "2": "Auth Flow",
+            "3": "Gallery Sync"
+          }
+        }
+      }
+    }
+  },
+  "gallery": {
+    "title": "Screenshot Gallery",
+    "subtitle": "Visual representation of all application pages and functions"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "close": "Close",
+    "open": "Open",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "view": "View",
+    "details": "Details",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  }
+}

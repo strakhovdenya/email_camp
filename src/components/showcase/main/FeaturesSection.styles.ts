@@ -29,5 +29,6 @@ export const featuresSectionStyles = {
   },
   gridItem: {
     display: 'flex',
+    width: '100%',
   },
 };

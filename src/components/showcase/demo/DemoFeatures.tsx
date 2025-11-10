@@ -1,15 +1,23 @@
+'use client';
+
 import React from 'react';
 import { Card, CardContent } from '@mui/material';
-import { demoData } from './demoData';
 import { demoFeaturesStyles } from './DemoFeatures.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
-export const DemoFeatures = () => {
+interface DemoFeaturesProps {
+  features: string[];
+}
+
+export const DemoFeatures = ({ features }: DemoFeaturesProps) => {
+  const { t } = useLocale();
+
   return (
     <Card className={demoFeaturesStyles.card}>
       <CardContent>
-        <h2 className={demoFeaturesStyles.title}>Особенности демо:</h2>
+        <h2 className={demoFeaturesStyles.title}>{t('demo.features.title')}</h2>
         <div className={demoFeaturesStyles.featuresContainer}>
-          {demoData.features.map((feature, index) => (
+          {features.map((feature, index) => (
             <div key={index} className={demoFeaturesStyles.featureItem}>
               • {feature}
             </div>

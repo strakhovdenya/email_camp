@@ -11,47 +11,46 @@ export const demoTheme = createTheme({
 // Создаем глобальный экземпляр MockDataSource для демо
 export const demoMockDataSource = new MockDataSource();
 
-export const demoData = {
-  title: 'Демо приложения',
+export const getDemoData = (t: (key: string) => string) => ({
+  title: t('demo.title'),
   description: {
-    main: 'Это демо версия приложения с mock данными.',
-    subtitle:
-      'Здесь используются реальные компоненты приложения, но данные берутся из локального mock источника.',
+    main: t('demo.description.main'),
+    subtitle: t('demo.description.subtitle'),
   },
   features: [
-    'Используются реальные компоненты: RoomCard, AddLetterForm, LetterList',
-    'Данные берутся из MockDataSource (локальные демо-данные)',
-    'Все хуки работают через DataSource паттерн',
-    'Кнопка "Добавить" переводит на форму добавления письма для комнаты',
-    'Кнопка "Выдать" переводит на страницу выдачи писем для комнаты',
-    'Форма добавления письма полностью функциональна',
+    t('demo.features.0'),
+    t('demo.features.1'),
+    t('demo.features.2'),
+    t('demo.features.3'),
+    t('demo.features.4'),
+    t('demo.features.5'),
   ],
   tabs: [
     {
       label: {
-        full: 'Главная страница',
-        short: 'Главная',
+        full: t('demo.tabs.home.full'),
+        short: t('demo.tabs.home.short'),
       },
     },
     {
       label: {
-        full: 'Добавить письмо',
-        short: 'Добавить',
+        full: t('demo.tabs.addLetter.full'),
+        short: t('demo.tabs.addLetter.short'),
         active: (room: string) => ({
-          full: `Добавить (${room})`,
+          full: t('demo.tabs.addLetter.active').replace('{{room}}', room),
           short: `➕ ${room}`,
         }),
       },
     },
     {
       label: {
-        full: 'Выдать письма',
-        short: 'Выдать',
+        full: t('demo.tabs.deliverLetters.full'),
+        short: t('demo.tabs.deliverLetters.short'),
         active: (room: string) => ({
-          full: `Выдать (${room})`,
+          full: t('demo.tabs.deliverLetters.active').replace('{{room}}', room),
           short: `📦 ${room}`,
         }),
       },
     },
   ],
-};
+});

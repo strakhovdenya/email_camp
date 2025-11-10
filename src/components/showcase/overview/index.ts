@@ -6,7 +6,7 @@ export { KeyAspects } from './KeyAspects';
 export { HowItWorks } from './HowItWorks';
 export { ProcessStep } from './ProcessStep';
 export { NotificationExamples } from './NotificationExamples';
-export { stepsData } from './stepsData';
+export { getStepsData } from './stepsData';
 export type { StepData } from './stepsData';
 
 // Styles exports

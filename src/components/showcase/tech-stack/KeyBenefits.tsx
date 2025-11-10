@@ -1,17 +1,57 @@
-import React from 'react';
+'use client';
+
+import React, { useMemo } from 'react';
 import { Box, Typography, Card, Avatar } from '@mui/material';
 import { motion } from 'framer-motion';
-import { techStackData } from './techStackData';
 import { keyBenefitsStyles } from './KeyBenefits.styles';
+import { useLocale } from '@/contexts/LocaleContext';
+import {
+  Speed as SpeedIcon,
+  Security as SecurityIcon,
+  Cloud as CloudIcon,
+  Build as BuildIcon,
+} from '@mui/icons-material';
 
 export const KeyBenefits = () => {
+  const { t } = useLocale();
+
+  const benefits = useMemo(
+    () => [
+      {
+        title: t('techStack.benefits.items.0.title'),
+        description: t('techStack.benefits.items.0.description'),
+        icon: <SpeedIcon />,
+        color: '#059669',
+      },
+      {
+        title: t('techStack.benefits.items.1.title'),
+        description: t('techStack.benefits.items.1.description'),
+        icon: <SecurityIcon />,
+        color: '#dc2626',
+      },
+      {
+        title: t('techStack.benefits.items.2.title'),
+        description: t('techStack.benefits.items.2.description'),
+        icon: <CloudIcon />,
+        color: '#2563eb',
+      },
+      {
+        title: t('techStack.benefits.items.3.title'),
+        description: t('techStack.benefits.items.3.description'),
+        icon: <BuildIcon />,
+        color: '#7c3aed',
+      },
+    ],
+    [t]
+  );
+
   return (
     <Box sx={keyBenefitsStyles.container}>
       <Typography variant="h3" sx={keyBenefitsStyles.title}>
-        Преимущества выбранного стека
+        {t('techStack.benefits.title')}
       </Typography>
       <Box sx={keyBenefitsStyles.benefitsGrid}>
-        {techStackData.benefits.map((benefit, index) => (
+        {benefits.map((benefit, index) => (
           <Box key={benefit.title} sx={keyBenefitsStyles.benefitItem}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}

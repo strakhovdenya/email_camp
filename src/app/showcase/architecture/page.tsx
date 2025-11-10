@@ -13,9 +13,11 @@ import {
   MetricsTab,
 } from '@/components/showcase/architecture';
 import * as styles from './styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function ArchitecturePage() {
   const [tabValue, setTabValue] = useState(0);
+  const { t } = useLocale();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -43,40 +45,60 @@ export default function ArchitecturePage() {
           <Tab
             label={
               <Box sx={styles.tabLabelBoxStyles}>
-                <Box sx={{ display: { xs: 'none', md: 'block' } }}>База данных</Box>
-                <Box sx={{ display: { xs: 'block', md: 'none' } }}>БД</Box>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                  {t('architecture.tabs.database.full')}
+                </Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                  {t('architecture.tabs.database.short')}
+                </Box>
               </Box>
             }
           />
           <Tab
             label={
               <Box sx={styles.tabLabelBoxStyles}>
-                <Box sx={{ display: { xs: 'none', md: 'block' } }}>API Структура</Box>
-                <Box sx={{ display: { xs: 'block', md: 'none' } }}>API</Box>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                  {t('architecture.tabs.api.full')}
+                </Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                  {t('architecture.tabs.api.short')}
+                </Box>
               </Box>
             }
           />
           <Tab
             label={
               <Box sx={styles.tabLabelBoxStyles}>
-                <Box sx={{ display: { xs: 'none', md: 'block' } }}>DataSource</Box>
-                <Box sx={{ display: { xs: 'block', md: 'none' } }}>DS</Box>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                  {t('architecture.tabs.datasource.full')}
+                </Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                  {t('architecture.tabs.datasource.short')}
+                </Box>
               </Box>
             }
           />
           <Tab
             label={
               <Box sx={styles.tabLabelBoxStyles}>
-                <Box sx={{ display: { xs: 'none', md: 'block' } }}>Безопасность</Box>
-                <Box sx={{ display: { xs: 'block', md: 'none' } }}>Защита</Box>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                  {t('architecture.tabs.security.full')}
+                </Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                  {t('architecture.tabs.security.short')}
+                </Box>
               </Box>
             }
           />
           <Tab
             label={
               <Box sx={styles.tabLabelBoxStyles}>
-                <Box sx={{ display: { xs: 'none', md: 'block' } }}>Метрики</Box>
-                <Box sx={{ display: { xs: 'block', md: 'none' } }}>Метрики</Box>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                  {t('architecture.tabs.metrics.full')}
+                </Box>
+                <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                  {t('architecture.tabs.metrics.short')}
+                </Box>
               </Box>
             }
           />

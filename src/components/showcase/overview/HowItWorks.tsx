@@ -1,17 +1,21 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { ProcessStep } from './ProcessStep';
-import { stepsData } from './stepsData';
+import { getStepsData } from './stepsData';
 import { howItWorksStyles } from './HowItWorks.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export const HowItWorks = () => {
+  const { t } = useLocale();
+  const stepsData = getStepsData(t);
+
   return (
     <Box sx={howItWorksStyles.container}>
       <Typography variant="h3" sx={howItWorksStyles.title}>
-        Как это работает
+        {t('overview.howItWorks.title')}
       </Typography>
       <Typography variant="h6" color="text.secondary" sx={howItWorksStyles.subtitle}>
-        От поступления письма до получения жителем лагеря — весь процесс автоматизирован
+        {t('overview.howItWorks.subtitle')}
       </Typography>
 
       <Box sx={howItWorksStyles.stepsContainer}>

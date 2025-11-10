@@ -1,37 +1,38 @@
+'use client';
+
 import React from 'react';
 import { Typography, Box, Paper, Card, Chip } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import * as styles from './DataSourceTab.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export function DataSourceTab() {
+  const { t } = useLocale();
+
   return (
     <>
       <Typography variant="h4" sx={styles.titleStyles}>
-        DataSource Архитектура
+        {t('architecture.datasourceTab.title')}
       </Typography>
 
       <Paper sx={styles.paperStyles}>
         <Typography variant="h5" sx={styles.sectionTitleStyles}>
-          Паттерн абстракции данных
+          {t('architecture.datasourceTab.pattern.title')}
         </Typography>
         <Typography variant="body1" sx={styles.descriptionStyles}>
-          DataSource архитектура позволяет легко переключаться между различными источниками данных
-          (Supabase, Mock, PostgreSQL, MySQL) изменением одной настройки в конфигурации.
-          MockDataSource используется для тестирования и демонстрации функциональности без реальной
-          базы данных.
+          {t('architecture.datasourceTab.pattern.description')}
         </Typography>
 
         <Box sx={styles.benefitsContainerStyles}>
-          {[
-            'Единый интерфейс',
-            'Легкое переключение',
-            'Тестируемость',
-            'Демо режим',
-            'Типобезопасность',
-          ].map((benefit) => (
-            <Chip key={benefit} label={benefit} variant="outlined" size="small" />
+          {[0, 1, 2, 3, 4].map((index) => (
+            <Chip
+              key={index}
+              label={t(`architecture.datasourceTab.benefits.${index}`)}
+              variant="outlined"
+              size="small"
+            />
           ))}
         </Box>
       </Paper>
@@ -46,16 +47,11 @@ export function DataSourceTab() {
         >
           <Card sx={styles.getStructureCardStyles('#2563eb')}>
             <Typography variant="h6" sx={styles.getStructureCardTitleStyles('#2563eb')}>
-              📋 Интерфейсы
+              {t('architecture.datasourceTab.interfaces.title')}
             </Typography>
-            {[
-              'IDataSource - главный интерфейс',
-              'IUserDataSource - операции с пользователями',
-              'ILetterDataSource - операции с письмами',
-              'IRoomDataSource - операции с комнатами',
-            ].map((item, index) => (
+            {[0, 1, 2, 3].map((index) => (
               <Typography key={index} variant="body2" sx={styles.structureCardItemStyles}>
-                • {item}
+                • {t(`architecture.datasourceTab.interfaces.items.${index}`)}
               </Typography>
             ))}
           </Card>
@@ -69,16 +65,11 @@ export function DataSourceTab() {
         >
           <Card sx={styles.getStructureCardStyles('#7c3aed')}>
             <Typography variant="h6" sx={styles.getStructureCardTitleStyles('#7c3aed')}>
-              🏭 Фабрика
+              {t('architecture.datasourceTab.factory.title')}
             </Typography>
-            {[
-              'Singleton паттерн',
-              'Переключение по конфигурации',
-              'Автоматическая инициализация',
-              'Управление жизненным циклом',
-            ].map((item, index) => (
+            {[0, 1, 2, 3].map((index) => (
               <Typography key={index} variant="body2" sx={styles.structureCardItemStyles}>
-                • {item}
+                • {t(`architecture.datasourceTab.factory.items.${index}`)}
               </Typography>
             ))}
           </Card>
@@ -92,16 +83,11 @@ export function DataSourceTab() {
         >
           <Card sx={styles.getStructureCardStyles('#059669')}>
             <Typography variant="h6" sx={styles.getStructureCardTitleStyles('#059669')}>
-              🔌 Реализации
+              {t('architecture.datasourceTab.implementations.title')}
             </Typography>
-            {[
-              'SupabaseDataSource - продакшн',
-              'MockDataSource - тестирование и демо',
-              'PostgreSQLDataSource - планируется',
-              'MySQLDataSource - планируется',
-            ].map((item, index) => (
+            {[0, 1, 2, 3].map((index) => (
               <Typography key={index} variant="body2" sx={styles.structureCardItemStyles}>
-                • {item}
+                • {t(`architecture.datasourceTab.implementations.items.${index}`)}
               </Typography>
             ))}
           </Card>
@@ -111,7 +97,7 @@ export function DataSourceTab() {
       {/* Configuration Example */}
       <Paper sx={styles.paperStyles}>
         <Typography variant="h5" sx={styles.sectionTitleStyles}>
-          Конфигурация источника данных
+          {t('architecture.datasourceTab.configuration.title')}
         </Typography>
         <SyntaxHighlighter
           language="typescript"
@@ -137,7 +123,7 @@ export const CURRENT_DATASOURCE: DataSourceType = 'supabase'; // или 'mock'
       {/* Usage Example */}
       <Paper sx={styles.paperStyles}>
         <Typography variant="h5" sx={styles.sectionTitleStyles}>
-          Использование в компонентах
+          {t('architecture.datasourceTab.usage.title')}
         </Typography>
         <SyntaxHighlighter
           language="typescript"
@@ -180,7 +166,7 @@ function UsersList() {
       {/* Direct Usage */}
       <Paper sx={styles.paperStyles}>
         <Typography variant="h5" sx={styles.sectionTitleStyles}>
-          Прямое использование DataSource
+          {t('architecture.datasourceTab.directUsage.title')}
         </Typography>
         <SyntaxHighlighter
           language="typescript"

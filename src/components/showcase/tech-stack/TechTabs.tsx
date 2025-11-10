@@ -1,13 +1,19 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Paper, Tabs, Tab, Box } from '@mui/material';
 import { motion } from 'framer-motion';
 import { TabPanel } from './TabPanel';
 import { TechCard } from './TechCard';
-import { techStackData } from './techStackData';
+import { getTechStackData } from './techStackData';
 import { techTabsStyles } from './TechTabs.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export const TechTabs = () => {
   const [tabValue, setTabValue] = useState(0);
+  const { t } = useLocale();
+
+  const techStackData = React.useMemo(() => getTechStackData(t), [t]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -41,9 +47,9 @@ export const TechTabs = () => {
           allowScrollButtonsMobile
           sx={techTabsStyles.tabs}
         >
-          <Tab label="Frontend" />
-          <Tab label="Backend" />
-          <Tab label="DevOps" />
+          <Tab label={t('techStack.tabs.frontend')} />
+          <Tab label={t('techStack.tabs.backend')} />
+          <Tab label={t('techStack.tabs.devops')} />
         </Tabs>
       </Paper>
 

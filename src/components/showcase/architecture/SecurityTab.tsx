@@ -1,9 +1,12 @@
-import React from 'react';
+'use client';
+
+import React, { useMemo } from 'react';
 import { Typography, Box, Card, Paper, Chip, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { securityTabStyles } from './SecurityTab.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface SecurityFeature {
   title: string;
@@ -12,56 +15,65 @@ interface SecurityFeature {
   features: string[];
 }
 
-const securityFeatures: SecurityFeature[] = [
-  {
-    title: 'Row Level Security',
-    description: 'Защита данных на уровне строк в PostgreSQL',
-    icon: '🔒',
-    features: [
-      'Автоматическая фильтрация',
-      'Политики доступа',
-      'Защита от SQL-инъекций',
-      'Контроль по ролям',
-    ],
-  },
-  {
-    title: 'JWT Authentication',
-    description: 'Безопасная аутентификация с токенами',
-    icon: '🎫',
-    features: [
-      'Статeless токены',
-      'Автоматическое обновление',
-      'Защищенные маршруты',
-      'Middleware проверка',
-    ],
-  },
-  {
-    title: 'API Protection',
-    description: 'Защита API эндпоинтов',
-    icon: '🛡️',
-    features: [
-      'Rate limiting',
-      'CORS настройки',
-      'Валидация входных данных',
-      'Логирование запросов',
-    ],
-  },
-  {
-    title: 'Data Encryption',
-    description: 'Шифрование чувствительных данных',
-    icon: '🔐',
-    features: ['HTTPS/TLS', 'Хеширование паролей', 'Шифрование в БД', 'Безопасные cookies'],
-  },
-];
-
 export function SecurityTab() {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  const { t } = useLocale();
+
+  const securityFeatures: SecurityFeature[] = useMemo(
+    () => [
+      {
+        title: t('architecture.securityTab.rls.title'),
+        description: t('architecture.securityTab.rls.description'),
+        icon: '🔒',
+        features: [
+          t('architecture.securityTab.rls.features.0'),
+          t('architecture.securityTab.rls.features.1'),
+          t('architecture.securityTab.rls.features.2'),
+          t('architecture.securityTab.rls.features.3'),
+        ],
+      },
+      {
+        title: t('architecture.securityTab.jwt.title'),
+        description: t('architecture.securityTab.jwt.description'),
+        icon: '🎫',
+        features: [
+          t('architecture.securityTab.jwt.features.0'),
+          t('architecture.securityTab.jwt.features.1'),
+          t('architecture.securityTab.jwt.features.2'),
+          t('architecture.securityTab.jwt.features.3'),
+        ],
+      },
+      {
+        title: t('architecture.securityTab.apiProtection.title'),
+        description: t('architecture.securityTab.apiProtection.description'),
+        icon: '🛡️',
+        features: [
+          t('architecture.securityTab.apiProtection.features.0'),
+          t('architecture.securityTab.apiProtection.features.1'),
+          t('architecture.securityTab.apiProtection.features.2'),
+          t('architecture.securityTab.apiProtection.features.3'),
+        ],
+      },
+      {
+        title: t('architecture.securityTab.encryption.title'),
+        description: t('architecture.securityTab.encryption.description'),
+        icon: '🔐',
+        features: [
+          t('architecture.securityTab.encryption.features.0'),
+          t('architecture.securityTab.encryption.features.1'),
+          t('architecture.securityTab.encryption.features.2'),
+          t('architecture.securityTab.encryption.features.3'),
+        ],
+      },
+    ],
+    [t]
+  );
 
   return (
     <>
       <Typography variant="h4" sx={securityTabStyles.title}>
-        Безопасность
+        {t('architecture.securityTab.title')}
       </Typography>
 
       <Box sx={securityTabStyles.securityGrid}>
@@ -119,7 +131,7 @@ export function SecurityTab() {
         }}
       >
         <Typography variant="h5" sx={securityTabStyles.codeTitle}>
-          Пример RLS политики
+          {t('architecture.securityTab.rlsExample.title')}
         </Typography>
         <SyntaxHighlighter language="sql" style={oneDark} customStyle={securityTabStyles.codeStyle}>
           {`-- Политика для таблицы letters

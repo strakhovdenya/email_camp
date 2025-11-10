@@ -1,17 +1,23 @@
 import React from 'react';
 import { Tabs, Tab } from '@mui/material';
-import { demoData } from './demoData';
 import { demoTabsStyles } from './DemoTabs.styles';
+
+interface TabLabel {
+  full: string;
+  short: string;
+  active?: (room: string) => { full: string; short: string };
+}
 
 interface DemoTabsProps {
   activeTab: number;
   selectedRoom: string;
   onTabChange: (event: React.SyntheticEvent, newValue: number) => void;
+  tabs: Array<{ label: TabLabel }>;
 }
 
-export const DemoTabs = ({ activeTab, selectedRoom, onTabChange }: DemoTabsProps) => {
+export const DemoTabs = ({ activeTab, selectedRoom, onTabChange, tabs }: DemoTabsProps) => {
   const getTabLabel = (tabIndex: number) => {
-    const tab = demoData.tabs[tabIndex];
+    const tab = tabs[tabIndex];
 
     if (tab.label.active && activeTab === tabIndex && tabIndex > 0) {
       const activeLabels = tab.label.active(selectedRoom);
@@ -40,7 +46,7 @@ export const DemoTabs = ({ activeTab, selectedRoom, onTabChange }: DemoTabsProps
         variant="fullWidth"
         sx={demoTabsStyles.tabs}
       >
-        {demoData.tabs.map((_, index) => (
+        {tabs.map((_, index) => (
           <Tab key={index} label={getTabLabel(index)} />
         ))}
       </Tabs>

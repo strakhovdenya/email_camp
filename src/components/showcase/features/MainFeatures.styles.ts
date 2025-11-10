@@ -9,16 +9,18 @@ export const outerContainerStyles: SxProps<Theme> = {
 
 // Inner container styles
 export const innerContainerStyles: SxProps<Theme> = {
-  display: 'flex',
-  flexWrap: 'wrap',
+  display: 'grid',
+  gridTemplateColumns: {
+    xs: '1fr',
+    md: 'repeat(2, 1fr)',
+  },
   gap: { xs: 2, md: 4 },
   maxWidth: '1200px',
-  justifyContent: 'center',
   width: '100%',
 };
 
 // Feature item styles
 export const featureItemStyles: SxProps<Theme> = {
-  flex: { xs: '1 1 100%', md: '1 1 calc(50% - 16px)' },
-  minWidth: { xs: 'auto', md: '300px' },
+  display: 'flex',
+  width: '100%',
 };

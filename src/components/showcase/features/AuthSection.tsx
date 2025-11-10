@@ -7,27 +7,29 @@ import {
   Dashboard as DashboardIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export function AuthSection() {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  const { t } = useLocale();
 
   const authMethods = [
     {
-      title: 'Email регистрация',
-      description: 'Классический способ с подтверждением',
+      title: t('features.authSection.authMethods.emailRegistration.title'),
+      description: t('features.authSection.authMethods.emailRegistration.description'),
       icon: <EmailIcon />,
       color: '#3b82f6',
       steps: [
-        'Заполнение формы: имя, фамилия, email, пароль, роль',
-        'Отправка письма с подтверждением на emal',
-        'Автоматический вход после подтверждения',
-        'Создание записи в базе данных пользователей',
+        t('features.authSection.authMethods.emailRegistration.steps.0'),
+        t('features.authSection.authMethods.emailRegistration.steps.1'),
+        t('features.authSection.authMethods.emailRegistration.steps.2'),
+        t('features.authSection.authMethods.emailRegistration.steps.3'),
       ],
     },
     {
-      title: 'Google OAuth',
-      description: 'Быстрый вход через Google аккаунт',
+      title: t('features.authSection.authMethods.googleOAuth.title'),
+      description: t('features.authSection.authMethods.googleOAuth.description'),
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -38,10 +40,10 @@ export function AuthSection() {
       ),
       color: '#059669',
       steps: [
-        'Редирект на страницу авторизации Google',
-        'Получение данных профиля (имя, email)',
-        'Завершение профиля (роль, дополнительные данные)',
-        'Автоматический вход в систему',
+        t('features.authSection.authMethods.googleOAuth.steps.0'),
+        t('features.authSection.authMethods.googleOAuth.steps.1'),
+        t('features.authSection.authMethods.googleOAuth.steps.2'),
+        t('features.authSection.authMethods.googleOAuth.steps.3'),
       ],
     },
   ];
@@ -49,37 +51,36 @@ export function AuthSection() {
   const securityFeatures = [
     {
       icon: <AdminIcon />,
-      title: 'Первый = Администратор',
-      description:
-        'Первый зарегистрированный пользователь автоматически получает права администратора',
+      title: t('features.authSection.securityFeatures.firstAdmin.title'),
+      description: t('features.authSection.securityFeatures.firstAdmin.description'),
       color: '#dc2626',
     },
     {
       icon: <CheckIcon />,
-      title: 'Контролируемая регистрация',
-      description: 'После создания админа самостоятельная регистрация блокируется',
+      title: t('features.authSection.securityFeatures.controlledRegistration.title'),
+      description: t('features.authSection.securityFeatures.controlledRegistration.description'),
       color: '#7c3aed',
     },
     {
       icon: <DashboardIcon />,
-      title: 'Роли и права',
-      description: 'Три роли: Администратор, Сотрудник, Житель с разными уровнями доступа',
+      title: t('features.authSection.securityFeatures.rolesAndRights.title'),
+      description: t('features.authSection.securityFeatures.rolesAndRights.description'),
       color: '#2563eb',
     },
     {
       icon: <CheckIcon />,
-      title: 'Middleware защита',
-      description: 'Автоматическая проверка авторизации на каждом запросе к защищенным страницам',
+      title: t('features.authSection.securityFeatures.middlewareProtection.title'),
+      description: t('features.authSection.securityFeatures.middlewareProtection.description'),
       color: '#059669',
     },
   ];
 
   const techStack = [
-    { label: 'Supabase Auth', color: '#059669' },
-    { label: 'Next.js Middleware', color: '#2563eb' },
-    { label: 'OAuth 2.0', color: '#7c3aed' },
-    { label: 'JWT Tokens', color: '#dc2626' },
-    { label: 'Email Verification', color: '#ea580c' },
+    { label: t('features.authSection.technicalImplementation.techStack.0'), color: '#059669' },
+    { label: t('features.authSection.technicalImplementation.techStack.1'), color: '#2563eb' },
+    { label: t('features.authSection.technicalImplementation.techStack.2'), color: '#7c3aed' },
+    { label: t('features.authSection.technicalImplementation.techStack.3'), color: '#dc2626' },
+    { label: t('features.authSection.technicalImplementation.techStack.4'), color: '#ea580c' },
   ];
 
   return (
@@ -102,7 +103,7 @@ export function AuthSection() {
             fontSize: { xs: '1.8rem', md: '2.5rem' },
           }}
         >
-          Система авторизации и безопасность
+          {t('features.authSection.title')}
         </Typography>
 
         {/* Auth Methods */}
@@ -179,7 +180,7 @@ export function AuthSection() {
             fontSize: { xs: '1.5rem', md: '2rem' },
           }}
         >
-          Особенности безопасности
+          {t('features.authSection.securityFeatures.title')}
         </Typography>
 
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: { xs: 4, md: 6 } }}>
@@ -245,7 +246,7 @@ export function AuthSection() {
         {/* Technical Implementation */}
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h5" sx={{ mb: 2, fontWeight: 700, color: 'text.primary' }}>
-            Техническая реализация
+            {t('features.authSection.technicalImplementation.title')}
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 2 }}>
             {techStack.map((tech, index) => (

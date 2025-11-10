@@ -1,28 +1,16 @@
-import React from 'react';
+'use client';
+
+import React, { useMemo } from 'react';
 import { Typography, Box, Card, Paper, Chip, useTheme } from '@mui/material';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface ApiEndpoint {
   method: string;
   path: string;
   description: string;
 }
-
-const apiEndpoints: ApiEndpoint[] = [
-  { method: 'GET', path: '/api/letters', description: 'Получить список писем' },
-  { method: 'POST', path: '/api/letters', description: 'Добавить новое письмо' },
-  { method: 'POST', path: '/api/letters/deliver', description: 'Отметить письмо как выданное' },
-  { method: 'GET', path: '/api/rooms', description: 'Получить список комнат' },
-  {
-    method: 'GET',
-    path: '/api/rooms/[roomNumber]/users',
-    description: 'Получить жильцов комнаты',
-  },
-  { method: 'GET', path: '/api/users', description: 'Получить список пользователей' },
-  { method: 'POST', path: '/api/users/invite', description: 'Пригласить пользователя' },
-  { method: 'GET', path: '/api/auth/me', description: 'Получить текущего пользователя' },
-];
 
 const getMethodChipStyles = (method: string) => {
   const colors = {
@@ -37,6 +25,33 @@ const getMethodChipStyles = (method: string) => {
 export function ApiTab() {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  const { t } = useLocale();
+
+  const apiEndpoints: ApiEndpoint[] = useMemo(
+    () => [
+      { method: 'GET', path: '/api/letters', description: t('architecture.apiTab.endpoints.0') },
+      { method: 'POST', path: '/api/letters', description: t('architecture.apiTab.endpoints.1') },
+      {
+        method: 'POST',
+        path: '/api/letters/deliver',
+        description: t('architecture.apiTab.endpoints.2'),
+      },
+      { method: 'GET', path: '/api/rooms', description: t('architecture.apiTab.endpoints.3') },
+      {
+        method: 'GET',
+        path: '/api/rooms/[roomNumber]/users',
+        description: t('architecture.apiTab.endpoints.4'),
+      },
+      { method: 'GET', path: '/api/users', description: t('architecture.apiTab.endpoints.5') },
+      {
+        method: 'POST',
+        path: '/api/users/invite',
+        description: t('architecture.apiTab.endpoints.6'),
+      },
+      { method: 'GET', path: '/api/auth/me', description: t('architecture.apiTab.endpoints.7') },
+    ],
+    [t]
+  );
 
   return (
     <>
@@ -51,7 +66,7 @@ export function ApiTab() {
           wordBreak: 'break-word',
         }}
       >
-        API Структура
+        {t('architecture.apiTab.title')}
       </Typography>
 
       <Box sx={{ mb: { xs: 1, md: 6 } }}>
@@ -126,7 +141,7 @@ export function ApiTab() {
             fontSize: { xs: '1rem', md: '1.5rem' },
           }}
         >
-          Пример использования API
+          {t('architecture.apiTab.example.title')}
         </Typography>
         <SyntaxHighlighter
           language="typescript"

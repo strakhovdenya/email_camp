@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import {
   Card,
@@ -15,12 +17,15 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { TechItem } from './techStackData';
 import { techCardStyles } from './TechCard.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface TechCardProps {
   tech: TechItem;
 }
 
 export const TechCard = ({ tech }: TechCardProps) => {
+  const { t } = useLocale();
+
   return (
     <Card sx={techCardStyles.card(tech.color)}>
       <CardContent sx={techCardStyles.cardContent}>
@@ -54,7 +59,7 @@ export const TechCard = ({ tech }: TechCardProps) => {
           <Accordion sx={techCardStyles.accordion}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant="body2" sx={techCardStyles.accordionTitle}>
-                Пример кода
+                {t('techStack.codeExample')}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>

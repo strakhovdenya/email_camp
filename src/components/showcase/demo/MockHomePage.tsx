@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Card, CardContent } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -7,6 +9,7 @@ import { LinkButton } from '@/components/ui/LinkButton';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { RoomCard } from '@/components/ui/RoomCard';
 import { mockHomePageStyles } from './MockHomePage.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface MockHomePageProps {
   onAddLetterClick: (roomNumber: string) => void;
@@ -15,11 +18,12 @@ interface MockHomePageProps {
 
 export const MockHomePage = ({ onAddLetterClick, onDeliverClick }: MockHomePageProps) => {
   const { data: rooms = [], isLoading } = useRoomsWithLettersDataSource();
+  const { t } = useLocale();
 
   return (
     <main className={mockHomePageStyles.container}>
-      <h1 className={mockHomePageStyles.title}>Email Camp</h1>
-      <h2 className={mockHomePageStyles.subtitle}>Комнаты и письма, ожидающие выдачи</h2>
+      <h1 className={mockHomePageStyles.title}>{t('demo.pages.home.title')}</h1>
+      <h2 className={mockHomePageStyles.subtitle}>{t('demo.pages.home.subtitle')}</h2>
 
       {isLoading ? (
         <div className={mockHomePageStyles.skeletonGrid}>
@@ -35,7 +39,7 @@ export const MockHomePage = ({ onAddLetterClick, onDeliverClick }: MockHomePageP
         >
           <Card elevation={2} className="rounded-2xl">
             <CardContent className={mockHomePageStyles.emptyState}>
-              Нет комнат с письмами.
+              {t('demo.pages.home.emptyState')}
             </CardContent>
           </Card>
         </motion.div>
@@ -59,9 +63,9 @@ export const MockHomePage = ({ onAddLetterClick, onDeliverClick }: MockHomePageP
                   e.preventDefault();
                   onAddLetterClick(room.room_number);
                 }}
-                title="Добавить письмо"
+                title={t('demo.pages.buttons.addLetter')}
               >
-                <span className="hidden sm:inline">Добавить</span>
+                <span className="hidden sm:inline">{t('demo.pages.buttons.add')}</span>
               </LinkButton>
               <LinkButton
                 href={`/deliver/${room.room_number}`}
@@ -74,9 +78,9 @@ export const MockHomePage = ({ onAddLetterClick, onDeliverClick }: MockHomePageP
                   e.preventDefault();
                   onDeliverClick(room.room_number);
                 }}
-                title="Выдать письма"
+                title={t('demo.pages.buttons.deliverLetters')}
               >
-                <span className="hidden sm:inline">Выдать</span>
+                <span className="hidden sm:inline">{t('demo.pages.buttons.deliver')}</span>
               </LinkButton>
             </RoomCard>
           ))}

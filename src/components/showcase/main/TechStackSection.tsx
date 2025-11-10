@@ -1,19 +1,24 @@
+'use client';
+
 import React from 'react';
 import { Box, Typography, Button, Chip } from '@mui/material';
 import { Launch as LaunchIcon } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { techStackSectionStyles } from './TechStackSection.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface TechStackSectionProps {
   techStack: string[];
 }
 
 export const TechStackSection = ({ techStack }: TechStackSectionProps) => {
+  const { t } = useLocale();
+
   return (
     <Box sx={techStackSectionStyles.container}>
       <Typography variant="h3" sx={techStackSectionStyles.title}>
-        Современный стек технологий
+        {t('hero.techStackTitle')}
       </Typography>
 
       <Box sx={techStackSectionStyles.chipContainer}>
@@ -38,7 +43,7 @@ export const TechStackSection = ({ techStack }: TechStackSectionProps) => {
         href="/showcase/tech-stack"
         sx={techStackSectionStyles.button}
       >
-        Подробнее о технологиях
+        {t('hero.learnMoreTech')}
       </Button>
     </Box>
   );

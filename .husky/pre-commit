@@ -1,12 +1,4 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-# Проверка TypeScript
-npx tsc --noEmit
-
-# Lint-staged для измененных файлов
+# Lint-staged для измененных файлов (проверяет только измененные файлы)
+# Полная проверка TypeScript и lint выполняется в CI/CD
 npx lint-staged
 
-# Дополнительная проверка на warnings для всего проекта
-npm run lint -- --max-warnings 0
- 

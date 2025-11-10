@@ -7,31 +7,34 @@ import {
   TrendingUp as TrendingIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export function BenefitsSummary() {
+  const { t } = useLocale();
+
   const benefits = [
     {
       icon: <SpeedIcon />,
-      title: 'Экономия времени',
-      description: 'Устранение ежедневных очередей после 14:00',
+      title: t('features.benefitsSummary.benefits.timeSaving.title'),
+      description: t('features.benefitsSummary.benefits.timeSaving.description'),
       color: '#2563eb',
     },
     {
       icon: <CheckIcon />,
-      title: 'Гарантия получения',
-      description: 'Жители приходят только при наличии почты',
+      title: t('features.benefitsSummary.benefits.guaranteedDelivery.title'),
+      description: t('features.benefitsSummary.benefits.guaranteedDelivery.description'),
       color: '#059669',
     },
     {
       icon: <TimeIcon />,
-      title: 'Быстрая обработка',
-      description: 'Регистрация и выдача за секунды',
+      title: t('features.benefitsSummary.benefits.fastProcessing.title'),
+      description: t('features.benefitsSummary.benefits.fastProcessing.description'),
       color: '#7c3aed',
     },
     {
       icon: <TrendingIcon />,
-      title: 'Полная прозрачность',
-      description: 'Отслеживание каждого этапа процесса',
+      title: t('features.benefitsSummary.benefits.fullTransparency.title'),
+      description: t('features.benefitsSummary.benefits.fullTransparency.description'),
       color: '#dc2626',
     },
   ];
@@ -46,7 +49,7 @@ export function BenefitsSummary() {
           fontSize: { xs: '1.8rem', md: '2.5rem' },
         }}
       >
-        Результаты внедрения
+        {t('features.benefitsSummary.title')}
       </Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>

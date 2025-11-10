@@ -1,11 +1,16 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import { Box, Typography, Card, Avatar, Paper } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Email as EmailIcon, Telegram as TelegramIcon } from '@mui/icons-material';
 import { notificationExamplesStyles } from './NotificationExamples.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export const NotificationExamples = () => {
+  const { t } = useLocale();
+
   return (
     <Paper
       component={motion.div}
@@ -15,7 +20,7 @@ export const NotificationExamples = () => {
       sx={notificationExamplesStyles.paper}
     >
       <Typography variant="h5" sx={notificationExamplesStyles.title}>
-        Примеры уведомлений
+        {t('overview.notificationExamples.title')}
       </Typography>
 
       <Box sx={notificationExamplesStyles.notificationsGrid}>
@@ -31,24 +36,20 @@ export const NotificationExamples = () => {
               <TelegramIcon />
             </Avatar>
             <Typography variant="h6" sx={notificationExamplesStyles.notificationTitle}>
-              Telegram уведомление
+              {t('overview.notificationExamples.telegram.title')}
             </Typography>
           </Box>
           <Paper sx={notificationExamplesStyles.telegramMessage}>
-            <Typography variant="body2" sx={{ fontSize: 'inherit' }}>
-              📬 <strong>Новое письмо в лагере!</strong>
-              <br />
-              Для: Иван Петров
-              <br />
-              Комната: 101
-              <br />
-              Время поступления: 14:30
-              <br />
-              <br />
-              Заберите письмо на инфо-поинте! 📮
-              <br />
-              Ваше письмо готово к получению.
-            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ fontSize: 'inherit' }}
+              dangerouslySetInnerHTML={{
+                __html: t('overview.notificationExamples.telegram.message').replace(
+                  /\n/g,
+                  '<br />'
+                ),
+              }}
+            />
           </Paper>
         </Card>
 
@@ -64,7 +65,7 @@ export const NotificationExamples = () => {
               <EmailIcon />
             </Avatar>
             <Typography variant="h6" sx={notificationExamplesStyles.notificationTitle}>
-              Email уведомление
+              {t('overview.notificationExamples.email.title')}
             </Typography>
           </Box>
 
@@ -72,7 +73,7 @@ export const NotificationExamples = () => {
           <Box sx={notificationExamplesStyles.emailScreenshot}>
             <Image
               src="/images/examples/email-notification.png"
-              alt="Пример Email уведомления жителю лагеря"
+              alt={t('overview.notificationExamples.email.alt')}
               width={400}
               height={300}
               style={{
@@ -88,7 +89,7 @@ export const NotificationExamples = () => {
             color="text.secondary"
             sx={notificationExamplesStyles.emailCaption}
           >
-            Реальный пример Email уведомления для жителя лагеря
+            {t('overview.notificationExamples.email.caption')}
           </Typography>
         </Card>
       </Box>

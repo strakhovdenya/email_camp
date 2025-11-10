@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Card, CardContent, Chip } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -5,6 +7,7 @@ import { useLettersByRoomDataSource } from '@/hooks/useLettersDataSource';
 import { AddLetterForm } from '@/components/AddLetterForm';
 import { LetterList } from '@/components/LetterList';
 import { mockAddLetterPageStyles } from './MockAddLetterPage.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface MockAddLetterPageProps {
   roomNumber: string;
@@ -12,6 +15,7 @@ interface MockAddLetterPageProps {
 
 export const MockAddLetterPage = ({ roomNumber }: MockAddLetterPageProps) => {
   const { data: letters = [] } = useLettersByRoomDataSource(roomNumber);
+  const { t } = useLocale();
   const count = letters.length;
 
   return (
@@ -22,10 +26,10 @@ export const MockAddLetterPage = ({ roomNumber }: MockAddLetterPageProps) => {
           <span role="img" aria-label="room">
             🏠
           </span>{' '}
-          Комната {roomNumber}
+          {t('demo.pages.addLetter.roomTitle')} {roomNumber}
         </h1>
         <Chip
-          label={`Писем: ${count}`}
+          label={`${t('demo.pages.addLetter.lettersCount')} ${count}`}
           color="primary"
           size="small"
           sx={mockAddLetterPageStyles.chip}
@@ -41,7 +45,9 @@ export const MockAddLetterPage = ({ roomNumber }: MockAddLetterPageProps) => {
       >
         <Card elevation={3} className="rounded-2xl">
           <CardContent className={mockAddLetterPageStyles.cardContent}>
-            <h2 className={mockAddLetterPageStyles.sectionTitle}>Добавить письмо</h2>
+            <h2 className={mockAddLetterPageStyles.sectionTitle}>
+              {t('demo.pages.addLetter.addLetterTitle')}
+            </h2>
             <AddLetterForm onRoomNumberChange={() => {}} initialRoomNumber={roomNumber} />
           </CardContent>
         </Card>
@@ -55,7 +61,9 @@ export const MockAddLetterPage = ({ roomNumber }: MockAddLetterPageProps) => {
       >
         <Card elevation={3} className="rounded-2xl">
           <CardContent className={mockAddLetterPageStyles.cardContent}>
-            <h2 className={mockAddLetterPageStyles.sectionTitle}>Список писем</h2>
+            <h2 className={mockAddLetterPageStyles.sectionTitle}>
+              {t('demo.pages.addLetter.lettersListTitle')}
+            </h2>
             <LetterList letters={letters} deliverLoadingId={null} />
           </CardContent>
         </Card>

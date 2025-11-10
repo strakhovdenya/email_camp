@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Typography, Box, Paper } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -5,6 +7,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { DatabaseTable } from './DatabaseTable';
 import * as styles from './DatabaseTab.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface DatabaseColumn {
   name: string;
@@ -58,10 +61,12 @@ const databaseTables: DatabaseTableData[] = [
 ];
 
 export function DatabaseTab() {
+  const { t } = useLocale();
+
   return (
     <>
       <Typography variant="h4" sx={styles.titleStyles}>
-        Схема базы данных
+        {t('architecture.databaseTab.title')}
       </Typography>
 
       <Box sx={styles.tablesContainerStyles}>
@@ -79,37 +84,37 @@ export function DatabaseTab() {
 
       <Paper sx={styles.paperStyles}>
         <Typography variant="h5" sx={styles.sectionTitleStyles}>
-          Связи между таблицами
+          {t('architecture.databaseTab.relationships.title')}
         </Typography>
         <Box sx={styles.relationshipBoxStyles}>
           <Typography variant="body1" sx={styles.relationshipTitleStyles}>
-            <strong>users.room_number</strong> → <strong>rooms.room_number</strong>
+            <strong>{t('architecture.databaseTab.relationships.usersRooms.title')}</strong>
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
             sx={styles.relationshipDescriptionStyles}
           >
-            Каждый пользователь привязан к определенной комнате
+            {t('architecture.databaseTab.relationships.usersRooms.description')}
           </Typography>
         </Box>
         <Box>
           <Typography variant="body1" sx={styles.relationshipTitleStyles}>
-            <strong>letters.user_id</strong> → <strong>users.id</strong>
+            <strong>{t('architecture.databaseTab.relationships.lettersUsers.title')}</strong>
           </Typography>
           <Typography
             variant="body2"
             color="text.secondary"
             sx={styles.relationshipDescriptionStyles}
           >
-            Каждое письмо адресовано конкретному пользователю
+            {t('architecture.databaseTab.relationships.lettersUsers.description')}
           </Typography>
         </Box>
       </Paper>
 
       <Paper sx={styles.lastPaperStyles}>
         <Typography variant="h5" sx={styles.sectionTitleStyles}>
-          Пример SQL запроса
+          {t('architecture.databaseTab.sqlExample.title')}
         </Typography>
         <SyntaxHighlighter
           language="sql"

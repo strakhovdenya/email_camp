@@ -2,8 +2,11 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import { overviewHeaderStyles } from './OverviewHeader.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export const OverviewHeader = () => {
+  const { t } = useLocale();
+
   return (
     <Box sx={overviewHeaderStyles.container}>
       <Typography
@@ -13,10 +16,10 @@ export const OverviewHeader = () => {
         animate={{ opacity: 1, y: 0 }}
         sx={overviewHeaderStyles.title}
       >
-        Обзор проекта
+        {t('overview.title')}
       </Typography>
       <Typography variant="h6" color="text.secondary" sx={overviewHeaderStyles.subtitle}>
-        Детальный анализ разработки системы управления почтой для лагерей
+        {t('overview.subtitle')}
       </Typography>
     </Box>
   );

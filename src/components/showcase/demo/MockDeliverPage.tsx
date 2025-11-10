@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Card, CardContent, Chip } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -8,6 +10,7 @@ import {
 import { useUsersByRoomDataSource } from '@/hooks/useUsersDataSource';
 import { LetterList } from '@/components/LetterList';
 import { mockDeliverPageStyles } from './MockDeliverPage.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface MockDeliverPageProps {
   roomNumber: string;
@@ -18,6 +21,7 @@ export const MockDeliverPage = ({ roomNumber }: MockDeliverPageProps) => {
   const { data: users = [] } = useUsersByRoomDataSource(roomNumber);
   const { markAsDelivered } = useLetterMutationsDataSource();
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const { t } = useLocale();
 
   const count = letters.length;
 
@@ -30,9 +34,11 @@ export const MockDeliverPage = ({ roomNumber }: MockDeliverPageProps) => {
     <main className={mockDeliverPageStyles.container}>
       {/* Header */}
       <div className={mockDeliverPageStyles.header}>
-        <h1 className={mockDeliverPageStyles.title}>Выдача писем — комната {roomNumber}</h1>
+        <h1 className={mockDeliverPageStyles.title}>
+          {t('demo.pages.deliver.title')} {roomNumber}
+        </h1>
         <Chip
-          label={`Писем: ${count}`}
+          label={`${t('demo.pages.deliver.lettersCount')} ${count}`}
           color="primary"
           size="small"
           sx={mockDeliverPageStyles.chip}
@@ -49,7 +55,7 @@ export const MockDeliverPage = ({ roomNumber }: MockDeliverPageProps) => {
         <Card elevation={2} className="rounded-2xl">
           <CardContent className={mockDeliverPageStyles.filterContent}>
             <label htmlFor="userFilter" className={mockDeliverPageStyles.filterLabel}>
-              <span className="w-4 h-4 text-blue-400">🔽</span> Фильтр по пользователю
+              <span className="w-4 h-4 text-blue-400">🔽</span> {t('demo.pages.deliver.userFilter')}
             </label>
             <select
               id="userFilter"
@@ -57,7 +63,7 @@ export const MockDeliverPage = ({ roomNumber }: MockDeliverPageProps) => {
               onChange={(e) => setSelectedUserId(e.target.value || null)}
               className={mockDeliverPageStyles.filterSelect}
             >
-              <option value="">Все пользователи</option>
+              <option value="">{t('demo.pages.deliver.allUsers')}</option>
               {users.map((user: { id: string; first_name: string; last_name: string }) => (
                 <option key={user.id} value={user.id}>
                   {user.last_name} {user.first_name}

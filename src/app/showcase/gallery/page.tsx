@@ -14,8 +14,10 @@ import {
   DEVICE_CATEGORIES,
   FUNCTIONAL_CATEGORIES,
 } from '@/components/showcase/gallery';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export default function GalleryPage() {
+  const { t } = useLocale();
   const [selectedDeviceCategory, setSelectedDeviceCategory] = useState<DeviceCategory>(
     DEVICE_CATEGORIES.ALL
   );
@@ -82,7 +84,7 @@ export default function GalleryPage() {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <GalleryHeader title={galleryData.title} subtitle={galleryData.subtitle} />
+      <GalleryHeader title={t('gallery.title')} subtitle={t('gallery.subtitle')} />
 
       <GalleryFilters
         deviceCategories={galleryData.deviceCategories}

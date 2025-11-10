@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import {
@@ -8,51 +10,57 @@ import {
 } from '@mui/icons-material';
 import { OverviewCard } from './OverviewCard';
 import { keyAspectsStyles } from './KeyAspects.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export const KeyAspects = () => {
-  const aspects = [
-    {
-      icon: <ProblemIcon />,
-      title: 'Проблема',
-      description: 'Неэффективный процесс получения почты в лагере',
-      color: '#dc2626',
-      details: [
-        'Ежедневные очереди на инфо-поинте после 14:00',
-        'Ручная проверка папок каждой комнаты сотрудниками',
-        'Потеря времени при отсутствии писем',
-        'Неопределенность для жителей лагеря',
-      ],
-    },
-    {
-      icon: <SolutionIcon />,
-      title: 'Решение',
-      description: 'QR-система с автоматическими уведомлениями',
-      color: '#059669',
-      details: [
-        'QR-коды на папках комнат для быстрой регистрации',
-        'Автоматические уведомления в Telegram/Email',
-        'Жители приходят только при наличии почты',
-        'Экономия времени сотрудников и жителей',
-      ],
-    },
-    {
-      icon: <ResultIcon />,
-      title: 'Результат',
-      description: 'Оптимизированный процесс получения почты',
-      color: '#2563eb',
-      details: [
-        'Устранение ежедневных очередей на инфо-поинте',
-        'Гарантированное получение почты при посещении',
-        'Минимальные затраты времени сотрудников',
-        'Полная прозрачность и отслеживание процесса',
-      ],
-    },
-  ];
+  const { t } = useLocale();
+
+  const aspects = useMemo(
+    () => [
+      {
+        icon: <ProblemIcon />,
+        title: t('overview.keyAspects.problem.title'),
+        description: t('overview.keyAspects.problem.description'),
+        color: '#dc2626',
+        details: [
+          t('overview.keyAspects.problem.details.0'),
+          t('overview.keyAspects.problem.details.1'),
+          t('overview.keyAspects.problem.details.2'),
+          t('overview.keyAspects.problem.details.3'),
+        ],
+      },
+      {
+        icon: <SolutionIcon />,
+        title: t('overview.keyAspects.solution.title'),
+        description: t('overview.keyAspects.solution.description'),
+        color: '#059669',
+        details: [
+          t('overview.keyAspects.solution.details.0'),
+          t('overview.keyAspects.solution.details.1'),
+          t('overview.keyAspects.solution.details.2'),
+          t('overview.keyAspects.solution.details.3'),
+        ],
+      },
+      {
+        icon: <ResultIcon />,
+        title: t('overview.keyAspects.result.title'),
+        description: t('overview.keyAspects.result.description'),
+        color: '#2563eb',
+        details: [
+          t('overview.keyAspects.result.details.0'),
+          t('overview.keyAspects.result.details.1'),
+          t('overview.keyAspects.result.details.2'),
+          t('overview.keyAspects.result.details.3'),
+        ],
+      },
+    ],
+    [t]
+  );
 
   return (
     <Box sx={keyAspectsStyles.container}>
       <Typography variant="h3" sx={keyAspectsStyles.title}>
-        Ключевые аспекты
+        {t('overview.keyAspects.title')}
       </Typography>
       <Box sx={keyAspectsStyles.aspectsGrid}>
         {aspects.map((aspect, index) => (

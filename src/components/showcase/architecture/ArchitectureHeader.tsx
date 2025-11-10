@@ -1,8 +1,11 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
 import { motion } from 'framer-motion';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export function ArchitectureHeader() {
+  const { t } = useLocale();
+
   return (
     <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
       <Typography
@@ -16,7 +19,7 @@ export function ArchitectureHeader() {
           fontSize: { xs: '2rem', sm: '2.5rem', md: '3.5rem' },
         }}
       >
-        Архитектура системы
+        {t('architecture.title')}
       </Typography>
       <Typography
         variant="h6"
@@ -28,7 +31,7 @@ export function ArchitectureHeader() {
           fontSize: { xs: '1rem', md: '1.25rem' },
         }}
       >
-        Детальное описание структуры базы данных и архитектуры приложения
+        {t('architecture.subtitle')}
       </Typography>
     </Box>
   );

@@ -4,4 +4,4 @@ export { FeaturesSection } from './FeaturesSection';
 export { TechStackSection } from './TechStackSection';
 export { AnimatedCounter } from './AnimatedCounter';
 export { FeatureCard } from './FeatureCard';
-export { showcaseData } from './showcaseData';
+export { getShowcaseData } from './showcaseData';

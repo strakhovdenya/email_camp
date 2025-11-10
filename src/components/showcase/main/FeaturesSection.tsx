@@ -3,16 +3,19 @@ import { Box, Typography } from '@mui/material';
 import { FeatureCard } from './FeatureCard';
 import { type FeatureData } from './showcaseData';
 import { featuresSectionStyles } from './FeaturesSection.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 interface FeaturesSectionProps {
   features: FeatureData[];
 }
 
 export const FeaturesSection = ({ features }: FeaturesSectionProps) => {
+  const { t } = useLocale();
+
   return (
     <Box sx={featuresSectionStyles.container}>
       <Typography variant="h2" textAlign="center" sx={featuresSectionStyles.title}>
-        Ключевые возможности
+        {t('features.title')}
       </Typography>
 
       <Typography
@@ -21,7 +24,7 @@ export const FeaturesSection = ({ features }: FeaturesSectionProps) => {
         color="text.secondary"
         sx={featuresSectionStyles.subtitle}
       >
-        Полнофункциональная система с современным стеком технологий
+        {t('features.subtitle')}
       </Typography>
 
       <Box sx={featuresSectionStyles.grid}>

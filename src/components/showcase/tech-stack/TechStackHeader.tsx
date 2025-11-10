@@ -2,8 +2,11 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import { techStackHeaderStyles } from './TechStackHeader.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export const TechStackHeader = () => {
+  const { t } = useLocale();
+
   return (
     <Box sx={techStackHeaderStyles.container}>
       <Typography
@@ -13,10 +16,10 @@ export const TechStackHeader = () => {
         animate={{ opacity: 1, y: 0 }}
         sx={techStackHeaderStyles.title}
       >
-        Технологический стек
+        {t('techStack.title')}
       </Typography>
       <Typography variant="h6" color="text.secondary" sx={techStackHeaderStyles.subtitle}>
-        Современные технологии для создания надежного и масштабируемого приложения
+        {t('techStack.subtitle')}
       </Typography>
     </Box>
   );

@@ -27,15 +27,25 @@ export interface BenefitItem {
   color: string;
 }
 
-export const techStackData = {
+export interface ArchitectureItem {
+  label: string;
+  color: string;
+}
+
+export const getTechStackData = (t: (key: string) => string) => ({
   frontend: [
     {
       icon: React.createElement(CodeIcon),
-      title: 'Next.js',
+      title: t('techStack.technologies.frontend.0.title'),
       version: '14.0',
-      description: 'React фреймворк с App Router, SSR и оптимизациями',
+      description: t('techStack.technologies.frontend.0.description'),
       color: '#000000',
-      features: ['App Router', 'Server Components', 'API Routes', 'Image Optimization'],
+      features: [
+        t('techStack.technologies.frontend.0.features.0'),
+        t('techStack.technologies.frontend.0.features.1'),
+        t('techStack.technologies.frontend.0.features.2'),
+        t('techStack.technologies.frontend.0.features.3'),
+      ],
       codeExample: `// app/layout.tsx
 export default function RootLayout({
   children,
@@ -51,11 +61,16 @@ export default function RootLayout({
     },
     {
       icon: React.createElement(CodeIcon),
-      title: 'TypeScript',
+      title: t('techStack.technologies.frontend.1.title'),
       version: '5.0',
-      description: 'Строгая типизация для надежности и лучшего DX',
+      description: t('techStack.technologies.frontend.1.description'),
       color: '#3178c6',
-      features: ['Strict Mode', 'Type Safety', 'IntelliSense', 'Refactoring'],
+      features: [
+        t('techStack.technologies.frontend.1.features.0'),
+        t('techStack.technologies.frontend.1.features.1'),
+        t('techStack.technologies.frontend.1.features.2'),
+        t('techStack.technologies.frontend.1.features.3'),
+      ],
       codeExample: `interface LetterWithRelations {
   id: string;
   status: 'pending' | 'delivered';
@@ -71,11 +86,16 @@ export default function RootLayout({
     },
     {
       icon: React.createElement(PaletteIcon),
-      title: 'Material-UI',
+      title: t('techStack.technologies.frontend.2.title'),
       version: '5.14',
-      description: 'Компонентная библиотека с Material Design',
+      description: t('techStack.technologies.frontend.2.description'),
       color: '#007fff',
-      features: ['Theming', 'Responsive', 'Accessibility', 'Customization'],
+      features: [
+        t('techStack.technologies.frontend.2.features.0'),
+        t('techStack.technologies.frontend.2.features.1'),
+        t('techStack.technologies.frontend.2.features.2'),
+        t('techStack.technologies.frontend.2.features.3'),
+      ],
       codeExample: `const theme = createTheme({
   palette: {
     primary: {
@@ -95,11 +115,16 @@ export default function RootLayout({
     },
     {
       icon: React.createElement(AnimationIcon),
-      title: 'Framer Motion',
+      title: t('techStack.technologies.frontend.3.title'),
       version: '10.16',
-      description: 'Библиотека анимаций для React компонентов',
+      description: t('techStack.technologies.frontend.3.description'),
       color: '#ff0055',
-      features: ['Gestures', 'Layout Animations', 'Scroll Triggers', 'Variants'],
+      features: [
+        t('techStack.technologies.frontend.3.features.0'),
+        t('techStack.technologies.frontend.3.features.1'),
+        t('techStack.technologies.frontend.3.features.2'),
+        t('techStack.technologies.frontend.3.features.3'),
+      ],
       codeExample: `<motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
@@ -113,11 +138,17 @@ export default function RootLayout({
   backend: [
     {
       icon: React.createElement(StorageIcon),
-      title: 'Supabase',
+      title: t('techStack.technologies.backend.0.title'),
       version: '2.38',
-      description: 'Backend-as-a-Service с PostgreSQL и real-time',
+      description: t('techStack.technologies.backend.0.description'),
       color: '#3ecf8e',
-      features: ['PostgreSQL', 'Real-time', 'Auth', 'Storage', 'Edge Functions'],
+      features: [
+        t('techStack.technologies.backend.0.features.0'),
+        t('techStack.technologies.backend.0.features.1'),
+        t('techStack.technologies.backend.0.features.2'),
+        t('techStack.technologies.backend.0.features.3'),
+        t('techStack.technologies.backend.0.features.4'),
+      ],
       codeExample: `const { data, error } = await supabase
   .from('letters')
   .select(\`
@@ -130,11 +161,15 @@ export default function RootLayout({
     },
     {
       icon: React.createElement(SecurityIcon),
-      title: 'Row Level Security',
+      title: t('techStack.technologies.backend.1.title'),
       version: 'PostgreSQL',
-      description: 'Политики безопасности на уровне строк БД',
+      description: t('techStack.technologies.backend.1.description'),
       color: '#336791',
-      features: ['User Isolation', 'Role-based Access', 'Data Protection'],
+      features: [
+        t('techStack.technologies.backend.1.features.0'),
+        t('techStack.technologies.backend.1.features.1'),
+        t('techStack.technologies.backend.1.features.2'),
+      ],
       codeExample: `-- RLS Policy
 CREATE POLICY "Users can view own letters" ON letters
   FOR SELECT USING (
@@ -144,11 +179,16 @@ CREATE POLICY "Users can view own letters" ON letters
     },
     {
       icon: React.createElement(SpeedIcon),
-      title: 'React Query',
+      title: t('techStack.technologies.backend.2.title'),
       version: '5.0',
-      description: 'Управление серверным состоянием и кэширование',
+      description: t('techStack.technologies.backend.2.description'),
       color: '#ff4154',
-      features: ['Caching', 'Background Updates', 'Optimistic Updates', 'Offline Support'],
+      features: [
+        t('techStack.technologies.backend.2.features.0'),
+        t('techStack.technologies.backend.2.features.1'),
+        t('techStack.technologies.backend.2.features.2'),
+        t('techStack.technologies.backend.2.features.3'),
+      ],
       codeExample: `export function useLetters() {
   return useQuery({
     queryKey: ['letters'],
@@ -164,11 +204,16 @@ CREATE POLICY "Users can view own letters" ON letters
   devops: [
     {
       icon: React.createElement(CloudIcon),
-      title: 'Vercel',
+      title: t('techStack.technologies.devops.0.title'),
       version: 'Platform',
-      description: 'Платформа для деплоя с автоматическим CI/CD',
+      description: t('techStack.technologies.devops.0.description'),
       color: '#000000',
-      features: ['Auto Deploy', 'Preview URLs', 'Analytics', 'Edge Network'],
+      features: [
+        t('techStack.technologies.devops.0.features.0'),
+        t('techStack.technologies.devops.0.features.1'),
+        t('techStack.technologies.devops.0.features.2'),
+        t('techStack.technologies.devops.0.features.3'),
+      ],
       codeExample: `// vercel.json
 {
   "functions": {
@@ -181,11 +226,16 @@ CREATE POLICY "Users can view own letters" ON letters
     },
     {
       icon: React.createElement(BuildIcon),
-      title: 'ESLint + Prettier',
+      title: t('techStack.technologies.devops.1.title'),
       version: '8.0 + 3.0',
-      description: 'Линтинг и форматирование кода',
+      description: t('techStack.technologies.devops.1.description'),
       color: '#4b32c3',
-      features: ['Code Quality', 'Formatting', 'TypeScript Rules', 'Auto Fix'],
+      features: [
+        t('techStack.technologies.devops.1.features.0'),
+        t('techStack.technologies.devops.1.features.1'),
+        t('techStack.technologies.devops.1.features.2'),
+        t('techStack.technologies.devops.1.features.3'),
+      ],
       codeExample: `// .eslintrc.json
 {
   "extends": [
@@ -200,11 +250,16 @@ CREATE POLICY "Users can view own letters" ON letters
     },
     {
       icon: React.createElement(AnimationIcon),
-      title: 'Screenshot Automation',
+      title: t('techStack.technologies.devops.2.title'),
       version: 'Playwright',
-      description: 'Автоматическая генерация скриншотов для галереи',
+      description: t('techStack.technologies.devops.2.description'),
       color: '#45ba4b',
-      features: ['Auto Screenshots', 'Mobile + Desktop', 'Auth Flow', 'Gallery Sync'],
+      features: [
+        t('techStack.technologies.devops.2.features.0'),
+        t('techStack.technologies.devops.2.features.1'),
+        t('techStack.technologies.devops.2.features.2'),
+        t('techStack.technologies.devops.2.features.3'),
+      ],
       codeExample: `// scripts/take-screenshots.cjs
 // Сначала страницы авторизации (без входа)
 for (const pageConfig of pagesBeforeAuth) {
@@ -220,39 +275,4 @@ if (isLoggedIn) {
 }`,
     },
   ],
-  benefits: [
-    {
-      title: 'Производительность',
-      description: 'SSR, оптимизация изображений, кэширование запросов',
-      icon: React.createElement(SpeedIcon),
-      color: '#059669',
-    },
-    {
-      title: 'Безопасность',
-      description: 'RLS, аутентификация, валидация на всех уровнях',
-      icon: React.createElement(SecurityIcon),
-      color: '#dc2626',
-    },
-    {
-      title: 'Масштабируемость',
-      description: 'Serverless архитектура, автоматическое масштабирование',
-      icon: React.createElement(CloudIcon),
-      color: '#2563eb',
-    },
-    {
-      title: 'Developer Experience',
-      description: 'TypeScript, hot reload, автоматическое тестирование',
-      icon: React.createElement(BuildIcon),
-      color: '#7c3aed',
-    },
-  ],
-  architecture: [
-    { label: 'Next.js Frontend', color: '#000000' },
-    { label: '→', color: 'transparent' },
-    { label: 'API Routes', color: '#2563eb' },
-    { label: '→', color: 'transparent' },
-    { label: 'Supabase', color: '#3ecf8e' },
-    { label: '→', color: 'transparent' },
-    { label: 'PostgreSQL', color: '#336791' },
-  ],
-};
+});

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Paper, Typography, Box, Card, Avatar } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -8,8 +10,11 @@ import {
   Code as CodeIcon,
 } from '@mui/icons-material';
 import * as styles from './ArchitectureOverview.styles';
+import { useLocale } from '@/contexts/LocaleContext';
 
 export function ArchitectureOverview() {
+  const { t } = useLocale();
+
   return (
     <Paper
       component={motion.div}
@@ -18,7 +23,7 @@ export function ArchitectureOverview() {
       sx={styles.paperStyles}
     >
       <Typography variant="h4" sx={styles.titleStyles}>
-        Общая архитектура
+        {t('architecture.overview.title')}
       </Typography>
 
       {/* Mobile version - Compact horizontal */}
