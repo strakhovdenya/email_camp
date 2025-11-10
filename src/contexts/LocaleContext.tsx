@@ -85,9 +85,9 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = ({ children }) => {
               );
               return key;
             }
-          } else if (k in value) {
+          } else if (!Array.isArray(value) && k in value) {
             // Доступ к свойству объекта (включая числовые строковые ключи как "0", "1")
-            value = value[k];
+            value = (value as { [key: string]: TranslationValue })[k];
           } else {
             console.warn(
               `Translation key "${key}" not found for locale "${locale}" at "${k}". Available keys: ${Object.keys(value).slice(0, 10).join(', ')}${Object.keys(value).length > 10 ? '...' : ''}`
